@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 6 · Unit 9: What a Job! | Vocabulary Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink:     #9B6FD4;
+    --pink-lt:  #C4A8F0;
+    --pink-dk:  #5B2D9E;
+    --rose:     #7E4CC8;
+    --cream:    #F3EEFF;
+    --purple:   #C855F0;
+    --yellow:   #FFD93D;
+    --green:    #2ECC8A;
+    --red:      #FF4D6D;
+    --white:    #FFFFFF;
+    --muted:    rgba(80,30,140,0.4);
+    --border:   rgba(130,80,200,0.25);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: #EDE4FF;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px;
+    position: relative; overflow-x: hidden;
+  }
+
+  /* ── Background ── */
+  .bg-layer {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 15% 10%, rgba(130,80,200,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 65% at 88% 85%, rgba(100,60,180,0.2) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 50% 50%, rgba(170,130,230,0.15) 0%, transparent 70%),
+      linear-gradient(160deg, #E8DCFF 0%, #EDE4FF 50%, #DDD0FF 100%);
+  }
+
+  /* Bouncing shapes */
+  .shape { position:fixed;border-radius:50%;pointer-events:none;animation:shapeBounce var(--dur) ease-in-out infinite;opacity:0.18; }
+  .s1 { width:320px;height:320px;background:#9B6FD4;top:-80px;left:-100px;--dur:10s; }
+  .s2 { width:250px;height:250px;background:#6A3FBB;bottom:-60px;right:-80px;--dur:13s;animation-delay:-4s; }
+  .s3 { width:180px;height:180px;background:#B8A0FF;top:55%;left:70%;--dur:8s;animation-delay:-7s;opacity:0.22; }
+  .s4 { width:120px;height:120px;background:#D4C0FF;top:20%;right:8%;--dur:11s;animation-delay:-2s; }
+  @keyframes shapeBounce { 0%,100%{transform:translate(0,0) scale(1);}40%{transform:translate(18px,-22px) scale(1.05);}70%{transform:translate(-12px,16px) scale(0.96);} }
+
+  /* Floating stars/hearts */
+  .floaties { position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0; }
+  .floatie { position:absolute;font-size:var(--sz);animation:floatUp var(--dur) ease-in-out infinite;opacity:0; }
+  @keyframes floatUp { 0%{opacity:0;transform:translateY(0) rotate(0deg);}20%{opacity:0.6;}80%{opacity:0.3;}100%{opacity:0;transform:translateY(-100px) rotate(20deg);} }
+
+  /* ── Header ── */
+  .header { text-align:center;margin-bottom:16px;position:relative;z-index:2; }
+  .unit-badge {
+    display:inline-block;
+    background: linear-gradient(135deg, var(--rose), var(--pink-dk));
+    color: white;
+    font-family:'Baloo 2',cursive;
+    font-weight:800;
+    font-size:12px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    padding:6px 22px;
+    border-radius:50px;
+    margin-bottom:12px;
+    box-shadow:0 4px 20px rgba(100,50,180,0.4);
+  }
+  h1 {
+    font-family:'Baloo 2', cursive;
+    font-size: clamp(22px, 4.5vw, 46px);
+    color: var(--pink-dk);
+    line-height:1.15;
+    text-shadow: 0 2px 12px rgba(100,50,180,0.2);
+  }
+  h1 span { color: var(--rose); }
+
+  /* ── Progress ── */
+  .progress-bar-wrap { width:100%;max-width:820px;margin:0 auto 14px;position:relative;z-index:2; }
+  .progress-info { display:flex;justify-content:space-between;color:var(--pink-dk);font-size:13px;font-weight:700;margin-bottom:8px;opacity:0.7; }
+  .progress-track { height:10px;background:rgba(130,80,200,0.15);border-radius:10px;overflow:hidden;border:1px solid rgba(130,80,200,0.25); }
+  .progress-fill { height:100%;background:linear-gradient(90deg,var(--pink-dk),var(--rose),var(--pink-lt));border-radius:10px;transition:width 0.5s ease;box-shadow:0 0 12px rgba(100,50,180,0.4); }
+
+  /* ── Quiz Card ── */
+  .quiz-card {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    border:2px solid rgba(130,80,200,0.2);
+    border-radius:32px;
+    padding:clamp(24px,5vw,52px) clamp(20px,6vw,60px);
+    width:100%;max-width:820px;
+    position:relative;z-index:2;
+    box-shadow:0 20px 60px rgba(100,50,180,0.12), 0 4px 16px rgba(100,50,180,0.08);
+  }
+  .quiz-card::before {
+    content:'';position:absolute;top:-2px;left:60px;right:60px;height:4px;
+    background:linear-gradient(90deg,transparent,#5B2D9E,#7E4CC8,#C4A8F0,#A080E0,transparent);
+    border-radius:0 0 4px 4px;
+  }
+
+  .word-label { font-size:12px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:8px; }
+  .word {
+    font-family:'Baloo 2',cursive;
+    font-size:clamp(32px,7vw,72px);
+    color:var(--pink-dk);
+    line-height:1.1;
+    margin-bottom:8px;
+  }
+  .pos-badge {
+    display:inline-block;
+    font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--rose);
+    background:rgba(126,76,200,0.1);
+    border:1px solid rgba(126,76,200,0.25);
+    padding:4px 14px;border-radius:50px;margin-bottom:28px;
+  }
+
+  /* ── Review badge ── */
+  .review-badge {
+    display:none;align-items:center;gap:8px;
+    background:linear-gradient(135deg,#FF8C00,#E05000);
+    color:white;
+    font-family:'Baloo 2',cursive;
+    font-weight:800;
+    font-size:14px;letter-spacing:0.06em;
+    padding:7px 20px;border-radius:50px;margin-bottom:16px;
+    box-shadow:0 4px 18px rgba(255,120,0,0.4);
+    animation:pulseOrange 1.8s ease-in-out infinite;
+  }
+  .review-badge.visible { display:inline-flex; }
+  @keyframes pulseOrange {
+    0%,100%{box-shadow:0 4px 18px rgba(255,120,0,0.4);}
+    50%{box-shadow:0 6px 28px rgba(255,120,0,0.75);}
+  }
+
+  /* ── Options ── */
+  .options { display:flex;flex-direction:column;gap:12px; }
+  .option {
+    background:rgba(255,255,255,0.8);
+    border:2px solid rgba(130,80,200,0.2);
+    border-radius:18px;
+    padding:16px 22px;cursor:pointer;
+    display:flex;align-items:flex-start;gap:14px;
+    transition:all 0.2s;text-align:left;
+    box-shadow:0 2px 8px rgba(100,50,180,0.06);
+  }
+  .option:hover { background:rgba(130,80,200,0.08);border-color:rgba(126,76,200,0.45);transform:translateY(-2px);box-shadow:0 8px 24px rgba(100,50,180,0.12); }
+  .option-letter {
+    width:36px;height:36px;min-width:36px;border-radius:10px;
+    background:rgba(126,76,200,0.1);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Baloo 2',cursive;font-size:17px;color:var(--rose);
+    transition:all 0.2s;border:1px solid rgba(126,76,200,0.2);
+  }
+  .option-text { font-size:clamp(14px,2vw,17px);font-weight:600;color:#3A1A6E;line-height:1.45;transition:all 0.2s;padding-top:4px; }
+
+  .option.selected { border-color:var(--rose);background:rgba(126,76,200,0.08); }
+  .option.selected .option-letter { background:var(--rose);color:white; }
+  .option.correct { border-color:var(--green) !important;background:rgba(46,204,138,0.1) !important; }
+  .option.correct .option-letter { background:var(--green) !important;color:white !important; }
+  .option.correct .option-text { color:#007A45 !important;font-weight:700; }
+  .option.wrong { border-color:var(--red) !important;background:rgba(255,77,109,0.07) !important;opacity:0.5; }
+  .option.wrong .option-letter { background:var(--red) !important;color:white !important; }
+  .option.wrong .option-text { color:rgba(180,0,60,0.4) !important; }
+  .option.faded { opacity:0.25;transform:none !important; }
+  .option.faded:hover { transform:none;border-color:rgba(130,80,200,0.2);background:rgba(255,255,255,0.8); }
+  .option.disabled { cursor:default;pointer-events:none; }
+
+  /* ── Buttons ── */
+  .btn-row { display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;justify-content:center; }
+  .btn { font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(15px,2.2vw,18px);border:none;border-radius:14px;padding:13px 34px;cursor:pointer;transition:all 0.2s; }
+  .btn-reveal { background:linear-gradient(135deg,var(--yellow),#FFB830);color:#7A4000;box-shadow:0 8px 24px rgba(255,217,61,0.4);display:none; }
+  .btn-reveal:hover { transform:translateY(-3px);box-shadow:0 14px 32px rgba(255,217,61,0.6); }
+  .btn-reveal.visible { display:block; }
+  .btn-next { background:linear-gradient(135deg,var(--rose),var(--pink-dk));color:white;box-shadow:0 8px 24px rgba(100,50,180,0.35);display:none; }
+  .btn-next:hover { transform:translateY(-3px);box-shadow:0 14px 32px rgba(100,50,180,0.5); }
+  .btn-next.visible { display:block; }
+  .btn-review { background:linear-gradient(135deg,#FF8C00,#E05000);color:white;box-shadow:0 8px 24px rgba(255,120,0,0.35);display:none; }
+  .btn-review:hover { transform:translateY(-3px);box-shadow:0 14px 32px rgba(255,120,0,0.55); }
+  .btn-review.visible { display:inline-block; }
+
+  .score-area { display:flex;gap:20px;justify-content:center;margin-top:20px;flex-wrap:wrap; }
+  .score-pill { display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--muted);background:rgba(130,80,200,0.08);border:1px solid rgba(130,80,200,0.2);padding:7px 16px;border-radius:50px; }
+  .dot { width:10px;height:10px;border-radius:50%; }
+  .dot-correct { background:var(--green);box-shadow:0 0 8px var(--green); }
+  .dot-wrong { background:var(--red);box-shadow:0 0 8px var(--red); }
+
+  /* ── Animations ── */
+  .pop { animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes popIn { 0%{transform:scale(0.8);opacity:0;}100%{transform:scale(1);opacity:1;} }
+  .slide-up { animation:slideUp 0.35s ease; }
+  @keyframes slideUp { 0%{transform:translateY(16px);opacity:0;}100%{transform:translateY(0);opacity:1;} }
+
+  /* ── End Screen ── */
+  .end-screen { text-align:center;display:none; }
+  .end-screen.visible { display:block; }
+  .end-screen .big-emoji { font-size:80px;margin-bottom:16px;animation:popIn 0.5s ease; }
+  .end-screen h2 { font-family:'Baloo 2',cursive;font-size:clamp(28px,5vw,52px);color:var(--rose);margin-bottom:10px; }
+  .end-screen p { font-size:18px;color:rgba(80,30,140,0.65);margin-bottom:28px; }
+  .end-score { font-family:'Baloo 2',cursive;font-size:clamp(40px,8vw,72px);color:var(--pink-dk);margin-bottom:24px; }
+  .end-score span { color:var(--green); }
+  .quiz-content.hidden { display:none; }
+
+  /* Confetti dots on end screen */
+  .confetti-row { font-size:28px;margin-bottom:14px;animation:popIn 0.6s ease; }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="shape s1"></div>
+<div class="shape s2"></div>
+<div class="shape s3"></div>
+<div class="shape s4"></div>
+<div class="floaties" id="floaties"></div>
+
+<div class="header">
+  <div class="unit-badge">🌟 Vocabulary Quiz</div>
+  <h1>Grade 6 · <span>Unit 9: What a Job!</span></h1>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-info">
+    <span id="progress-label">Question 1 of 16</span>
+    <span id="score-label">Score: 0</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-content" id="quiz-content">
+    <div class="word-label">What does this word / phrase mean?</div>
+    <div class="word" id="word-display">—</div>
+    <div class="pos-badge" id="pos-display">noun</div>
+    <div class="review-badge" id="review-badge">⚠️ REVIEW — you missed this one!</div>
+    <div class="options" id="options-container"></div>
+    <div class="btn-row">
+      <button class="btn btn-reveal" id="btn-reveal" onclick="reveal()">🔍 Reveal Answer</button>
+      <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Next Word ➜</button>
+    </div>
+    <div class="score-area">
+      <div class="score-pill"><div class="dot dot-correct"></div><span id="correct-count">0 correct</span></div>
+      <div class="score-pill"><div class="dot dot-wrong"></div><span id="wrong-count">0 wrong</span></div>
+    </div>
+  </div>
+
+  <div class="end-screen" id="end-screen">
+    <div class="big-emoji" id="end-emoji">🎉</div>
+    <h2 id="end-title">Quiz Complete!</h2>
+    <div class="confetti-row">🌸 🌟 🌸 🌟 🌸</div>
+    <p id="end-message">Great work on Unit 9 vocabulary!</p>
+    <div class="end-score">You scored <span id="final-score">—</span></div>
+    <div id="end-review-note" style="font-size:15px;color:#E05000;margin-bottom:20px;display:none;font-weight:700;"></div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-review" id="btn-start-review" onclick="startReview()" style="display:none">⚠️ Review Missed Words</button>
+      <button class="btn btn-next visible" onclick="restartQuiz()" style="display:inline-block">🔄 Play Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── VOCABULARY ────────────────────────────────────────
+const vocab = [
+  { word: "career", pos: "noun",
+    correct: "The type of work someone does for most of their life",
+    wrong: ["A special prize given to someone who works very hard",
+            "A place where people go to learn a new skill"] },
+
+  { word: "challenging", pos: "adjective",
+    correct: "Difficult in a way that requires a lot of effort and skill",
+    wrong: ["Very easy and quick to finish without much thinking",
+            "Boring and not very interesting to do"] },
+
+  { word: "promoted", pos: "verb",
+    correct: "Given a higher or more important job at work",
+    wrong: ["Told to leave a job because of making a mistake",
+            "Asked to teach a new person how to do your job"] },
+
+  { word: "blind", pos: "adjective",
+    correct: "Not able to see, either partly or completely",
+    wrong: ["Not able to hear sounds or voices",
+            "Not able to speak clearly or at all"] },
+
+  { word: "deaf", pos: "adjective",
+    correct: "Not able to hear, either partly or completely",
+    wrong: ["Not able to see things clearly",
+            "Not able to walk or move around easily"] },
+
+  { word: "disabled", pos: "adjective",
+    correct: "Having a physical or mental condition that makes some things harder to do",
+    wrong: ["Very tired after doing too much exercise or hard work",
+            "Feeling too shy or nervous to talk to other people"] },
+
+  { word: "work long hours", pos: "expression",
+    correct: "To spend a lot of time at your job each day, more than usual",
+    wrong: ["To do a job that is very close to where you live",
+            "To finish all your tasks quickly so you can go home early"] },
+
+  { word: "give notice", pos: "expression",
+    correct: "To tell your employer officially that you are going to leave your job",
+    wrong: ["To ask your boss for more money or a better position",
+            "To write a list of all the jobs you want to do in the future"] },
+
+  { word: "obsolete", pos: "adjective",
+    correct: "No longer useful or needed because something newer has taken its place",
+    wrong: ["Very new and modern, and used by almost everyone",
+            "Very expensive and difficult for most people to afford"] },
+
+  { word: "replaced", pos: "adjective",
+    correct: "Taken over by something or someone new that does the same job",
+    wrong: ["Fixed after it was broken so that it works again",
+            "Kept safe so that it does not get lost or damaged"] },
+
+  { word: "raise money", pos: "expression",
+    correct: "To collect money from other people, usually to help someone or something",
+    wrong: ["To save your own money carefully over a long period of time",
+            "To spend money on things that are important to you"] },
+
+  { word: "a good cause", pos: "expression",
+    correct: "Something worth doing because it helps other people or makes the world better",
+    wrong: ["A reason for doing something that only helps yourself",
+            "A job that pays a lot of money and is very popular"] },
+
+  { word: "sponsored", pos: "adjective",
+    correct: "Supported by people who give money, often because you are doing a challenge",
+    wrong: ["Chosen to be the leader of a team or group activity",
+            "Paid to do work at home instead of going to an office"] },
+
+  { word: "sponge", pos: "noun",
+    correct: "A soft object full of tiny holes that soaks up water, used for washing and cleaning",
+    wrong: ["A hard plastic tool used to scrub dirt off floors and walls",
+            "A small cloth used to dry your hands after washing them"] },
+
+  { word: "accept an invitation", pos: "expression",
+    correct: "To say yes when someone asks you to come to an event or join an activity",
+    wrong: ["To send a message asking someone to come to your party or event",
+            "To forget to reply when someone asks you to join them"] },
+
+  { word: "refuse an invitation", pos: "expression",
+    correct: "To say no when someone asks you to come to an event or join an activity",
+    wrong: ["To arrive very late to a party or event you were invited to",
+            "To ask someone else to go to an event in your place"] }
+];
+
+// ── QUIZ STATE ────────────────────────────────────────
+let questions    = [];
+let current      = 0;
+let score        = 0;
+let correct      = 0;
+let wrong        = 0;
+let answered     = false;
+let missedWords  = [];
+let isReviewMode = false;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function buildQuestions() {
+  const shuffledVocab = shuffle(vocab);
+  // Guarantee even spread across A(0), B(1), C(2)
+  const positions = [];
+  const perSlot = Math.floor(shuffledVocab.length / 3);
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < perSlot; j++) positions.push(i);
+  }
+  while (positions.length < shuffledVocab.length) {
+    positions.push(Math.floor(Math.random() * 3));
+  }
+  const shuffledPositions = shuffle(positions);
+
+  questions = shuffledVocab.map(function(v, idx) {
+    const correctPos = shuffledPositions[idx];
+    const wrongOpts = shuffle([
+      { text: v.wrong[0], isCorrect: false },
+      { text: v.wrong[1], isCorrect: false }
+    ]);
+    const opts = wrongOpts.slice();
+    opts.splice(correctPos, 0, { text: v.correct, isCorrect: true });
+    return { word: v.word, pos: v.pos, opts: opts };
+  });
+}
+
+function render() {
+  answered = false;
+  const q = questions[current];
+  const wordEl = document.getElementById('word-display');
+  wordEl.textContent = q.word;
+  wordEl.className = 'word pop';
+  document.getElementById('pos-display').textContent = q.pos;
+
+  const total = questions.length;
+  const label = isReviewMode ? 'Review ' : 'Question ';
+  document.getElementById('progress-label').textContent = label + (current + 1) + ' of ' + total;
+  document.getElementById('score-label').textContent = isReviewMode ? '⚠️ Review Mode' : 'Score: ' + score;
+  document.getElementById('progress-fill').style.width = ((current / total) * 100) + '%';
+
+  const badge = document.getElementById('review-badge');
+  if (isReviewMode) { badge.classList.add('visible'); } else { badge.classList.remove('visible'); }
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  container.className = 'options slide-up';
+  const letters = ['A', 'B', 'C'];
+  q.opts.forEach(function(opt, i) {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.dataset.correct = opt.isCorrect;
+    div.innerHTML = '<div class="option-letter">' + letters[i] + '</div><div class="option-text">' + opt.text + '</div>';
+    div.addEventListener('click', function() { selectOption(div, opt.isCorrect); });
+    container.appendChild(div);
+  });
+  document.getElementById('btn-reveal').classList.remove('visible');
+  document.getElementById('btn-next').classList.remove('visible');
+}
+
+function selectOption(el, isCorrect) {
+  if (answered) return;
+  answered = true;
+  document.querySelectorAll('.option').forEach(function(o) { o.classList.add('disabled'); });
+  el.classList.add('selected');
+  if (isCorrect) {
+    el.classList.add('correct');
+    score++; correct++;
+    document.querySelectorAll('.option').forEach(function(o) { if (o !== el) o.classList.add('faded'); });
+    document.getElementById('btn-next').classList.add('visible');
+  } else {
+    el.classList.add('wrong');
+    wrong++;
+    document.getElementById('btn-reveal').classList.add('visible');
+  }
+  document.getElementById('correct-count').textContent = correct + ' correct';
+  document.getElementById('wrong-count').textContent = wrong + ' wrong';
+  document.getElementById('score-label').textContent = isReviewMode ? '⚠️ Review Mode' : 'Score: ' + score;
+}
+
+function reveal() {
+  if (!isReviewMode) {
+    const q = questions[current];
+    const vocabEntry = vocab.find(function(v) { return v.word === q.word; });
+    if (vocabEntry && !missedWords.find(function(m) { return m.word === vocabEntry.word; })) {
+      missedWords.push(vocabEntry);
+    }
+  }
+  document.querySelectorAll('.option').forEach(function(o) {
+    if (o.dataset.correct === 'true') { o.classList.add('correct'); o.classList.remove('faded'); }
+    else if (!o.classList.contains('wrong')) { o.classList.add('faded'); }
+  });
+  document.getElementById('btn-reveal').classList.remove('visible');
+  document.getElementById('btn-next').classList.add('visible');
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) { showEnd(); return; }
+  render();
+}
+
+function showEnd() {
+  document.getElementById('quiz-content').classList.add('hidden');
+  document.getElementById('end-screen').classList.add('visible');
+
+  if (isReviewMode) {
+    document.getElementById('end-emoji').textContent = '✅';
+    document.getElementById('end-title').textContent = 'Review Complete!';
+    document.getElementById('end-message').textContent = 'Well done for going back over the tricky ones!';
+    document.getElementById('final-score').textContent = 'All ' + questions.length + ' reviewed';
+    document.getElementById('btn-start-review').style.display = 'none';
+    document.getElementById('end-review-note').style.display = 'none';
+  } else {
+    const pct = Math.round((correct / questions.length) * 100);
+    document.getElementById('final-score').textContent = correct + ' / ' + questions.length;
+    let emoji = '🎉', title = 'Quiz Complete!', msg = 'Great work on Unit 9 vocabulary!';
+    if (pct >= 80) { emoji = '🏆'; title = 'Fantastic!'; msg = 'You really know your Unit 9 words — amazing work!'; }
+    else if (pct >= 60) { emoji = '🌟'; title = 'Great job!'; msg = 'Really good effort — keep practising!'; }
+    else if (pct >= 40) { emoji = '💪'; title = 'Good try!'; msg = 'Have another go — you can do it!'; }
+    else { emoji = '📚'; title = 'Keep going!'; msg = 'Read through the words and try again!'; }
+    document.getElementById('end-emoji').textContent = emoji;
+    document.getElementById('end-title').textContent = title;
+    document.getElementById('end-message').textContent = msg;
+
+    if (missedWords.length > 0) {
+      const reviewBtn = document.getElementById('btn-start-review');
+      reviewBtn.style.display = 'inline-block';
+      const note = document.getElementById('end-review-note');
+      note.style.display = 'block';
+      note.textContent = '⚠️ You revealed the answer for ' + missedWords.length + ' word' + (missedWords.length > 1 ? 's' : '') + ' — want to practise them again?';
+    }
+  }
+  document.getElementById('progress-fill').style.width = '100%';
+}
+
+function startReview() {
+  isReviewMode = true;
+  current = 0;
+  const shuffledMissed = shuffle(missedWords);
+  const positions = [];
+  const perSlot = Math.floor(shuffledMissed.length / 3);
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < perSlot; j++) positions.push(i);
+  }
+  while (positions.length < shuffledMissed.length) {
+    positions.push(Math.floor(Math.random() * 3));
+  }
+  const shuffledPositions = shuffle(positions);
+
+  questions = shuffledMissed.map(function(v, idx) {
+    const correctPos = shuffledPositions[idx];
+    const wrongOpts = shuffle([
+      { text: v.wrong[0], isCorrect: false },
+      { text: v.wrong[1], isCorrect: false }
+    ]);
+    const opts = wrongOpts.slice();
+    opts.splice(correctPos, 0, { text: v.correct, isCorrect: true });
+    return { word: v.word, pos: v.pos, opts: opts };
+  });
+
+  document.getElementById('end-screen').classList.remove('visible');
+  document.getElementById('quiz-content').classList.remove('hidden');
+  render();
+}
+
+function restartQuiz() {
+  current = 0; score = 0; correct = 0; wrong = 0;
+  missedWords = []; isReviewMode = false;
+  buildQuestions();
+  document.getElementById('end-screen').classList.remove('visible');
+  document.getElementById('quiz-content').classList.remove('hidden');
+  document.getElementById('correct-count').textContent = '0 correct';
+  document.getElementById('wrong-count').textContent = '0 wrong';
+  render();
+}
+
+// ── FLOATING EMOJIS ───────────────────────────────────
+(function() {
+  const wrap = document.getElementById('floaties');
+  const emojis = ['⭐','✨','🌟','💫','🔮','🌀','⚡'];
+  for (let i = 0; i < 18; i++) {
+    const d = document.createElement('div');
+    d.className = 'floatie';
+    const em = emojis[Math.floor(Math.random() * emojis.length)];
+    d.textContent = em;
+    d.style.cssText =
+      'left:' + (Math.random() * 100) + '%;' +
+      'top:' + (Math.random() * 100) + '%;' +
+      '--sz:' + (Math.random() * 14 + 12) + 'px;' +
+      '--dur:' + (Math.random() * 6 + 6) + 's;' +
+      'animation-delay:' + (Math.random() * 10) + 's;';
+    wrap.appendChild(d);
+  }
+})();
+
+// ── INIT ──────────────────────────────────────────────
+buildQuestions();
+render();
+
+document.addEventListener('keydown', function(e) {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (document.getElementById('btn-next').classList.contains('visible')) nextQuestion();
+    else if (document.getElementById('btn-reveal').classList.contains('visible')) reveal();
+  }
+});
+</script>
+</body>
+</html>
