@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can We Compare?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff9f0;
+    --card-a: #fff;
+    --accent1: #ff4d6d;
+    --accent2: #4361ee;
+    --accent3: #06d6a0;
+    --accent4: #ffd166;
+    --text: #1a1a2e;
+    --muted: #888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── CONFETTI DOTS BACKGROUND ── */
+  .bg-dots {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .dot {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.18;
+    animation: float linear infinite;
+  }
+
+  @keyframes float {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.18; }
+    90%  { opacity: 0.18; }
+    100% { transform: translateY(-120px) rotate(360deg); opacity: 0; }
+  }
+
+  /* ── BURST ANIMATION ── */
+  .burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    font-size: 2rem;
+    animation: burst-anim 0.7s ease-out forwards;
+  }
+
+  @keyframes burst-anim {
+    0%   { transform: scale(0) translateY(0); opacity: 1; }
+    60%  { transform: scale(1.4) translateY(-40px); opacity: 1; }
+    100% { transform: scale(1) translateY(-80px); opacity: 0; }
+  }
+
+  /* ── LAYOUT ── */
+  .everything { position: relative; z-index: 1; width: 100%; max-width: 880px; display: flex; flex-direction: column; align-items: center; }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.6rem, 7vw, 4.5rem);
+    color: var(--accent1);
+    text-shadow: 4px 4px 0 #ffd166, 7px 7px 0 rgba(255,77,109,0.15);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  /* ── QUESTION BAR ── */
+  .question-bar {
+    background: var(--accent2);
+    border-radius: 20px;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    box-shadow: 0 6px 0 #2d3db5, 0 8px 20px rgba(67,97,238,0.25);
+  }
+
+  .q-static {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: #fff;
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+
+  .q-pill {
+    background: var(--accent4);
+    border-radius: 50px;
+    padding: 6px 22px;
+    min-width: 240px;
+    text-align: center;
+    box-shadow: 0 4px 0 #e6a800;
+    transition: transform 0.1s;
+  }
+
+  .q-word {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--text);
+    letter-spacing: 1px;
+    display: block;
+  }
+
+  .q-word.spinning { opacity: 0.5; }
+
+  /* ── ARENA ── */
+  .arena {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* ── SLOT CARDS ── */
+  .slot-card {
+    flex: 1;
+    min-width: 230px;
+    max-width: 350px;
+    background: #fff;
+    border-radius: 24px;
+    border: 3px solid #e8e8f0;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 0 #e0e0ef, 0 10px 24px rgba(0,0,0,0.08);
+  }
+
+  .slot-card:hover { transform: translateY(-3px); }
+
+  .slot-card.left  { border-top: 6px solid var(--accent1); }
+  .slot-card.right { border-top: 6px solid var(--accent2); }
+
+  .slot-card.left.active  { box-shadow: 0 0 0 4px var(--accent1), 0 12px 32px rgba(255,77,109,0.25); transform: scale(1.03); }
+  .slot-card.right.active { box-shadow: 0 0 0 4px var(--accent2), 0 12px 32px rgba(67,97,238,0.25); transform: scale(1.03); }
+
+  .slot-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px 4px;
+  }
+
+  .slot-emoji {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+
+  .slot-label {
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .slot-card.left  .slot-label { color: var(--accent1); }
+  .slot-card.right .slot-label { color: var(--accent2); }
+
+  .slot-window {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px 16px;
+  }
+
+  .slot-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.6rem, 3.8vw, 2.4rem);
+    text-align: center;
+    line-height: 1.15;
+    color: var(--text);
+    transition: opacity 0.05s, transform 0.05s;
+  }
+
+  .slot-text.blur { opacity: 0.2; transform: scale(0.92); }
+
+  /* ── VS BADGE ── */
+  .vs-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    border-radius: 50%;
+    width: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 5px 0 #c03055, 0 8px 20px rgba(255,77,109,0.3);
+    animation: vs-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes vs-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
+  }
+
+  .btn:active { transform: translateY(3px) !important; box-shadow: none !important; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  .btn-spin {
+    background: var(--accent3);
+    color: #fff;
+    font-size: 1.3rem;
+    padding: 16px 56px;
+    box-shadow: 0 6px 0 #04a57c, 0 10px 24px rgba(6,214,160,0.3);
+  }
+  .btn-spin:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 9px 0 #04a57c, 0 14px 28px rgba(6,214,160,0.3); }
+
+  .btn-edit {
+    background: #f0f0f8;
+    color: #666;
+    font-size: 0.95rem;
+    padding: 12px 28px;
+    box-shadow: 0 4px 0 #d0d0e0;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+  }
+  .btn-edit:hover { background: #e4e4f4; transform: translateY(-2px); box-shadow: 0 6px 0 #d0d0e0; }
+
+  /* ── EDIT PANEL ── */
+  .edit-panel {
+    display: none;
+    background: #fff;
+    border: 3px solid #e8e8f0;
+    border-radius: 24px;
+    padding: 28px;
+    width: 100%;
+    margin-top: 14px;
+    box-shadow: 0 6px 0 #e0e0ef;
+  }
+
+  .edit-panel.open { display: block; }
+
+  .edit-panel h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: var(--accent2);
+    margin-bottom: 20px;
+  }
+
+  .edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 580px) { .edit-grid { grid-template-columns: 1fr; } }
+
+  .edit-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .edit-group textarea {
+    width: 100%;
+    background: #f8f8ff;
+    border: 2px solid #e0e0f0;
+    border-radius: 14px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    padding: 10px 14px;
+    resize: vertical;
+    min-height: 200px;
+    line-height: 1.8;
+  }
+
+  .edit-group textarea:focus { outline: none; border-color: var(--accent2); }
+  .edit-hint { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+
+  .btn-apply {
+    margin-top: 20px;
+    background: var(--accent2);
+    color: #fff;
+    box-shadow: 0 5px 0 #2d3db5;
+  }
+  .btn-apply:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #2d3db5; }
+
+  footer {
+    color: #bbb;
+    font-size: 0.78rem;
+    margin-top: 24px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  /* ── WIGGLE ON LAND ── */
+  @keyframes wiggle {
+    0%,100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+
+  .slot-card.wiggle { animation: wiggle 0.35s ease; }
+</style>
+</head>
+<body>
+
+<!-- Floating background dots -->
+<div class="bg-dots" id="bgDots"></div>
+
+<div class="everything">
+
+  <div class="header">
+    <h1>🤔 Can We Compare?</h1>
+    <p class="subtitle">Spin the wheel — then make your case! 💬</p>
+  </div>
+
+  <!-- QUESTION BAR -->
+  <div class="question-bar">
+    <span class="q-static">Who is more</span>
+    <div class="q-pill">
+      <span class="q-word" id="qWord">Dangerous</span>
+    </div>
+    <span class="q-static">?</span>
+  </div>
+
+  <!-- ARENA -->
+  <div class="arena">
+    <div class="slot-card left" id="cardLeft">
+      <div class="slot-top">
+        <span class="slot-emoji">🧑‍🎓</span>
+        <span class="slot-label">Student A</span>
+      </div>
+      <div class="slot-window">
+        <div class="slot-text" id="slotLeft">Azimjon</div>
+      </div>
+    </div>
+
+    <div class="vs-badge">VS</div>
+
+    <div class="slot-card right" id="cardRight">
+      <div class="slot-top">
+        <span class="slot-emoji">🧑‍🎓</span>
+        <span class="slot-label">Student B</span>
+      </div>
+      <div class="slot-window">
+        <div class="slot-text" id="slotRight">Azizbek (Blue)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="btn btn-spin" id="spinBtn" onclick="spinAll()">🎲 SPIN!</button>
+    <button class="btn btn-edit" onclick="toggleEdit()">✏️ Edit Lists</button>
+  </div>
+
+  <!-- EDIT PANEL -->
+  <div class="edit-panel" id="editPanel">
+    <h3>✏️ Customize Your Lists</h3>
+    <div class="edit-grid">
+      <div class="edit-group">
+        <label>Students</label>
+        <textarea id="editJobs"></textarea>
+        <p class="edit-hint">One name per line</p>
+      </div>
+      <div class="edit-group">
+        <label>Criteria</label>
+        <textarea id="editCriteria"></textarea>
+        <p class="edit-hint">One criterion per line</p>
+      </div>
+    </div>
+    <button class="btn btn-apply btn-spin" onclick="applyEdits()">✅ Apply Changes</button>
+  </div>
+
+  <footer>Double-click a name to pin it 📌 &nbsp;·&nbsp; Spacebar or SPIN to randomize</footer>
+
+</div>
+
+<script>
+  // ── LISTS ──────────────────────────────────────────────────────
+  let jobs = [
+    "Azimjon","Saidakbar","Abirbek","Azizbek (Green)","Alisher",
+    "Shojahon (Green)","Robiya","Rushana","Umidjon","Mardon",
+    "Ulugbek","Abdulaziz","Masrur","Fayozbek","Firdavs",
+    "Islom","Shojahon (Blue)","Iroda","Zarina","Miraziz",
+    "Maxmud","Jahongir","Abror","Azizbek (Blue)"
+  ];
+
+  let criteria = [
+    "Funny","Tall","Easy-going","Supportive","Good at sport",
+    "Most likely to be school president","Creative","Dangerous",
+    "Usually happy","Stressed about school","Most likely to be famous"
+  ];
+
+  // ── FLOATING DOTS ──────────────────────────────────────────────
+  const dotColors = ['#ff4d6d','#4361ee','#06d6a0','#ffd166','#f72585','#4cc9f0'];
+  const container = document.getElementById('bgDots');
+  for (let i = 0; i < 28; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    const size = 10 + Math.random() * 22;
+    d.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      background:${dotColors[Math.floor(Math.random()*dotColors.length)]};
+      animation-duration:${8+Math.random()*14}s;
+      animation-delay:${-Math.random()*20}s;
+    `;
+    container.appendChild(d);
+  }
+
+  // ── BURST EMOJIS ──────────────────────────────────────────────
+  const burstEmojis = ['🎉','⭐','🔥','💥','✨','🎊','👏','🚀'];
+  function spawnBurst() {
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'burst';
+        el.textContent = burstEmojis[Math.floor(Math.random()*burstEmojis.length)];
+        el.style.left = (20 + Math.random() * 60) + 'vw';
+        el.style.top  = (30 + Math.random() * 40) + 'vh';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 800);
+      }, i * 100);
+    }
+  }
+
+  // ── HELPERS ───────────────────────────────────────────────────
+  let pinnedLeft = false, pinnedRight = false, isSpinning = false;
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  // ── SHUFFLED DECK for criteria (each word used once before repeating) ──
+  let criteriaDeck = [];
+  function pickCriteria() {
+    if (criteriaDeck.length === 0) {
+      // Refill and shuffle the deck
+      criteriaDeck = [...criteria];
+      for (let i = criteriaDeck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [criteriaDeck[i], criteriaDeck[j]] = [criteriaDeck[j], criteriaDeck[i]];
+      }
+    }
+    return criteriaDeck.pop();
+  }
+
+  function pickTwo(arr) {
+    let a = pick(arr), b = pick(arr), t = 0;
+    while (b === a && t++ < 30) b = pick(arr);
+    return [a, b];
+  }
+
+  // ── EMOJI per student ────────────────────────────────────────
+  const emojiMap = {};
+
+  function getEmoji(name) {
+    return '🧑‍🎓';
+  }
+
+  // ── ANIMATE ───────────────────────────────────────────────────
+  function animateSlot(el, emojiEl, list, finalValue, delay) {
+    let ticks = 0;
+    const total = 18 + delay;
+    el.classList.add('blur');
+    const iv = setInterval(() => {
+      ticks++;
+      const r = pick(list);
+      el.textContent = r;
+      emojiEl.textContent = getEmoji(r);
+      if (ticks >= total) {
+        clearInterval(iv);
+        el.textContent = finalValue;
+        emojiEl.textContent = getEmoji(finalValue);
+        el.classList.remove('blur');
+      }
+    }, 60);
+  }
+
+  function animateQuestion(el, list, finalValue) {
+    let ticks = 0;
+    el.classList.add('spinning');
+    const iv = setInterval(() => {
+      ticks++;
+      el.textContent = pick(list);
+      if (ticks >= 14) {
+        clearInterval(iv);
+        el.textContent = finalValue;
+        el.classList.remove('spinning');
+      }
+    }, 55);
+  }
+
+  // ── SPIN ──────────────────────────────────────────────────────
+  function spinAll() {
+    if (isSpinning) return;
+    isSpinning = true;
+    document.getElementById('spinBtn').disabled = true;
+
+    const [newLeft, newRight] = pickTwo(jobs);
+    const newQ = pickCriteria();
+
+    const elL   = document.getElementById('slotLeft');
+    const elR   = document.getElementById('slotRight');
+    const elQ   = document.getElementById('qWord');
+    const cL    = document.getElementById('cardLeft');
+    const cR    = document.getElementById('cardRight');
+    const emL   = cL.querySelector('.slot-emoji');
+    const emR   = cR.querySelector('.slot-emoji');
+
+    cL.classList.add('active');
+    cR.classList.add('active');
+
+    animateQuestion(elQ, criteria, newQ);
+    if (!pinnedLeft)  animateSlot(elL, emL, jobs, newLeft, 0);
+    if (!pinnedRight) animateSlot(elR, emR, jobs, newRight, 6);
+
+    const duration = (18 + 6) * 60 + 200;
+    setTimeout(() => {
+      cL.classList.remove('active');
+      cR.classList.remove('active');
+      cL.classList.add('wiggle');
+      cR.classList.add('wiggle');
+      setTimeout(() => { cL.classList.remove('wiggle'); cR.classList.remove('wiggle'); }, 400);
+      spawnBurst();
+      isSpinning = false;
+      document.getElementById('spinBtn').disabled = false;
+    }, duration);
+  }
+
+  // ── PIN ───────────────────────────────────────────────────────
+  document.getElementById('slotLeft').addEventListener('dblclick', () => {
+    pinnedLeft = !pinnedLeft;
+    document.getElementById('slotLeft').style.color = pinnedLeft ? '#f7c948' : '';
+    document.querySelector('.slot-card.left .slot-label').textContent = pinnedLeft ? 'Student A 📌' : 'Student A';
+  });
+
+  document.getElementById('slotRight').addEventListener('dblclick', () => {
+    pinnedRight = !pinnedRight;
+    document.getElementById('slotRight').style.color = pinnedRight ? '#f7c948' : '';
+    document.querySelector('.slot-card.right .slot-label').textContent = pinnedRight ? 'Student B 📌' : 'Student B';
+  });
+
+  // ── EDIT PANEL ────────────────────────────────────────────────
+  function toggleEdit() {
+    const panel = document.getElementById('editPanel');
+    const isOpen = panel.classList.toggle('open');
+    if (isOpen) {
+      document.getElementById('editJobs').value = jobs.join('\n');
+      document.getElementById('editCriteria').value = criteria.join('\n');
+    }
+  }
+
+  function applyEdits() {
+    const parseLines = str => str.split('\n').map(s => s.trim()).filter(Boolean);
+    const newJobs = parseLines(document.getElementById('editJobs').value);
+    const newCrit = parseLines(document.getElementById('editCriteria').value);
+    if (newJobs.length < 2) { alert('Please add at least 2 students!'); return; }
+    if (newCrit.length < 1) { alert('Please add at least 1 criterion!'); return; }
+    jobs = newJobs;
+    criteria = newCrit;
+    criteriaDeck = []; // reset deck so new criteria are used fresh
+    document.getElementById('editPanel').classList.remove('open');
+    spinAll();
+  }
+
+  // ── KEYBOARD ──────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && document.activeElement.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      spinAll();
+    }
+  });
+</script>
+</body>
+</html>
