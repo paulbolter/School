@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Jizzax Presidential Name Picker ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+            /* Ghibli / "Your Name" sky gradient — soft twilight pinks and greens */
+            background: linear-gradient(180deg, 
+                #fce4ec 0%, 
+                #f8bbd0 15%, 
+                #f48fb1 30%, 
+                #e8b5ce 45%, 
+                #c8e6c9 60%, 
+                #a5d6a7 75%, 
+                #81c784 90%, 
+                #66bb6a 100%
+            );
+            background-attachment: fixed;
+        }
+
+        /* ===== Floating elements — clouds, stars, sparkles ===== */
+        .bg-float {
+            position: fixed;
+            opacity: 0.18;
+            animation: floatDrift 14s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+            font-size: 36px;
+        }
+        @keyframes floatDrift {
+            0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
+            25% { transform: translateY(-18px) translateX(8px) rotate(5deg); }
+            50% { transform: translateY(-30px) translateX(-5px) rotate(-3deg); }
+            75% { transform: translateY(-12px) translateX(12px) rotate(8deg); }
+        }
+
+        /* ===== Animated rainbow arc at top ===== */
+        .rainbow-arc {
+            position: fixed;
+            top: -180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 300px;
+            border-radius: 300px 300px 0 0;
+            background: conic-gradient(from 180deg at 50% 100%, 
+                #ff9a9e, #fad0c4, #ffecd2, #a8edea, #d4fc79, #fbc2eb, #ff9a9e
+            );
+            opacity: 0.2;
+            z-index: 0;
+            pointer-events: none;
+            animation: rainbowPulse 8s ease-in-out infinite;
+        }
+        @keyframes rainbowPulse {
+            0%, 100% { opacity: 0.15; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.25; transform: translateX(-50%) scale(1.05); }
+        }
+
+        /* ===== Shooting stars ===== */
+        .shooting-star {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(255,255,255,0.6), 0 0 12px 4px rgba(248,187,208,0.4);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .shooting-star::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 60px; height: 2px;
+            background: linear-gradient(to left, rgba(255,255,255,0.8), transparent);
+            transform-origin: left center;
+            transform: rotate(45deg) translateX(-60px);
+        }
+        .shooting-star:nth-child(1) { top: 8%; left: 15%; animation: shoot 6s 1s infinite; }
+        .shooting-star:nth-child(2) { top: 20%; left: 70%; animation: shoot 8s 3.5s infinite; }
+        .shooting-star:nth-child(3) { top: 12%; left: 45%; animation: shoot 7s 5.5s infinite; }
+        @keyframes shoot {
+            0% { opacity: 0; transform: translate(0, 0); }
+            2% { opacity: 1; }
+            8% { opacity: 1; transform: translate(120px, 80px); }
+            10% { opacity: 0; transform: translate(150px, 100px); }
+            100% { opacity: 0; }
+        }
+
+        /* ===== Main container — frosted glass ===== */
+        .container {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 32px;
+            padding: 28px;
+            max-width: 640px;
+            width: 100%;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 
+                0 8px 40px rgba(233, 30, 99, 0.1),
+                0 2px 10px rgba(255, 255, 255, 0.5) inset;
+            position: relative;
+            z-index: 1;
+            margin-top: 10px;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #e91e8f;
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 1.9em;
+            text-shadow: 0 2px 12px rgba(233, 30, 143, 0.2), 0 0 30px rgba(255, 183, 213, 0.3);
+            letter-spacing: 1px;
+            line-height: 1.3;
+        }
+
+        /* ===== Unicorn banner — SVG illustrations ===== */
+        .hero-images {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .hero-img-wrap {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid;
+            transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            cursor: default;
+        }
+        .hero-img-wrap:nth-child(1) { 
+            border-color: #f48fb1; 
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            box-shadow: 0 0 18px rgba(244,143,177,0.4); 
+        }
+        .hero-img-wrap:nth-child(2) { 
+            border-color: #a5d6a7; 
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            box-shadow: 0 0 18px rgba(165,214,167,0.4); 
+        }
+        .hero-img-wrap:nth-child(3) { 
+            border-color: #ffcc80; 
+            background: linear-gradient(135deg, #fff8e1, #ffe0b2);
+            box-shadow: 0 0 18px rgba(255,204,128,0.4); 
+        }
+        .hero-img-wrap:nth-child(4) { 
+            border-color: #b39ddb; 
+            background: linear-gradient(135deg, #ede7f6, #d1c4e9);
+            box-shadow: 0 0 18px rgba(179,157,219,0.4); 
+        }
+        .hero-img-wrap:nth-child(5) { 
+            border-color: #80cbc4; 
+            background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+            box-shadow: 0 0 18px rgba(128,203,196,0.4); 
+        }
+        .hero-img-wrap:hover {
+            transform: scale(1.2) rotate(-8deg);
+            box-shadow: 0 0 30px rgba(244, 143, 177, 0.5);
+        }
+
+        /* ===== Controls ===== */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        select, button {
+            padding: 13px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(233, 30, 99, 0.15);
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        select {
+            flex: 1;
+            min-width: 170px;
+            background: rgba(255,255,255,0.6);
+            color: #7b1fa2;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23e91e63' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+        select option {
+            background: #fce4ec;
+            color: #7b1fa2;
+        }
+
+        button {
+            background: linear-gradient(135deg, #f48fb1, #ce93d8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(244, 143, 177, 0.35);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(244, 143, 177, 0.5);
+        }
+        button:active { transform: translateY(0); }
+
+        /* ===== PICK button — rainbow shimmer ===== */
+        .pick-button {
+            width: auto; 
+            display: block;
+            padding: 16px 48px;
+            font-size: 1.4em;
+            font-family: 'Pacifico', cursive;
+            margin: 12px auto;
+            background: linear-gradient(135deg, #f48fb1 0%, #ce93d8 25%, #80cbc4 50%, #a5d6a7 75%, #f48fb1 100%);
+            background-size: 300% 300%;
+            animation: rainbowBtn 4s ease-in-out infinite;
+            color: white;
+            box-shadow: 0 6px 30px rgba(244, 143, 177, 0.4);
+            border: none;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.15);
+        }
+        @keyframes rainbowBtn {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .pick-button:hover {
+            box-shadow: 0 8px 40px rgba(244, 143, 177, 0.6);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        /* ===== Selected student display ===== */
+        .selected-student {
+            background: linear-gradient(135deg, #f48fb1 0%, #ce93d8 50%, #80cbc4 100%);
+            color: white;
+            padding: 28px;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 2.2em;
+            font-family: 'Pacifico', cursive;
+            margin: 16px 0;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s;
+            box-shadow: 0 10px 40px rgba(244, 143, 177, 0.3);
+            border: 2px solid rgba(255,255,255,0.4);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .selected-student::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.15), transparent, rgba(255,255,255,0.08), transparent);
+            animation: shimmer 5s linear infinite;
+        }
+        @keyframes shimmer { to { transform: rotate(360deg); } }
+        .selected-student > * { position: relative; z-index: 1; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.7) rotate(-5deg); }
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        /* ===== Student circles ===== */
+        .student-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 18px 0;
+        }
+
+        .student-item {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            font-weight: 700;
+            font-size: 0.72em;
+            line-height: 1.15;
+            padding: 8px;
+            word-break: break-word;
+            transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
+            cursor: default;
+            color: #fff;
+            border: 3px solid rgba(255,255,255,0.5);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        /* Soft pastel palette for student circles */
+        .student-item:nth-child(8n+1) { background: linear-gradient(135deg, #f48fb1, #f06292); }
+        .student-item:nth-child(8n+2) { background: linear-gradient(135deg, #ce93d8, #ba68c8); }
+        .student-item:nth-child(8n+3) { background: linear-gradient(135deg, #80cbc4, #4db6ac); }
+        .student-item:nth-child(8n+4) { background: linear-gradient(135deg, #a5d6a7, #81c784); }
+        .student-item:nth-child(8n+5) { background: linear-gradient(135deg, #ffab91, #ff8a65); }
+        .student-item:nth-child(8n+6) { background: linear-gradient(135deg, #90caf9, #64b5f6); }
+        .student-item:nth-child(8n+7) { background: linear-gradient(135deg, #ffcc80, #ffa726); }
+        .student-item:nth-child(8n+8) { background: linear-gradient(135deg, #ef9a9a, #ef5350); }
+
+        .student-item:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 25px rgba(244, 143, 177, 0.4);
+            z-index: 2;
+        }
+
+        .student-item.last-picked {
+            background: linear-gradient(135deg, #fff176, #ffd54f) !important;
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255, 241, 118, 0.7), 0 0 40px rgba(255, 213, 79, 0.3);
+            animation: winPulse 1s ease-in-out;
+            transform: scale(1.1);
+            color: #7b1fa2;
+            text-shadow: none;
+        }
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1.1); box-shadow: 0 0 20px rgba(255,241,118,0.7); }
+            50% { transform: scale(1.2); box-shadow: 0 0 35px rgba(255,213,79,0.9); }
+        }
+
+        .student-item.excluded {
+            background: rgba(255,255,255,0.15) !important;
+            border-color: rgba(255,255,255,0.2);
+            color: rgba(120,100,120,0.35);
+            text-decoration: line-through;
+            box-shadow: none;
+            text-shadow: none;
+        }
+
+        .exclude-btn {
+            position: absolute; top: -4px; right: -4px;
+            background: #f48fb1;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 50%;
+            width: 24px; height: 24px;
+            font-size: 13px;
+            cursor: pointer; padding: 0; font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s; z-index: 3; line-height: 1;
+        }
+        .exclude-btn:hover { transform: scale(1.2); }
+        .exclude-btn.include { background: #81c784; }
+
+        .remove-btn {
+            position: absolute; bottom: -4px; right: -4px;
+            background: #ef5350;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 50%;
+            width: 24px; height: 24px;
+            font-size: 14px;
+            cursor: pointer; padding: 0; font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s; z-index: 3; line-height: 1;
+        }
+        .remove-btn:hover { transform: scale(1.2); }
+
+        .placeholder {
+            color: rgba(123, 31, 162, 0.35);
+            font-style: italic;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.6em;
+        }
+
+        .spinning { animation: spin 0.1s linear; }
+        @keyframes spin {
+            from { transform: scale(1) rotate(0deg); }
+            to { transform: scale(1) rotate(360deg); }
+        }
+
+        canvas {
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 999;
+        }
+
+        /* ===== Edit section ===== */
+        .edit-section {
+            background: rgba(255,255,255,0.45);
+            padding: 20px;
+            border-radius: 22px;
+            margin-top: 18px;
+            border: 2px solid rgba(244, 143, 177, 0.2);
+        }
+
+        .edit-section h3 {
+            color: #7b1fa2;
+            margin-bottom: 14px;
+            font-family: 'Pacifico', cursive;
+            font-size: 1.15em;
+            font-weight: 400;
+        }
+
+        input[type="text"] {
+            padding: 12px 16px;
+            border: 2px solid rgba(244, 143, 177, 0.35);
+            border-radius: 50px;
+            font-size: 1em;
+            width: 100%;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.7);
+            color: #7b1fa2;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+        }
+        input[type="text"]::placeholder { color: rgba(123,31,162,0.35); }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #f48fb1;
+            box-shadow: 0 0 12px rgba(244,143,177,0.3);
+        }
+
+        .button-group {
+            display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;
+        }
+
+        .small-button { padding: 11px 18px; font-size: 0.95em; }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #81c784, #a5d6a7);
+            box-shadow: 0 4px 15px rgba(129, 199, 132, 0.3);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #ef5350, #e53935);
+        }
+
+        /* ===== Sparkle keyframes for confetti ===== */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* ===== Small screen ===== */
+        @media (max-width: 500px) {
+            h1 { font-size: 1.5em; }
+            .hero-img-wrap { width: 65px; height: 65px; font-size: 32px; }
+            .student-item { width: 72px; height: 72px; font-size: 0.65em; }
+            .pick-button { font-size: 1.15em; padding: 14px 36px; }
+            .selected-student { font-size: 1.7em; padding: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Shooting stars -->
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+
+    <!-- Rainbow arc -->
+    <div class="rainbow-arc"></div>
+
+    <!-- Floating background elements -->
+    <div class="bg-float" style="top:4%; left:6%; animation-delay:0s;">🦄</div>
+    <div class="bg-float" style="top:14%; right:7%; animation-delay:2.5s; font-size:42px;">🌈</div>
+    <div class="bg-float" style="top:35%; left:3%; animation-delay:4s;">✨</div>
+    <div class="bg-float" style="top:55%; right:5%; animation-delay:1.5s; font-size:44px;">🌸</div>
+    <div class="bg-float" style="top:75%; left:8%; animation-delay:3.5s;">⭐</div>
+    <div class="bg-float" style="top:22%; left:88%; animation-delay:5s;">🦋</div>
+    <div class="bg-float" style="top:65%; right:10%; animation-delay:2s; font-size:38px;">💫</div>
+    <div class="bg-float" style="top:88%; left:45%; animation-delay:1s;">🌙</div>
+    <div class="bg-float" style="top:45%; left:92%; animation-delay:6s; font-size:32px;">🌟</div>
+
+    <canvas id="confettiCanvas"></canvas>
+
+    <div class="container">
+        <h1>🦄 Jizzax Presidential<br>Name Picker 🌈</h1>
+
+        <!-- Themed hero circles -->
+        <div class="hero-images" id="heroImages"></div>
+
+        <div class="controls">
+            <select id="classSelector">
+                <option value="">Select a class...</option>
+            </select>
+            <button onclick="toggleEditMode()" class="small-button">✏️ Edit</button>
+        </div>
+
+        <button class="pick-button" onclick="pickStudent()">🦄 PICK! 🌟</button>
+
+        <div style="text-align: center; margin: 10px 0;">
+            <button onclick="resetExcluded()" class="small-button reset-btn">↻ Reset Excluded</button>
+        </div>
+
+        <div id="selectedStudent" class="selected-student">
+            <span class="placeholder">Tap the button to pick a student! ✨</span>
+        </div>
+
+        <div id="studentList" class="student-list"></div>
+
+        <div id="editSection" class="edit-section" style="display: none;">
+            <h3>✏️ Manage Classes & Students</h3>
+            
+            <div>
+                <input type="text" id="newClassName" placeholder="New class name (e.g., Grade 8A)">
+                <button onclick="addClass()" class="small-button">➕ Add Class</button>
+            </div>
+
+            <div style="margin-top: 16px;">
+                <input type="text" id="newStudentName" placeholder="Student name">
+                <button onclick="addStudent()" class="small-button">➕ Add Student</button>
+            </div>
+
+            <div class="button-group">
+                <button onclick="renameCurrentClass()" class="small-button">✏️ Rename Class</button>
+                <button onclick="deleteCurrentClass()" class="small-button delete-btn">🗑️ Delete Class</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let classes = {};
+        let currentClass = '';
+        let lastPicked = null;
+        let temporarilyExcluded = [];
+
+        // ===== Unicorn/rainbow themed hero icons =====
+        const heroImageSets = [
+            { emoji: '🦄', label: 'Unicorn', bg: 'linear-gradient(135deg, #fce4ec, #f8bbd0)' },
+            { emoji: '🌈', label: 'Rainbow', bg: 'linear-gradient(135deg, #e8f5e9, #c8e6c9)' },
+            { emoji: '🌸', label: 'Blossom', bg: 'linear-gradient(135deg, #fff8e1, #ffe0b2)' },
+            { emoji: '⭐', label: 'Star', bg: 'linear-gradient(135deg, #ede7f6, #d1c4e9)' },
+            { emoji: '🦋', label: 'Butterfly', bg: 'linear-gradient(135deg, #e0f2f1, #b2dfdb)' },
+        ];
+
+        function renderHeroImages() {
+            const container = document.getElementById('heroImages');
+            container.innerHTML = '';
+            heroImageSets.forEach(item => {
+                const wrap = document.createElement('div');
+                wrap.className = 'hero-img-wrap';
+                wrap.style.background = item.bg;
+                wrap.title = item.label;
+                wrap.textContent = item.emoji;
+                container.appendChild(wrap);
+            });
+        }
+
+        // Initialize with default classes
+        function initializeDefaultClasses() {
+            if (Object.keys(classes).length === 0) {
+                classes = {
+                    'Grade 8A': ['Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5', 'Student 6', 'Student 7', 'Student 8', 'Student 9', 'Student 10', 'Student 11', 'Student 12'],
+                    'Grade 8B': ['Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5', 'Student 6', 'Student 7', 'Student 8', 'Student 9', 'Student 10', 'Student 11', 'Student 12'],
+                    'Grade 11A': ['Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5', 'Student 6', 'Student 7', 'Student 8', 'Student 9', 'Student 10', 'Student 11', 'Student 12'],
+                    'Grade 11B': ['Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5', 'Student 6', 'Student 7', 'Student 8', 'Student 9', 'Student 10', 'Student 11', 'Student 12'],
+                    'Grade 11C': ['Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5', 'Student 6', 'Student 7', 'Student 8', 'Student 9', 'Student 10', 'Student 11', 'Student 12'],
+                    'Grade 11D': ['Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5', 'Student 6', 'Student 7', 'Student 8', 'Student 9', 'Student 10', 'Student 11', 'Student 12']
+                };
+                saveToLocalStorage();
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('studentPickerData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                classes = data.classes;
+                currentClass = data.currentClass || '';
+            } else {
+                initializeDefaultClasses();
+            }
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('studentPickerData', JSON.stringify({
+                classes: classes,
+                currentClass: currentClass
+            }));
+        }
+
+        function updateClassSelector() {
+            const selector = document.getElementById('classSelector');
+            selector.innerHTML = '<option value="">Select a class...</option>';
+            
+            Object.keys(classes).sort().forEach(className => {
+                const option = document.createElement('option');
+                option.value = className;
+                option.textContent = className;
+                if (className === currentClass) option.selected = true;
+                selector.appendChild(option);
+            });
+
+            selector.onchange = function() {
+                currentClass = this.value;
+                lastPicked = null;
+                temporarilyExcluded = [];
+                displayStudentList();
+                saveToLocalStorage();
+                document.getElementById('selectedStudent').innerHTML = '<span class="placeholder">Tap the button to pick a student! ✨</span>';
+            };
+        }
+
+        function displayStudentList() {
+            const listDiv = document.getElementById('studentList');
+            listDiv.innerHTML = '';
+
+            if (!currentClass || !classes[currentClass]) return;
+
+            classes[currentClass].forEach((student, index) => {
+                const div = document.createElement('div');
+                div.className = 'student-item';
+                const isExcluded = temporarilyExcluded.includes(student);
+                
+                if (student === lastPicked && !isExcluded) div.classList.add('last-picked');
+                if (isExcluded) div.classList.add('excluded');
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = student;
+                div.appendChild(nameSpan);
+
+                // Permanent remove button (only in edit mode)
+                const editSection = document.getElementById('editSection');
+                if (editSection.style.display !== 'none') {
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.textContent = '×';
+                    removeBtn.title = 'Permanently remove';
+                    removeBtn.onclick = function(e) {
+                        e.stopPropagation();
+                        removeStudent(index);
+                    };
+                    div.appendChild(removeBtn);
+                }
+
+                listDiv.appendChild(div);
+            });
+        }
+
+        function toggleExclude(student) {
+            const index = temporarilyExcluded.indexOf(student);
+            if (index > -1) {
+                temporarilyExcluded.splice(index, 1);
+            } else {
+                temporarilyExcluded.push(student);
+            }
+            displayStudentList();
+        }
+
+        function resetExcluded() {
+            temporarilyExcluded = [];
+            displayStudentList();
+        }
+
+        // ===== Pick a random student =====
+        function pickStudent() {
+            if (!currentClass || !classes[currentClass] || classes[currentClass].length === 0) {
+                alert('Please select a class with students first!');
+                return;
+            }
+
+            const students = classes[currentClass];
+            const availableStudents = students.filter(s => !temporarilyExcluded.includes(s));
+            
+            if (availableStudents.length === 0) {
+                alert('All students have been excluded! Click ↻ Reset to include them back.');
+                return;
+            }
+
+            const displayElement = document.getElementById('selectedStudent');
+            
+            // Unicorn-themed spinning emojis
+            const funEmojis = ['🦄','🌈','✨','🌸','⭐','🦋','💫','🌙','💖','🌟','🎀','🍀'];
+            let spinCount = 0;
+            const spinInterval = setInterval(() => {
+                const randomStudent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+                const randomEmoji = funEmojis[Math.floor(Math.random() * funEmojis.length)];
+                displayElement.innerHTML = `<span>${randomEmoji} ${randomStudent} ${randomEmoji}</span>`;
+                displayElement.classList.add('spinning');
+                setTimeout(() => displayElement.classList.remove('spinning'), 80);
+                spinCount++;
+                
+                if (spinCount >= 22) {
+                    clearInterval(spinInterval);
+                    
+                    let finalPool = availableStudents.filter(s => s !== lastPicked);
+                    if (finalPool.length === 0) finalPool = availableStudents;
+                    const picked = finalPool[Math.floor(Math.random() * finalPool.length)];
+                    lastPicked = picked;
+
+                    // Auto-exclude the picked student
+                    if (!temporarilyExcluded.includes(picked)) {
+                        temporarilyExcluded.push(picked);
+                    }
+
+                    displayElement.innerHTML = `<span>🦄 ${picked} 🌈</span>`;
+                    displayStudentList();
+                    createConfetti();
+                }
+            }, 100);
+        }
+
+        // ===== Confetti — rainbow/unicorn style =====
+        function createConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const popperX = canvas.width / 2;
+            const popperY = canvas.height / 2;
+
+            const confettiPieces = [];
+            const emojis = ['🦄', '🌈', '✨', '🌸', '⭐', '🦋', '💖', '💫', '🌟', '🎀', '🍀'];
+            const colors = ['#f48fb1', '#ce93d8', '#80cbc4', '#a5d6a7', '#ffcc80', '#90caf9', '#fff176', '#ef9a9a', '#b39ddb', '#ffab91'];
+            const confettiCount = 100;
+
+            for (let i = 0; i < confettiCount; i++) {
+                const angle = (Math.PI * 2 * i) / confettiCount;
+                const velocity = Math.random() * 8 + 6;
+                confettiPieces.push({
+                    x: popperX, y: popperY,
+                    size: Math.random() * 8 + 4,
+                    speedX: Math.cos(angle) * velocity,
+                    speedY: Math.sin(angle) * velocity - Math.random() * 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 10 - 5,
+                    gravity: 0.3,
+                    isCircle: Math.random() > 0.4, // more circles for softer feel
+                    opacity: 1
+                });
+            }
+
+            // Emoji confetti
+            for (let i = 0; i < 18; i++) {
+                const angle = (Math.PI * 2 * i) / 18;
+                const velocity = Math.random() * 6 + 4;
+                confettiPieces.push({
+                    x: popperX, y: popperY,
+                    emoji: emojis[Math.floor(Math.random() * emojis.length)],
+                    size: 28,
+                    speedX: Math.cos(angle) * velocity,
+                    speedY: Math.sin(angle) * velocity - Math.random() * 2,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 8 - 4,
+                    gravity: 0.25,
+                    opacity: 1
+                });
+            }
+
+            let frameCount = 0;
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                frameCount++;
+
+                if (frameCount < 10) {
+                    ctx.font = '60px Arial';
+                    ctx.fillText('🦄', popperX - 30, popperY + 20);
+                }
+
+                confettiPieces.forEach((piece, index) => {
+                    piece.speedY += piece.gravity;
+                    piece.x += piece.speedX;
+                    piece.y += piece.speedY;
+                    piece.rotation += piece.rotationSpeed;
+
+                    ctx.save();
+                    ctx.translate(piece.x, piece.y);
+                    ctx.rotate((piece.rotation * Math.PI) / 180);
+
+                    if (piece.emoji) {
+                        ctx.font = piece.size + 'px Arial';
+                        ctx.fillText(piece.emoji, -piece.size / 2, piece.size / 2);
+                    } else {
+                        ctx.fillStyle = piece.color;
+                        if (piece.isCircle) {
+                            ctx.beginPath();
+                            ctx.arc(0, 0, piece.size / 2, 0, Math.PI * 2);
+                            ctx.fill();
+                        } else {
+                            // Star-shaped confetti pieces
+                            ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.6);
+                        }
+                    }
+                    ctx.restore();
+
+                    if (piece.y > canvas.height + 50) {
+                        confettiPieces.splice(index, 1);
+                    }
+                });
+
+                if (confettiPieces.length > 0) {
+                    requestAnimationFrame(animateConfetti);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            animateConfetti();
+        }
+
+        function addClass() {
+            const input = document.getElementById('newClassName');
+            const className = input.value.trim();
+            if (!className) { alert('Please enter a class name!'); return; }
+            if (classes[className]) { alert('This class already exists!'); return; }
+            classes[className] = [];
+            currentClass = className;
+            input.value = '';
+            updateClassSelector();
+            displayStudentList();
+            saveToLocalStorage();
+        }
+
+        function addStudent() {
+            if (!currentClass) { alert('Please select a class first!'); return; }
+            const input = document.getElementById('newStudentName');
+            const studentName = input.value.trim();
+            if (!studentName) { alert('Please enter a student name!'); return; }
+            classes[currentClass].push(studentName);
+            input.value = '';
+            displayStudentList();
+            saveToLocalStorage();
+        }
+
+        function removeStudent(index) {
+            if (!currentClass) return;
+            if (confirm('Remove this student from the class?')) {
+                classes[currentClass].splice(index, 1);
+                displayStudentList();
+                saveToLocalStorage();
+            }
+        }
+
+        function renameCurrentClass() {
+            if (!currentClass) { alert('Please select a class first!'); return; }
+            const newName = prompt('Enter new name for ' + currentClass + ':', currentClass);
+            if (newName && newName.trim() && newName !== currentClass) {
+                classes[newName.trim()] = classes[currentClass];
+                delete classes[currentClass];
+                currentClass = newName.trim();
+                updateClassSelector();
+                displayStudentList();
+                saveToLocalStorage();
+            }
+        }
+
+        function deleteCurrentClass() {
+            if (!currentClass) { alert('Please select a class first!'); return; }
+            if (confirm('Are you sure you want to delete ' + currentClass + ' and all its students?')) {
+                delete classes[currentClass];
+                currentClass = '';
+                lastPicked = null;
+                updateClassSelector();
+                displayStudentList();
+                saveToLocalStorage();
+                document.getElementById('selectedStudent').innerHTML = '<span class="placeholder">Tap the button to pick a student! ✨</span>';
+            }
+        }
+
+        function toggleEditMode() {
+            const editSection = document.getElementById('editSection');
+            editSection.style.display = editSection.style.display === 'none' ? 'block' : 'none';
+            displayStudentList();
+        }
+
+        window.onload = function() {
+            renderHeroImages();
+            loadFromLocalStorage();
+            updateClassSelector();
+            if (currentClass) displayStudentList();
+        };
+    </script>
+</body>
+</html>
