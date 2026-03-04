@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can We Compare?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #e8e0d0;
+    --accent1: #ff4d6d;
+    --accent2: #4361ee;
+    --accent3: #06d6a0;
+    --accent4: #ffd166;
+    --text: #1a1a2e;
+    --muted: #777;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .bg-dots {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .floater {
+    position: absolute;
+    font-size: 1.6rem;
+    opacity: 0;
+    animation: drift linear infinite;
+    will-change: transform, opacity;
+  }
+
+  @keyframes drift {
+    0%   { opacity: 0; }
+    8%   { opacity: 0.28; }
+    92%  { opacity: 0.28; }
+    100% { opacity: 0; }
+  }
+
+  .burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    font-size: 2rem;
+    animation: burst-anim 0.7s ease-out forwards;
+  }
+
+  @keyframes burst-anim {
+    0%   { transform: scale(0) translateY(0); opacity: 1; }
+    60%  { transform: scale(1.4) translateY(-40px); opacity: 1; }
+    100% { transform: scale(1) translateY(-80px); opacity: 0; }
+  }
+
+  .everything { position: relative; z-index: 1; width: 100%; max-width: 960px; display: flex; flex-direction: column; align-items: center; }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.6rem, 7vw, 4.5rem);
+    color: var(--accent1);
+    text-shadow: 4px 4px 0 #ffd166, 7px 7px 0 rgba(255,77,109,0.15);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  /* ── QUESTION BAR ── */
+  .question-bar {
+    background: var(--accent2);
+    border-radius: 20px;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    box-shadow: 0 6px 0 #2d3db5, 0 8px 20px rgba(67,97,238,0.25);
+  }
+
+  .q-static {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.3rem, 2.8vw, 1.8rem);
+    color: #fff;
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+
+  .q-pill {
+    background: var(--accent4);
+    border-radius: 50px;
+    padding: 6px 22px;
+    min-width: 260px;
+    text-align: center;
+    box-shadow: 0 4px 0 #e6a800;
+  }
+
+  .q-word {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+    color: var(--text);
+    letter-spacing: 1px;
+    display: block;
+  }
+
+  .q-word.spinning { opacity: 0.5; }
+
+  /* ── ARENA ── */
+  .arena {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* ── TEAM CARDS ── */
+  .team-card {
+    flex: 1;
+    min-width: 260px;
+    max-width: 380px;
+    background: #fff;
+    border-radius: 24px;
+    border: 3px solid #e8e8f0;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 0 #e0e0ef, 0 10px 24px rgba(0,0,0,0.08);
+  }
+
+  .team-card.left  { border-top: 6px solid var(--accent1); }
+  .team-card.right { border-top: 6px solid var(--accent2); }
+
+  .team-card.left.active  { box-shadow: 0 0 0 4px var(--accent1), 0 12px 32px rgba(255,77,109,0.25); }
+  .team-card.right.active { box-shadow: 0 0 0 4px var(--accent2), 0 12px 32px rgba(67,97,238,0.25); }
+
+  .team-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px 10px;
+  }
+
+  .team-emoji { font-size: 1.6rem; line-height: 1; }
+
+  .team-label {
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .team-card.left  .team-label { color: var(--accent1); }
+  .team-card.right .team-label { color: var(--accent2); }
+
+  /* ── MEMBER ROWS ── */
+  .member-list {
+    padding: 4px 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .member-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f8ff;
+    border-radius: 14px;
+    padding: 10px 14px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .member-row.pinned {
+    border-color: var(--accent4);
+    background: #fffae8;
+  }
+
+  .member-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #ccc;
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  .team-card.left  .member-num { color: rgba(255,77,109,0.35); }
+  .team-card.right .member-num { color: rgba(67,97,238,0.35); }
+
+  .member-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+    color: var(--text);
+    transition: opacity 0.05s;
+    cursor: default;
+    user-select: none;
+  }
+
+  .member-name.blur { opacity: 0.2; }
+  .member-name.pinned-text { color: #c8960a; }
+
+  .pin-icon {
+    margin-left: auto;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .member-row.pinned .pin-icon { opacity: 1; }
+
+  /* ── VS BADGE ── */
+  .vs-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    border-radius: 50%;
+    width: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 5px 0 #c03055, 0 8px 20px rgba(255,77,109,0.3);
+    animation: vs-pulse 2s ease-in-out infinite;
+    align-self: center;
+  }
+
+  @keyframes vs-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
+  }
+
+  .btn:active { transform: translateY(3px) !important; box-shadow: none !important; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  .btn-spin {
+    background: var(--accent3);
+    color: #fff;
+    font-size: 1.3rem;
+    padding: 16px 56px;
+    box-shadow: 0 6px 0 #04a57c, 0 10px 24px rgba(6,214,160,0.3);
+  }
+  .btn-spin:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 9px 0 #04a57c, 0 14px 28px rgba(6,214,160,0.3); }
+
+  .btn-edit {
+    background: #f0f0f8;
+    color: #666;
+    font-size: 0.95rem;
+    padding: 12px 28px;
+    box-shadow: 0 4px 0 #d0d0e0;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+  }
+  .btn-edit:hover { background: #e4e4f4; transform: translateY(-2px); box-shadow: 0 6px 0 #d0d0e0; }
+
+  /* ── EDIT PANEL ── */
+  .edit-panel {
+    display: none;
+    background: #fff;
+    border: 3px solid #e8e8f0;
+    border-radius: 24px;
+    padding: 28px;
+    width: 100%;
+    margin-top: 14px;
+    box-shadow: 0 6px 0 #e0e0ef;
+  }
+
+  .edit-panel.open { display: block; }
+
+  .edit-panel h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: var(--accent2);
+    margin-bottom: 20px;
+  }
+
+  .edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 580px) { .edit-grid { grid-template-columns: 1fr; } }
+
+  .edit-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .edit-group textarea {
+    width: 100%;
+    background: #f8f8ff;
+    border: 2px solid #e0e0f0;
+    border-radius: 14px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    padding: 10px 14px;
+    resize: vertical;
+    min-height: 200px;
+    line-height: 1.8;
+  }
+
+  .edit-group textarea:focus { outline: none; border-color: var(--accent2); }
+  .edit-hint { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+
+  .btn-apply {
+    margin-top: 20px;
+    background: var(--accent2);
+    color: #fff;
+    box-shadow: 0 5px 0 #2d3db5;
+  }
+  .btn-apply:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #2d3db5; }
+
+  footer {
+    color: #bbb;
+    font-size: 0.78rem;
+    margin-top: 24px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  @keyframes wiggle {
+    0%,100% { transform: rotate(0deg); }
+    25% { transform: rotate(-2deg); }
+    75% { transform: rotate(2deg); }
+  }
+
+  .team-card.wiggle { animation: wiggle 0.35s ease; }
+</style>
+</head>
+<body>
+
+<div class="bg-dots" id="bgDots"></div>
+
+<div class="everything">
+
+  <div class="header">
+    <h1>🏆 Team Challenge!</h1>
+    <p class="subtitle">Spin the wheel — which team would win? 💬</p>
+  </div>
+
+  <!-- QUESTION BAR -->
+  <div class="question-bar">
+    <span class="q-static">Which team would win</span>
+    <div class="q-pill">
+      <span class="q-word" id="qWord">a running relay race</span>
+    </div>
+    <span class="q-static">?</span>
+  </div>
+
+  <!-- ARENA -->
+  <div class="arena">
+
+    <!-- TEAM A -->
+    <div class="team-card left" id="cardLeft">
+      <div class="team-header">
+        <span class="team-emoji">🔴</span>
+        <span class="team-label" id="labelLeft">Team A</span>
+      </div>
+      <div class="member-list" id="listLeft">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div class="vs-badge">VS</div>
+
+    <!-- TEAM B -->
+    <div class="team-card right" id="cardRight">
+      <div class="team-header">
+        <span class="team-emoji">🔵</span>
+        <span class="team-label" id="labelRight">Team B</span>
+      </div>
+      <div class="member-list" id="listRight">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="btn btn-spin" id="spinBtn" onclick="spinAll()">🎲 SPIN!</button>
+    <button class="btn btn-edit" onclick="toggleEdit()">✏️ Edit Lists</button>
+  </div>
+
+  <!-- EDIT PANEL -->
+  <div class="edit-panel" id="editPanel">
+    <h3>✏️ Customize Your Lists</h3>
+    <div class="edit-grid">
+      <div class="edit-group">
+        <label>Students</label>
+        <textarea id="editStudents"></textarea>
+        <p class="edit-hint">One name per line</p>
+      </div>
+      <div class="edit-group">
+        <label>Competitions</label>
+        <textarea id="editCriteria"></textarea>
+        <p class="edit-hint">One competition per line</p>
+      </div>
+    </div>
+    <button class="btn btn-apply btn-spin" onclick="applyEdits()">✅ Apply Changes</button>
+  </div>
+
+  <footer>Double-click any name to pin it 📌 &nbsp;·&nbsp; Spacebar or SPIN to randomize</footer>
+
+</div>
+
+<script>
+  // ── DATA ──────────────────────────────────────────────────────
+  let students = [
+    "Azimjon","Saidakbar","Abirbek","Azizbek (Green)","Alisher",
+    "Shojahon (Green)","Robiya","Rushana","Umidjon","Mardon",
+    "Ulugbek","Abdulaziz","Masrur","Fayozbek","Firdavs",
+    "Islom","Shojahon (Blue)","Iroda","Zarina","Miraziz",
+    "Maxmud","Jahongir","Abror","Azizbek (Blue)"
+  ];
+
+  let criteria = [
+    "a basketball shootout",
+    "a swimming race",
+    "a skipping rope challenge",
+    "a science quiz",
+    "a history trivia challenge",
+    "a mental maths relay",
+    "an English vocabulary contest",
+    "a creative writing competition",
+    "a joke-telling contest",
+    "a coding challenge",
+    "a Minecraft building contest",
+    "a robot-building competition",
+    "a Fortnite competition",
+    "a cooking challenge",
+    "a singing contest",
+    "a running relay race",
+    "a geography olympiad",
+    "a maths competition",
+    "a football game",
+    "a volleyball game",
+    "a ping pong tournament",
+    "a serious debate",
+    "a drama competition"
+  ];
+
+  // ── FLOATING EMOJI OBJECTS ────────────────────────────────────
+  const floatEmojis = ['⚽','🏀','🏐','🏓','♟️','🎭','🎤','🧮','🌍','💻','🤖','🏊','🎯','🏋️','🎬','📚','🔬','🏆','🎪','🎲'];
+  const bgContainer = document.getElementById('bgDots');
+
+  for (let i = 0; i < 26; i++) {
+    const el = document.createElement('div');
+    el.className = 'floater';
+
+    // Random start position anywhere on screen
+    const startX = Math.random() * 100; // vw
+    const startY = Math.random() * 100; // vh
+
+    // Random travel direction and distance
+    const angle = Math.random() * 2 * Math.PI;
+    const dist  = 120 + Math.random() * 200; // px
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+
+    const duration = 10 + Math.random() * 16;
+    const delay    = -(Math.random() * duration); // start mid-animation
+
+    el.textContent = floatEmojis[Math.floor(Math.random() * floatEmojis.length)];
+    el.style.left = startX + 'vw';
+    el.style.top  = startY + 'vh';
+    el.style.animationDuration = duration + 's';
+    el.style.animationDelay   = delay + 's';
+    // Inline keyframe via CSS custom property trick — use a unique animation per element
+    el.style.setProperty('--dx', dx + 'px');
+    el.style.setProperty('--dy', dy + 'px');
+
+    // Apply a unique keyframe using a style block per element
+    el.style.animation = `none`;
+    el.style.transform = `translate(0,0)`;
+
+    bgContainer.appendChild(el);
+
+    // Use Web Animations API for per-element movement
+    el.animate([
+      { transform: 'translate(0, 0) rotate(0deg)',          opacity: 0    },
+      { transform: 'translate(0, 0) rotate(10deg)',          opacity: 0.28, offset: 0.08 },
+      { transform: `translate(${dx}px, ${dy}px) rotate(${Math.random()*60-30}deg)`, opacity: 0.28, offset: 0.92 },
+      { transform: `translate(${dx}px, ${dy}px) rotate(${Math.random()*60}deg)`,   opacity: 0    }
+    ], {
+      duration: duration * 1000,
+      delay: delay * 1000,
+      iterations: Infinity,
+      easing: 'linear'
+    });
+  }
+
+  // ── BURST ─────────────────────────────────────────────────────
+  const burstEmojis = ['🎉','⭐','🔥','💥','✨','🎊','👏','🚀'];
+  function spawnBurst() {
+    for (let i = 0; i < 6; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'burst';
+        el.textContent = burstEmojis[Math.floor(Math.random()*burstEmojis.length)];
+        el.style.left = (20 + Math.random() * 60) + 'vw';
+        el.style.top  = (30 + Math.random() * 40) + 'vh';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 800);
+      }, i * 100);
+    }
+  }
+
+  // ── STATE ─────────────────────────────────────────────────────
+  // pinnedLeft / pinnedRight are arrays of 3 booleans
+  let pinnedLeft  = [false, false, false];
+  let pinnedRight = [false, false, false];
+  let currentLeft  = ["", "", ""];
+  let currentRight = ["", "", ""];
+  let isSpinning = false;
+
+  // ── CRITERIA DECK (no repeats until all used) ─────────────────
+  let criteriaDeck = [];
+  function pickCriteria() {
+    if (criteriaDeck.length === 0) {
+      criteriaDeck = [...criteria];
+      for (let i = criteriaDeck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [criteriaDeck[i], criteriaDeck[j]] = [criteriaDeck[j], criteriaDeck[i]];
+      }
+    }
+    return criteriaDeck.pop();
+  }
+
+  // ── PICK 6 UNIQUE STUDENTS ────────────────────────────────────
+  function pickSix() {
+    const pool = [...students];
+    // shuffle
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, 6);
+  }
+
+  // ── BUILD MEMBER ROWS ─────────────────────────────────────────
+  function buildRows(side) {
+    const listEl = document.getElementById('list' + side);
+    listEl.innerHTML = '';
+    const current = side === 'Left' ? currentLeft : currentRight;
+    const pinned  = side === 'Left' ? pinnedLeft  : pinnedRight;
+
+    for (let i = 0; i < 3; i++) {
+      const row = document.createElement('div');
+      row.className = 'member-row' + (pinned[i] ? ' pinned' : '');
+      row.dataset.idx = i;
+      row.dataset.side = side;
+
+      row.innerHTML = `
+        <span class="member-num">${i + 1}</span>
+        <span class="member-name${pinned[i] ? ' pinned-text' : ''}" id="name${side}${i}">${current[i]}</span>
+        <span class="pin-icon">📌</span>
+      `;
+
+      row.addEventListener('dblclick', () => togglePin(side, i));
+      listEl.appendChild(row);
+    }
+  }
+
+  function togglePin(side, idx) {
+    if (side === 'Left') {
+      pinnedLeft[idx] = !pinnedLeft[idx];
+    } else {
+      pinnedRight[idx] = !pinnedRight[idx];
+    }
+    buildRows(side);
+  }
+
+  // ── ANIMATE A SINGLE NAME ─────────────────────────────────────
+  function animateName(side, idx, finalName, delay) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const el = document.getElementById('name' + side + idx);
+        if (!el) { resolve(); return; }
+        let ticks = 0;
+        const total = 16 + idx * 3 + (side === 'Right' ? 4 : 0);
+        el.classList.add('blur');
+        const iv = setInterval(() => {
+          ticks++;
+          el.textContent = students[Math.floor(Math.random() * students.length)];
+          if (ticks >= total) {
+            clearInterval(iv);
+            el.textContent = finalName;
+            el.classList.remove('blur');
+            resolve();
+          }
+        }, 60);
+      }, delay);
+    });
+  }
+
+  function animateQuestion(el, finalValue) {
+    let ticks = 0;
+    el.classList.add('spinning');
+    const iv = setInterval(() => {
+      ticks++;
+      el.textContent = criteria[Math.floor(Math.random() * criteria.length)];
+      if (ticks >= 14) {
+        clearInterval(iv);
+        el.textContent = finalValue;
+        el.classList.remove('spinning');
+      }
+    }, 55);
+  }
+
+  // ── SPIN ──────────────────────────────────────────────────────
+  function spinAll() {
+    if (isSpinning) return;
+    isSpinning = true;
+    document.getElementById('spinBtn').disabled = true;
+
+    const six = pickSix();
+    const newQ = pickCriteria();
+
+    // Assign new names only to unpinned slots
+    let leftPool = six.slice(0, 3);
+    let rightPool = six.slice(3, 6);
+
+    // Handle edge case: if pinned names are in the new pool, swap
+    for (let i = 0; i < 3; i++) {
+      if (!pinnedLeft[i])  currentLeft[i]  = leftPool[i];
+      if (!pinnedRight[i]) currentRight[i] = rightPool[i];
+    }
+
+    const elQ = document.getElementById('qWord');
+    animateQuestion(elQ, newQ);
+
+    const cL = document.getElementById('cardLeft');
+    const cR = document.getElementById('cardRight');
+    cL.classList.add('active');
+    cR.classList.add('active');
+
+    // Re-build rows (to reset DOM), then animate each unpinned name
+    buildRows('Left');
+    buildRows('Right');
+
+    const promises = [];
+    for (let i = 0; i < 3; i++) {
+      if (!pinnedLeft[i])  promises.push(animateName('Left',  i, currentLeft[i],  i * 80));
+      if (!pinnedRight[i]) promises.push(animateName('Right', i, currentRight[i], 200 + i * 80));
+    }
+
+    Promise.all(promises).then(() => {
+      cL.classList.remove('active');
+      cR.classList.remove('active');
+      cL.classList.add('wiggle');
+      cR.classList.add('wiggle');
+      setTimeout(() => {
+        cL.classList.remove('wiggle');
+        cR.classList.remove('wiggle');
+      }, 400);
+      spawnBurst();
+      isSpinning = false;
+      document.getElementById('spinBtn').disabled = false;
+    });
+  }
+
+  // ── EDIT PANEL ────────────────────────────────────────────────
+  function toggleEdit() {
+    const panel = document.getElementById('editPanel');
+    const isOpen = panel.classList.toggle('open');
+    if (isOpen) {
+      document.getElementById('editStudents').value = students.join('\n');
+      document.getElementById('editCriteria').value = criteria.join('\n');
+    }
+  }
+
+  function applyEdits() {
+    const parseLines = str => str.split('\n').map(s => s.trim()).filter(Boolean);
+    const newStudents = parseLines(document.getElementById('editStudents').value);
+    const newCrit     = parseLines(document.getElementById('editCriteria').value);
+    if (newStudents.length < 6) { alert('Please add at least 6 students (you need 3 per team)!'); return; }
+    if (newCrit.length < 1)     { alert('Please add at least 1 competition!'); return; }
+    students = newStudents;
+    criteria = newCrit;
+    criteriaDeck = [];
+    pinnedLeft  = [false, false, false];
+    pinnedRight = [false, false, false];
+    document.getElementById('editPanel').classList.remove('open');
+    spinAll();
+  }
+
+  // ── KEYBOARD ──────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && document.activeElement.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      spinAll();
+    }
+  });
+
+  // ── INIT ──────────────────────────────────────────────────────
+  // Set initial names and build layout
+  const initSix = pickSix();
+  currentLeft  = initSix.slice(0, 3);
+  currentRight = initSix.slice(3, 6);
+  buildRows('Left');
+  buildRows('Right');
+</script>
+</body>
+</html>
