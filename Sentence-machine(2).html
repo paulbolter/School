@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentence Machine</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff8f0;
+    --yellow: #FFD93D;
+    --orange: #FF9A3C;
+    --pink: #FF6B9D;
+    --green: #6BCB77;
+    --blue: #4D96FF;
+    --purple: #C77DFF;
+    --text: #2d2d2d;
+    --muted: #aaa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 10% 15%, #FFD93D33 0%, transparent 35%),
+      radial-gradient(circle at 90% 80%, #FF6B9D22 0%, transparent 35%),
+      radial-gradient(circle at 80% 10%, #4D96FF22 0%, transparent 30%),
+      radial-gradient(circle at 20% 85%, #6BCB7722 0%, transparent 30%);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+  }
+
+  .bg-shapes {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .shape {
+    position: absolute;
+    opacity: 0.13;
+  }
+  .shape:nth-child(1) { width: 200px; height: 200px; background: var(--yellow); top: -60px; left: -50px; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation: float1 7s ease-in-out infinite; }
+  .shape:nth-child(2) { width: 120px; height: 120px; background: var(--pink); top: 15%; right: 4%; border-radius: 50%; animation: float2 9s ease-in-out infinite; }
+  .shape:nth-child(3) { width: 220px; height: 220px; background: var(--blue); bottom: -70px; right: -50px; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation: float1 8s ease-in-out infinite reverse; }
+  .shape:nth-child(4) { width: 100px; height: 100px; background: var(--green); bottom: 12%; left: 3%; border-radius: 50%; animation: float2 6s ease-in-out infinite; }
+  .shape:nth-child(5) { width: 70px; height: 70px; background: var(--purple); top: 48%; left: 6%; border-radius: 50%; animation: float1 10s ease-in-out infinite; }
+
+  @keyframes float1 {
+    0%, 100% { transform: translate(0,0) rotate(0deg); }
+    33%  { transform: translate(12px, -18px) rotate(5deg); }
+    66%  { transform: translate(-8px, 10px) rotate(-3deg); }
+  }
+  @keyframes float2 {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50%  { transform: translate(-10px, 15px) scale(1.08); }
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.2rem, 7vw, 4.5rem);
+    line-height: 1.1;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--orange), var(--pink), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(3px 3px 0px rgba(255, 154, 60, 0.35));
+    animation: titlePulse 3s ease-in-out infinite;
+  }
+
+  @keyframes titlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-top: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .instruction {
+    text-align: center;
+    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+    color: #666;
+    font-weight: 600;
+    margin-bottom: 30px;
+    line-height: 1.5;
+  }
+  .instruction em {
+    color: var(--pink);
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  .sentence-display {
+    width: 100%;
+    background: white;
+    border-radius: 28px;
+    padding: 40px 36px;
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    color: var(--text);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #e8e0d6;
+    line-height: 1.35;
+    letter-spacing: 1px;
+    transition: border-color 0.5s ease;
+  }
+  .sentence-display.show {
+    border-color: var(--orange);
+    animation: sentencePop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .sentence-display .placeholder {
+    color: #ccc;
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    letter-spacing: 2px;
+    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+  }
+  .sentence-display .sentence-text {
+    background: linear-gradient(135deg, var(--blue), var(--pink), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @keyframes sentencePop {
+    0%   { transform: scale(0.85); opacity: 0.5; }
+    50%  { transform: scale(1.03); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .counter {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+  }
+
+  .btn-wrap {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  button {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    padding: 16px 56px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  button:active { transform: scale(0.96) translateY(3px); }
+
+  .btn-go {
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    color: white;
+    box-shadow: 0 6px 0 #c4543e, 0 12px 24px rgba(255,107,60,0.3);
+  }
+  .btn-go:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 0 #c4543e, 0 16px 30px rgba(255,107,60,0.35);
+  }
+
+  footer {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  @keyframes bounceIn {
+    0%   { opacity: 0; transform: translateY(-35px) scale(0.75); }
+    60%  { transform: translateY(8px) scale(1.06); }
+    80%  { transform: translateY(-4px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.5) rotate(-8deg); }
+    70%  { transform: scale(1.1) rotate(2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes slideLeft {
+    0%   { opacity: 0; transform: translateX(-40px); }
+    65%  { transform: translateX(6px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideRight {
+    0%   { opacity: 0; transform: translateX(40px); }
+    65%  { transform: translateX(-6px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  .anim-bounce { animation: bounceIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .anim-pop    { animation: popIn    0.5s  cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .anim-left   { animation: slideLeft  0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .anim-right  { animation: slideRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+  .flashing { animation: flash 0.12s steps(1) infinite; }
+  @keyframes flash {
+    0%  { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden; }
+  .confetti-piece {
+    position: absolute;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+  }
+
+  .emoji-burst {
+    position: fixed;
+    font-size: 1.6rem;
+    pointer-events: none;
+    z-index: 1000;
+    animation: emojiBurst 0.8s ease-out forwards;
+  }
+  @keyframes emojiBurst {
+    0%   { transform: translate(0,0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
+  }
+
+  .reset-msg {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    z-index: 2000;
+    animation: slideDown 2s ease forwards;
+  }
+  @keyframes slideDown {
+    0%   { opacity: 0; top: -40px; }
+    15%  { opacity: 1; top: 18px; }
+    75%  { opacity: 1; top: 18px; }
+    100% { opacity: 0; top: -40px; }
+  }
+
+  @media (max-width: 600px) {
+    .sentence-row, .label-row {
+      grid-template-columns: 1fr;
+    }
+    .cell { min-height: 70px; padding: 18px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="shape"></div><div class="shape"></div><div class="shape"></div>
+  <div class="shape"></div><div class="shape"></div>
+</div>
+
+<div class="confetti-container" id="confetti"></div>
+
+<div class="content">
+  <header>
+    <h1>Sentence Machine</h1>
+    <p>Presidential School</p>
+  </header>
+
+  <div class="instruction">
+    Read the sentence, then try to say it in the <em>passive voice</em>!
+  </div>
+
+  <div class="sentence-display" id="sentence-display">
+    <span class="placeholder">Press GO to generate a sentence!</span>
+  </div>
+
+  <div class="counter" id="counter"></div>
+
+  <div class="btn-wrap">
+    <button class="btn-go" onclick="randomize()">GO!</button>
+  </div>
+
+  <footer>Now say it in the passive voice! 🤔</footer>
+</div>
+
+<script>
+  // ═══════════════════════════════════════════
+  //  SUBJECTS
+  // ═══════════════════════════════════════════
+
+  const subjects = [
+    "Durdona", "Ifora", "Setora", "Akramjon",
+    "Sador", "Xushnud", "Shamshod", "Otabek",
+    "Azizbek", "Durbek", "Davlat", "Samandar",
+    "Mr. Paul", "Miss Nargiza"
+  ];
+
+  // ═══════════════════════════════════════════
+  //  VERB → OBJECT PAIRS
+  //  Each verb has its own curated object list
+  // ═══════════════════════════════════════════
+
+  const verbObjects = {
+    "ate":       ["a cake", "a snake", "a football", "a dragon egg", "a banana", "a pumpkin", "a watermelon", "a frog", "a crayon"],
+    "cooked":    ["a frog", "a cake", "a shoe", "a pizza", "a pumpkin", "a cookie", "a boot"],
+    "kicked":    ["a football", "a phone", "a shoe", "a watermelon", "a teddy bear"],
+    "drove":     ["a truck", "a Lamborghini"],
+    "broke":     ["a chair", "a laptop", "a telescope", "a banana", "a Rubik's cube", "a world record", "the internet"],
+    "washed":    ["a shoe", "a watermelon", "a house"],
+    "found":     ["a treasure chest", "a coin", "a backpack", "a teddy bear", "a dragon egg", "a robot", "a frog", "a dinosaur skeleton", "a sock", "a giant mushroom", "a secret door"],
+    "caught":    ["a volleyball", "a sandwich"],
+    "built":     ["a bridge", "a tower", "a mobile app"],
+    "opened":    ["a watermelon", "a door", "a box of snakes", "a can of peas"],
+    "sold":      ["a house", "a bike", "a phone", "a shoe"],
+    "fixed":     ["a toy", "a robot"],
+    "won":       ["a trophy", "a race", "a car"],
+    "flew":      ["a helicopter", "a spaceship", "a jet fighter", "a hot air balloon", "a magic carpet"],
+    "destroyed": ["a laptop", "an army", "a robot", "a school", "a building", "a sandcastle", "a birthday cake"],
+    "painted":   ["a fence", "a portrait"],
+    "chased":    ["a chicken", "a robot", "a ghost", "a mouse"],
+    "swallowed": ["a coin", "a fly"],
+  };
+
+  // ═══════════════════════════════════════
+  //  NO-REPEAT POOL SYSTEM
+  // ═══════════════════════════════════════
+
+  function createPool(arr) {
+    return { source: arr, remaining: [] };
+  }
+
+  function drawFromPool(pool) {
+    if (pool.remaining.length === 0) {
+      pool.remaining = [...pool.source].sort(() => Math.random() - 0.5);
+      return { value: pool.remaining.pop(), wasReset: true };
+    }
+    return { value: pool.remaining.pop(), wasReset: false };
+  }
+
+  // Build a pool of verb keys
+  const verbKeys = Object.keys(verbObjects);
+  const subjectPool = createPool(subjects);
+  const verbPool    = createPool(verbKeys);
+
+  // Per-verb object pools (created lazily)
+  const objectPools = {};
+  function getObjectPool(verb) {
+    if (!objectPools[verb]) {
+      objectPools[verb] = createPool(verbObjects[verb]);
+    }
+    return objectPools[verb];
+  }
+
+  // ═══════════════════════════════════════
+  //  HELPERS
+  // ═══════════════════════════════════════
+
+  let count = 0;
+
+  function launchConfetti() {
+    const container = document.getElementById('confetti');
+    const colors = ['#FFD93D','#FF6B9D','#4D96FF','#6BCB77','#C77DFF','#FF9A3C','#fff'];
+    for (let i = 0; i < 50; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      const size = 8 + Math.random() * 10;
+      const shape = Math.random();
+      let borderRadius = '50%';
+      if (shape > 0.5) borderRadius = '3px';
+      if (shape > 0.8) borderRadius = '50% 0 50% 0';
+      p.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        top: -14px;
+        width: ${size}px;
+        height: ${size}px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: ${borderRadius};
+        animation-duration: ${1.4 + Math.random() * 2}s;
+        animation-delay: ${Math.random() * 0.5}s;
+      `;
+      container.appendChild(p);
+      p.addEventListener('animationend', () => p.remove());
+    }
+  }
+
+  function launchEmojis() {
+    const emojis = ['🎉','⭐','🔥','✨','💥','🎯','🚀','🌟','😎','👏'];
+    const btn = document.querySelector('.btn-go');
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    for (let i = 0; i < 6; i++) {
+      const em = document.createElement('div');
+      em.className = 'emoji-burst';
+      em.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      const angle = (Math.PI * 2 * i) / 6 + (Math.random() - 0.5) * 0.5;
+      const dist = 60 + Math.random() * 80;
+      em.style.left = cx + 'px';
+      em.style.top = cy + 'px';
+      em.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      em.style.setProperty('--dy', Math.sin(angle) * dist - 40 + 'px');
+      em.style.animationDelay = (Math.random() * 0.2) + 's';
+      document.body.appendChild(em);
+      em.addEventListener('animationend', () => em.remove());
+    }
+  }
+
+  function showResetMsg(what) {
+    const msg = document.createElement('div');
+    msg.className = 'reset-msg';
+    msg.textContent = '🔄 ' + what + ' reshuffled!';
+    document.body.appendChild(msg);
+    msg.addEventListener('animationend', () => msg.remove());
+  }
+
+  // ═══════════════════════════════════════
+  //  MAIN RANDOMIZE
+  // ═══════════════════════════════════════
+
+  let busy = false;
+
+  function randomize() {
+    if (busy) return;
+    busy = true;
+
+    const sDraw = drawFromPool(subjectPool);
+    const vDraw = drawFromPool(verbPool);
+    const verb  = vDraw.value;
+    const oDraw = drawFromPool(getObjectPool(verb));
+
+    if (sDraw.wasReset) showResetMsg('Subjects');
+    if (vDraw.wasReset) showResetMsg('Verbs');
+
+    const subj = sDraw.value;
+    const obj  = oDraw.value;
+
+    const elDisplay = document.getElementById('sentence-display');
+    const elCount   = document.getElementById('counter');
+
+    elDisplay.classList.remove('show');
+
+    const fakes = ["???","* * *","...","!!!","~~~","###"];
+    let tick = 0;
+    const cycles = 8;
+    elDisplay.innerHTML = '<span class="sentence-text">...</span>';
+
+    const iv = setInterval(() => {
+      elDisplay.innerHTML = `<span class="sentence-text">${fakes[tick % fakes.length]}</span>`;
+      tick++;
+      if (tick >= cycles) {
+        clearInterval(iv);
+        const fullText = `${subj} ${verb} ${obj}.`;
+        elDisplay.innerHTML = `<span class="sentence-text">${fullText}</span>`;
+        elDisplay.classList.add('show');
+        launchConfetti();
+        launchEmojis();
+        count++;
+        elCount.textContent = `Sentence #${count}`;
+        busy = false;
+      }
+    }, 90);
+  }
+</script>
+
+</body>
+</html>
