@@ -119,7 +119,6 @@
     font-weight: 800;
   }
 
-  /* Main sentence display */
   .sentence-display {
     width: 100%;
     background: white;
@@ -164,7 +163,6 @@
     100% { transform: scale(1); opacity: 1; }
   }
 
-  /* Counter */
   .counter {
     font-size: 0.85rem;
     color: var(--muted);
@@ -173,7 +171,6 @@
     letter-spacing: 1px;
   }
 
-  /* Button */
   .btn-wrap {
     display: flex;
     gap: 14px;
@@ -210,7 +207,6 @@
     text-align: center;
   }
 
-  /* ---- Animations ---- */
   @keyframes bounceIn {
     0%   { opacity: 0; transform: translateY(-35px) scale(0.75); }
     60%  { transform: translateY(8px) scale(1.06); }
@@ -244,7 +240,6 @@
     50% { opacity: 0.4; }
   }
 
-  /* Confetti */
   .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden; }
   .confetti-piece {
     position: absolute;
@@ -255,7 +250,6 @@
     100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
   }
 
-  /* Emoji burst */
   .emoji-burst {
     position: fixed;
     font-size: 1.6rem;
@@ -268,7 +262,6 @@
     100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
   }
 
-  /* Reset message */
   .reset-msg {
     position: fixed;
     top: 18px;
@@ -291,7 +284,6 @@
     100% { opacity: 0; top: -40px; }
   }
 
-  /* Mobile */
   @media (max-width: 600px) {
     .sentence-row, .label-row {
       grid-template-columns: 1fr;
@@ -334,7 +326,7 @@
 
 <script>
   // ═══════════════════════════════════════════
-  //  WORD BANKS — fun & age-appropriate
+  //  SUBJECTS
   // ═══════════════════════════════════════════
 
   const subjects = [
@@ -344,25 +336,28 @@
     "Mr. Paul", "Miss Nargiza"
   ];
 
-  // Verbs — past tense, all transitive
-  const verbs = [
-    "ate", "kicked", "threw", "stole",
-    "broke", "hid", "washed", "built", "found",
-    "caught", "drew", "opened", "sold", "fixed",
-    "drove", "bought", "dropped",
-    "carried", "cooked", "destroyed", "invented", "borrowed"
-  ];
+  // ═══════════════════════════════════════════
+  //  VERB → OBJECT PAIRS
+  //  Each verb has its own curated object list
+  // ═══════════════════════════════════════════
 
-  const objects = [
-    "a sandwich", "a bicycle", "a trophy", "a pizza",
-    "a robot", "a painting", "a phone", "a basketball",
-    "a cake", "a spaceship", "a guitar", "a diamond",
-    "a banana", "a laptop", "a skateboard", "a dragon egg",
-    "a treasure chest", "an umbrella", "a football", "a telescope",
-    "a pumpkin", "a sword", "a cookie", "a helicopter",
-    "a teddy bear", "a shoe", "a backpack", "a crown",
-    "a watermelon", "a rocket"
-  ];
+  const verbObjects = {
+    "ate":       ["a cake", "a snake", "a football", "a dragon egg", "a banana", "a pumpkin", "a watermelon", "a frog"],
+    "cooked":    ["a frog", "a cake", "a shoe", "a pizza", "a pumpkin", "a cookie"],
+    "kicked":    ["a football", "a phone", "a shoe", "a watermelon", "a teddy bear"],
+    "drove":     ["a truck", "a Lamborghini"],
+    "broke":     ["a chair", "a laptop", "a telescope", "a banana", "a Rubik's cube"],
+    "washed":    ["a shoe", "a watermelon", "a house"],
+    "found":     ["a treasure chest", "a coin", "a backpack", "a teddy bear", "a dragon egg", "a robot", "a frog"],
+    "caught":    ["a volleyball", "a sandwich"],
+    "built":     ["a bridge", "a tower", "a mobile app"],
+    "opened":    ["a watermelon", "a door", "a box of snakes", "a can of peas"],
+    "sold":      ["a house", "a bike", "a phone", "a shoe"],
+    "fixed":     ["a toy", "a robot"],
+    "won":       ["a trophy", "a race", "a car"],
+    "flew":      ["a helicopter", "a spaceship", "a jet fighter", "a hot air balloon"],
+    "destroyed": ["a laptop", "an army", "a robot", "a school", "a building"],
+  };
 
   // ═══════════════════════════════════════
   //  NO-REPEAT POOL SYSTEM
@@ -380,35 +375,25 @@
     return { value: pool.remaining.pop(), wasReset: false };
   }
 
+  // Build a pool of verb keys
+  const verbKeys = Object.keys(verbObjects);
   const subjectPool = createPool(subjects);
-  const verbPool    = createPool(verbs);
-  const objectPool  = createPool(objects);
+  const verbPool    = createPool(verbKeys);
+
+  // Per-verb object pools (created lazily)
+  const objectPools = {};
+  function getObjectPool(verb) {
+    if (!objectPools[verb]) {
+      objectPools[verb] = createPool(verbObjects[verb]);
+    }
+    return objectPools[verb];
+  }
 
   // ═══════════════════════════════════════
   //  HELPERS
   // ═══════════════════════════════════════
 
   let count = 0;
-
-  function slotMachine(el, finalText, slotDuration, animClass) {
-    const fakes = ["???","***","...","!!!","~~~","###","&&&"];
-    let tick = 0;
-    const cycles = Math.floor(slotDuration / 80);
-    el.classList.remove('anim-bounce','anim-pop','anim-left','anim-right','flashing');
-    el.classList.add('flashing');
-
-    const iv = setInterval(() => {
-      el.textContent = fakes[tick % fakes.length];
-      tick++;
-      if (tick >= cycles) {
-        clearInterval(iv);
-        el.classList.remove('flashing');
-        el.textContent = finalText;
-        void el.offsetWidth;
-        if (animClass) el.classList.add(animClass);
-      }
-    }, 80);
-  }
 
   function launchConfetti() {
     const container = document.getElementById('confetti');
@@ -476,26 +461,22 @@
     if (busy) return;
     busy = true;
 
-    // Draw from pools
     const sDraw = drawFromPool(subjectPool);
     const vDraw = drawFromPool(verbPool);
-    const oDraw = drawFromPool(objectPool);
+    const verb  = vDraw.value;
+    const oDraw = drawFromPool(getObjectPool(verb));
 
     if (sDraw.wasReset) showResetMsg('Subjects');
     if (vDraw.wasReset) showResetMsg('Verbs');
-    if (oDraw.wasReset) showResetMsg('Objects');
 
     const subj = sDraw.value;
-    const verb = vDraw.value;
-    const obj = oDraw.value;
+    const obj  = oDraw.value;
 
     const elDisplay = document.getElementById('sentence-display');
-    const elCount = document.getElementById('counter');
+    const elCount   = document.getElementById('counter');
 
-    // Reset
     elDisplay.classList.remove('show');
 
-    // Slot-machine effect on the sentence box
     const fakes = ["???","* * *","...","!!!","~~~","###"];
     let tick = 0;
     const cycles = 8;
