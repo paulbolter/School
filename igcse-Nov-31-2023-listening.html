@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE 0510 – Listening Exercises 1–4 | Oct/Nov 2023</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #0f2027; --paper: #f0f6f8; --cream: #e4eff3;
+    --accent: #00897b; --accent-light: #b2dfdb; --muted: #5a6e7a; --border: #bfd4da;
+    --correct-bg: #e8f5e9; --correct-border: #4caf50;
+    --wrong-bg: #fdecea; --wrong-border: #e53935;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--accent); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--accent); color: white; font-weight: 600; font-size: 13px; padding: 5px 14px; border-radius: 20px; display: none; }
+
+  /* TABS */
+  .tab-bar { display: flex; background: #091a20; border-bottom: 2px solid var(--accent); flex-wrap: wrap; }
+  .tab-btn {
+    padding: 11px 22px; font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600;
+    color: #7799aa; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn:hover { color: #bbddee; }
+
+  /* LAYOUT */
+  .exercise { display: none; padding: 28px 32px; max-width: 860px; margin: 0 auto; }
+  .exercise.active { display: block; }
+
+  /* PANEL LABEL */
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  /* INSTRUCTION BOX */
+  .instruction-box {
+    background: var(--cream); border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 18px; margin-bottom: 22px; font-size: 13px; line-height: 1.6; color: var(--muted);
+  }
+  .instruction-box strong { color: var(--ink); }
+
+  /* QUESTIONS */
+  .question-item {
+    margin-bottom: 16px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.correct { border-color: var(--correct-border); background: var(--correct-bg); }
+  .question-item.wrong { border-color: var(--wrong-border); background: var(--wrong-bg); }
+  .question-item.spelling { border-color: #e67e22; background: #fef3e2; }
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; min-width: 28px; height: 22px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; padding: 0 7px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+
+  /* RECORDING GROUPS */
+  .recording-group {
+    margin-bottom: 24px; border-left: 3px solid var(--accent); padding-left: 16px;
+  }
+  .recording-label { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+
+  /* GAP-FILL WRAPPER for Ex2 */
+  .gapfill-box {
+    background: white; border: 1.5px solid var(--border); border-radius: 6px; padding: 20px 22px; margin-bottom: 20px;
+  }
+  .gapfill-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .gapfill-section { font-weight: 600; font-size: 13px; color: var(--ink); margin: 16px 0 10px; }
+  .gapfill-section:first-of-type { margin-top: 10px; }
+  .gapfill-line { font-size: 13.5px; line-height: 2.4; color: #2c2c2c; }
+  .gapfill-line input[type="text"] {
+    width: 160px; border: none; border-bottom: 2px dotted var(--border);
+    padding: 2px 6px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: var(--ink); background: transparent; outline: none; transition: border-color 0.2s;
+    text-align: center;
+  }
+  .gapfill-line input[type="text"]:focus { border-bottom-color: var(--accent); }
+  .gapfill-line input[type="text"]:disabled { border-bottom-color: transparent; }
+  .gapfill-line input.input-correct { color: #2e7d32; font-weight: 600; border-bottom-color: var(--correct-border); }
+  .gapfill-line input.input-wrong { color: #c62828; text-decoration: line-through; border-bottom-color: var(--wrong-border); }
+  .gapfill-line input.input-spelling { color: #e65100; font-weight: 600; border-bottom-color: #e67e22; }
+  .gapfill-feedback { font-size: 12px; margin-top: 2px; display: none; padding: 3px 8px; border-radius: 3px; }
+  .gapfill-feedback.show { display: inline-block; }
+  .gapfill-feedback.fb-correct { color: #2e7d32; background: #c8e6c9; }
+  .gapfill-feedback.fb-wrong { color: #b71c1c; background: #ffcdd2; }
+  .gapfill-feedback.fb-spelling { color: #7d4e00; background: #ffe0b2; }
+
+  /* EX3 MATCHING — Speakers */
+  .speaker-row {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
+    padding: 10px 14px; background: white; border: 1.5px solid var(--border); border-radius: 6px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .speaker-row.correct { border-color: var(--correct-border); background: var(--correct-bg); }
+  .speaker-row.wrong { border-color: var(--wrong-border); background: var(--wrong-bg); }
+  .speaker-label { font-weight: 600; font-size: 13px; min-width: 80px; }
+  .speaker-select { flex: 1; }
+  .speaker-select select {
+    width: 100%; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 4px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; background: white; color: var(--ink);
+    cursor: pointer; outline: none;
+  }
+  .speaker-select select:focus { border-color: var(--accent); }
+  .speaker-select select:disabled { background: var(--cream); cursor: default; }
+  .speaker-fb { font-size: 12px; display: none; min-width: 120px; }
+  .speaker-row.correct .speaker-fb { display: block; color: #2e7d32; }
+  .speaker-row.wrong .speaker-fb { display: block; color: #b71c1c; }
+
+  /* OPINIONS LIST for Ex3 */
+  .opinions-list { background: var(--cream); border: 1.5px solid var(--border); border-radius: 6px; padding: 14px 18px; margin-bottom: 20px; }
+  .opinions-list div { font-size: 13px; line-height: 1.9; }
+  .opinions-list span.op-letter { font-weight: 700; color: var(--accent); margin-right: 8px; }
+
+  /* ABC BUTTONS for Ex4 */
+  .abc-row { display: flex; gap: 8px; margin-top: 4px; }
+  .abc-btn {
+    width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .abc-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .abc-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abc-btn:disabled { cursor: default; }
+  .abc-btn.correct-answer { background: var(--correct-border); color: white; border-color: var(--correct-border); }
+  .abc-btn.wrong-answer { background: var(--wrong-border); color: white; border-color: var(--wrong-border); }
+
+  /* INPUTS (Ex1) */
+  input[type="text"].ex-input {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 4px;
+    padding: 8px 11px; font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+    color: var(--ink); background: white; transition: border-color 0.2s; outline: none;
+  }
+  input[type="text"].ex-input:focus { border-color: var(--accent); }
+  input[type="text"].ex-input:disabled { background: transparent; cursor: default; }
+
+  /* FEEDBACK */
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; }
+  .question-item.correct .feedback { display: block; color: #2e7d32; background: #c8e6c9; }
+  .question-item.wrong .feedback { display: block; color: #b71c1c; background: #ffcdd2; }
+  .question-item.spelling .feedback { display: block; color: #7d4e00; background: #ffe0b2; }
+  .answer-reveal { font-weight: 600; color: #1a6e2a; }
+
+  /* BUTTONS */
+  .btn-row { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-submit { background: var(--ink); color: white; }
+  .btn-redo { background: transparent; color: #c0392b; border: 1.5px solid #c0392b; display: none; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+
+  /* RESULT BAR */
+  .result-bar { display: none; margin-bottom: 18px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar span { color: var(--accent); }
+  .total-note { margin-top: 10px; padding: 9px 12px; background: var(--cream); border: 1px solid var(--border); border-radius: 4px; font-size: 11.5px; color: var(--muted); }
+
+  /* SCROLLBARS */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  @media (max-width: 820px) {
+    .exercise { padding: 18px 14px; }
+    .tab-btn { padding: 9px 14px; font-size: 11.5px; }
+    .gapfill-line input[type="text"] { width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">Cambridge IGCSE 0510 · Core · Oct/Nov 2023</span>
+    <h1>Paper 3 – Listening Practice</h1>
+  </div>
+  <div class="score-badge" id="globalBadge"></div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab(1)">Exercise 1 — Short Recordings</button>
+  <button class="tab-btn" onclick="switchTab(2)">Exercise 2 — New School Building</button>
+  <button class="tab-btn" onclick="switchTab(3)">Exercise 3 — Clothes Opinions</button>
+  <button class="tab-btn" onclick="switchTab(4)">Exercise 4 — Flower Arranging</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ EXERCISE 1 ═══ -->
+<div class="exercise active" id="ex1">
+  <div class="panel-label">🎧 Exercise 1 — Short Recordings</div>
+  <div class="instruction-box">
+    You will hear four short recordings. Answer each question on the line provided. Write <strong>no more than three words, or a number</strong>, for each answer. You will hear each recording twice.
+  </div>
+
+  <div class="result-bar" id="ex1-result">Your score: <span id="ex1-score"></span> / 8</div>
+  <div class="btn-row">
+    <button class="btn-submit" onclick="submitEx1()">Check Answers</button>
+    <button class="btn-redo" id="ex1-redo" onclick="redoWrong('ex1')">Redo Wrong</button>
+    <button class="btn-reset" onclick="resetEx('ex1')">Reset All</button>
+  </div>
+
+  <!-- Recording 1 -->
+  <div class="recording-group">
+    <div class="recording-label">Recording 1</div>
+    <div class="question-item" id="ex1-q1a-item">
+      <div class="q-header"><div class="q-num">1a</div><div class="q-text">What does the man most recommend visiting in the town?</div><div class="q-marks">[1]</div></div>
+      <input type="text" class="ex-input" id="ex1-q1a" placeholder="Your answer…">
+      <div class="feedback" id="ex1-q1a-fb"></div>
+    </div>
+    <div class="question-item" id="ex1-q1b-item">
+      <div class="q-header"><div class="q-num">1b</div><div class="q-text">Which area of the town does the man think it is best to stay in?</div><div class="q-marks">[1]</div></div>
+      <input type="text" class="ex-input" id="ex1-q1b" placeholder="Your answer…">
+      <div class="feedback" id="ex1-q1b-fb"></div>
+    </div>
+  </div>
+
+  <!-- Recording 2 -->
+  <div class="recording-group">
+    <div class="recording-label">Recording 2</div>
+    <div class="question-item" id="ex1-q2a-item">
+      <div class="q-header"><div class="q-num">2a</div><div class="q-text">Which product does the woman have a problem with now?</div><div class="q-marks">[1]</div></div>
+      <input type="text" class="ex-input" id="ex1-q2a" placeholder="Your answer…">
+      <div class="feedback" id="ex1-q2a-fb"></div>
+    </div>
+    <div class="question-item" id="ex1-q2b-item">
+      <div class="q-header"><div class="q-num">2b</div><div class="q-text">What does the woman want the company to email her?</div><div class="q-marks">[1]</div></div>
+      <input type="text" class="ex-input" id="ex1-q2b" placeholder="Your answer…">
+      <div class="feedback" id="ex1-q2b-fb"></div>
+    </div>
+  </div>
+
+  <!-- Recording 3 -->
+  <div class="recording-group">
+    <div class="recording-label">Recording 3</div>
+    <div class="question-item" id="ex1-q3a-item">
+      <div class="q-header"><div class="q-num">3a</div><div class="q-text">What is the man looking for?</div><div class="q-marks">[1]</div></div>
+      <input type="text" class="ex-input" id="ex1-q3a" placeholder="Your answer…">
+      <div class="feedback" id="ex1-q3a-fb"></div>
+    </div>
+    <div class="question-item" id="ex1-q3b-item">
+      <div class="q-header"><div class="q-num">3b</div><div class="q-text">What password do the man and woman agree to use?</div><div class="q-marks">[1]</div></div>
+      <input type="text" class="ex-input" id="ex1-q3b" placeholder="Your answer…">
+      <div class="feedback" id="ex1-q3b-fb"></div>
+    </div>
+  </div>
+
+  <!-- Recording 4 -->
+  <div class="recording-group">
+    <div class="recording-label">Recording 4</div>
+    <div class="question-item" id="ex1-q4a-item">
+      <div class="q-header"><div class="q-num">4a</div><div class="q-text">What does the man still need volunteers to help with at the race?</div><div class="q-marks">[1]</div></div>
+      <input type="text" class="ex-input" id="ex1-q4a" placeholder="Your answer…">
+      <div class="feedback" id="ex1-q4a-fb"></div>
+    </div>
+    <div class="question-item" id="ex1-q4b-item">
+      <div class="q-header"><div class="q-num">4b</div><div class="q-text">What is in the centre of the race map?</div><div class="q-marks">[1]</div></div>
+      <input type="text" class="ex-input" id="ex1-q4b" placeholder="Your answer…">
+      <div class="feedback" id="ex1-q4b-fb"></div>
+    </div>
+  </div>
+
+  <div class="total-note">[Total: 8 marks]</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ EXERCISE 2 ═══ -->
+<div class="exercise" id="ex2">
+  <div class="panel-label">🎧 Exercise 2 — Gap-fill: New School Building</div>
+  <div class="instruction-box">
+    You will hear a headteacher telling students about their new school building. Listen to the talk and complete the details below. Write <strong>one or two words, or a number</strong>, in each gap. You will hear the talk twice.
+  </div>
+
+  <div class="result-bar" id="ex2-result">Your score: <span id="ex2-score"></span> / 8</div>
+  <div class="btn-row">
+    <button class="btn-submit" onclick="submitEx2()">Check Answers</button>
+    <button class="btn-redo" id="ex2-redo" onclick="redoWrong('ex2')">Redo Wrong</button>
+    <button class="btn-reset" onclick="resetEx('ex2')">Reset All</button>
+  </div>
+
+  <div class="gapfill-box">
+    <div class="gapfill-title">New school building</div>
+
+    <div class="gapfill-section">Update on progress</div>
+    <div class="gapfill-line" id="ex2-5a-line">
+      The <input type="text" id="ex2-5a" placeholder="···"> phase took longer than expected.
+      <span class="gapfill-feedback" id="ex2-5a-fb"></span>
+    </div>
+
+    <div class="gapfill-section">Details of the new building</div>
+    <div class="gapfill-line" id="ex2-5b-line">
+      The word <input type="text" id="ex2-5b" placeholder="···"> best describes the new building.
+      <span class="gapfill-feedback" id="ex2-5b-fb"></span>
+    </div>
+    <div class="gapfill-line" id="ex2-5c-line">
+      Improving the <input type="text" id="ex2-5c" placeholder="···"> inside the classrooms was challenging.
+      <span class="gapfill-feedback" id="ex2-5c-fb"></span>
+    </div>
+    <div class="gapfill-line" id="ex2-5d-line">
+      The café on the third floor is called <input type="text" id="ex2-5d" placeholder="···"> .
+      <span class="gapfill-feedback" id="ex2-5d-fb"></span>
+    </div>
+    <div class="gapfill-line" id="ex2-5e-line">
+      The <input type="text" id="ex2-5e" placeholder="···"> is the only facility that is not ready yet.
+      <span class="gapfill-feedback" id="ex2-5e-fb"></span>
+    </div>
+    <div class="gapfill-line" id="ex2-5f-line">
+      The <input type="text" id="ex2-5f" placeholder="···"> will be available to people living in the city.
+      <span class="gapfill-feedback" id="ex2-5f-fb"></span>
+    </div>
+
+    <div class="gapfill-section">Moving in to the new building</div>
+    <div class="gapfill-line" id="ex2-5g-line">
+      Students will move in at the beginning of <input type="text" id="ex2-5g" placeholder="···"> .
+      <span class="gapfill-feedback" id="ex2-5g-fb"></span>
+    </div>
+    <div class="gapfill-line" id="ex2-5h-line">
+      A <input type="text" id="ex2-5h" placeholder="···"> will be arranged for students to find out more about the building.
+      <span class="gapfill-feedback" id="ex2-5h-fb"></span>
+    </div>
+  </div>
+
+  <div class="total-note">[Total: 8 marks]</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ EXERCISE 3 ═══ -->
+<div class="exercise" id="ex3">
+  <div class="panel-label">🎧 Exercise 3 — Speaker Matching: Clothes</div>
+  <div class="instruction-box">
+    You will hear six people talking about clothes. For each of the Speakers 1 to 6, choose from the list, <strong>A to G</strong>, which opinion each speaker expresses. Use each letter <strong>only once</strong>. There is one extra letter which you do not need to use. You will hear the recordings twice.
+  </div>
+
+  <div class="result-bar" id="ex3-result">Your score: <span id="ex3-score"></span> / 6</div>
+  <div class="btn-row">
+    <button class="btn-submit" onclick="submitEx3()">Check Answers</button>
+    <button class="btn-redo" id="ex3-redo" onclick="redoWrong('ex3')">Redo Wrong</button>
+    <button class="btn-reset" onclick="resetEx('ex3')">Reset All</button>
+  </div>
+
+  <div class="opinions-list">
+    <div><span class="op-letter">A</span> Everyone should learn how to repair their own clothes.</div>
+    <div><span class="op-letter">B</span> I prefer to buy second-hand clothes.</div>
+    <div><span class="op-letter">C</span> I buy myself something almost every week.</div>
+    <div><span class="op-letter">D</span> It's better to buy fewer items and get better quality.</div>
+    <div><span class="op-letter">E</span> I think more people should learn to make their own clothes.</div>
+    <div><span class="op-letter">F</span> It makes sense to hire clothes for special occasions.</div>
+    <div><span class="op-letter">G</span> My friends and I often borrow each other's clothes.</div>
+  </div>
+
+  <div class="speaker-row" id="ex3-s1-row">
+    <div class="speaker-label">Speaker 1</div>
+    <div class="speaker-select">
+      <select id="ex3-s1">
+        <option value="">— Choose —</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option>
+      </select>
+    </div>
+    <div class="speaker-fb" id="ex3-s1-fb"></div>
+  </div>
+  <div class="speaker-row" id="ex3-s2-row">
+    <div class="speaker-label">Speaker 2</div>
+    <div class="speaker-select">
+      <select id="ex3-s2">
+        <option value="">— Choose —</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option>
+      </select>
+    </div>
+    <div class="speaker-fb" id="ex3-s2-fb"></div>
+  </div>
+  <div class="speaker-row" id="ex3-s3-row">
+    <div class="speaker-label">Speaker 3</div>
+    <div class="speaker-select">
+      <select id="ex3-s3">
+        <option value="">— Choose —</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option>
+      </select>
+    </div>
+    <div class="speaker-fb" id="ex3-s3-fb"></div>
+  </div>
+  <div class="speaker-row" id="ex3-s4-row">
+    <div class="speaker-label">Speaker 4</div>
+    <div class="speaker-select">
+      <select id="ex3-s4">
+        <option value="">— Choose —</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option>
+      </select>
+    </div>
+    <div class="speaker-fb" id="ex3-s4-fb"></div>
+  </div>
+  <div class="speaker-row" id="ex3-s5-row">
+    <div class="speaker-label">Speaker 5</div>
+    <div class="speaker-select">
+      <select id="ex3-s5">
+        <option value="">— Choose —</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option>
+      </select>
+    </div>
+    <div class="speaker-fb" id="ex3-s5-fb"></div>
+  </div>
+  <div class="speaker-row" id="ex3-s6-row">
+    <div class="speaker-label">Speaker 6</div>
+    <div class="speaker-select">
+      <select id="ex3-s6">
+        <option value="">— Choose —</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+        <option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option>
+      </select>
+    </div>
+    <div class="speaker-fb" id="ex3-s6-fb"></div>
+  </div>
+
+  <div class="total-note">[Total: 6 marks]</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ EXERCISE 4 ═══ -->
+<div class="exercise" id="ex4">
+  <div class="panel-label">🎧 Exercise 4 — Multiple Choice: Lina Edwards, Flower Arranging</div>
+  <div class="instruction-box">
+    You will hear an interview with a woman called Lina Edwards, who runs a flower-arranging business. Listen to the interview and look at the questions. For each question, choose the correct answer, <strong>A, B or C</strong>. You will hear the interview twice.
+  </div>
+
+  <div class="result-bar" id="ex4-result">Your score: <span id="ex4-score"></span> / 8</div>
+  <div class="btn-row">
+    <button class="btn-submit" onclick="submitEx4()">Check Answers</button>
+    <button class="btn-redo" id="ex4-redo" onclick="redoWrong('ex4')">Redo Wrong</button>
+    <button class="btn-reset" onclick="resetEx('ex4')">Reset All</button>
+  </div>
+
+  <!-- 7a -->
+  <div class="question-item" id="ex4-qa-item">
+    <div class="q-header"><div class="q-num">7a</div><div class="q-text">What gave Lina the idea for starting her business?</div><div class="q-marks">[1]</div></div>
+    <div class="abc-row" id="ex4-qa-btns">
+      <button class="abc-btn" onclick="selectABC('ex4-qa','A')">A</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qa','B')">B</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qa','C')">C</button>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5;">A&nbsp;a childhood interest &nbsp;&nbsp; B&nbsp;a friend's marriage &nbsp;&nbsp; C&nbsp;a local festival</div>
+    <div class="feedback" id="ex4-qa-fb"></div>
+  </div>
+
+  <!-- 7b -->
+  <div class="question-item" id="ex4-qb-item">
+    <div class="q-header"><div class="q-num">7b</div><div class="q-text">What helped Lina to learn about working with flowers?</div><div class="q-marks">[1]</div></div>
+    <div class="abc-row" id="ex4-qb-btns">
+      <button class="abc-btn" onclick="selectABC('ex4-qb','A')">A</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qb','B')">B</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qb','C')">C</button>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5;">A&nbsp;doing a part-time course &nbsp;&nbsp; B&nbsp;watching a relative &nbsp;&nbsp; C&nbsp;working in a shop</div>
+    <div class="feedback" id="ex4-qb-fb"></div>
+  </div>
+
+  <!-- 7c -->
+  <div class="question-item" id="ex4-qc-item">
+    <div class="q-header"><div class="q-num">7c</div><div class="q-text">Lina says that many people fail to realise that professional flower arrangers need to</div><div class="q-marks">[1]</div></div>
+    <div class="abc-row" id="ex4-qc-btns">
+      <button class="abc-btn" onclick="selectABC('ex4-qc','A')">A</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qc','B')">B</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qc','C')">C</button>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5;">A&nbsp;be well organised &nbsp;&nbsp; B&nbsp;show a sense of creativity &nbsp;&nbsp; C&nbsp;have good communication skills</div>
+    <div class="feedback" id="ex4-qc-fb"></div>
+  </div>
+
+  <!-- 7d -->
+  <div class="question-item" id="ex4-qd-item">
+    <div class="q-header"><div class="q-num">7d</div><div class="q-text">Lina feels that the hardest thing about working with flowers is</div><div class="q-marks">[1]</div></div>
+    <div class="abc-row" id="ex4-qd-btns">
+      <button class="abc-btn" onclick="selectABC('ex4-qd','A')">A</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qd','B')">B</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qd','C')">C</button>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5;">A&nbsp;keeping them in position &nbsp;&nbsp; B&nbsp;avoiding damaging them &nbsp;&nbsp; C&nbsp;making them last</div>
+    <div class="feedback" id="ex4-qd-fb"></div>
+  </div>
+
+  <!-- 7e -->
+  <div class="question-item" id="ex4-qe-item">
+    <div class="q-header"><div class="q-num">7e</div><div class="q-text">When asked what her favourite flower is, Lina</div><div class="q-marks">[1]</div></div>
+    <div class="abc-row" id="ex4-qe-btns">
+      <button class="abc-btn" onclick="selectABC('ex4-qe','A')">A</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qe','B')">B</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qe','C')">C</button>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5;">A&nbsp;says she feels embarrassed about her answer &nbsp;&nbsp; B&nbsp;explains why she doesn't have one &nbsp;&nbsp; C&nbsp;suggests she finds the question annoying</div>
+    <div class="feedback" id="ex4-qe-fb"></div>
+  </div>
+
+  <!-- 7f -->
+  <div class="question-item" id="ex4-qf-item">
+    <div class="q-header"><div class="q-num">7f</div><div class="q-text">How has Lina made her business more environmentally friendly?</div><div class="q-marks">[1]</div></div>
+    <div class="abc-row" id="ex4-qf-btns">
+      <button class="abc-btn" onclick="selectABC('ex4-qf','A')">A</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qf','B')">B</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qf','C')">C</button>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5;">A&nbsp;by using more locally grown flowers &nbsp;&nbsp; B&nbsp;by providing recyclable packaging &nbsp;&nbsp; C&nbsp;by finding a better way of transporting flowers</div>
+    <div class="feedback" id="ex4-qf-fb"></div>
+  </div>
+
+  <!-- 7g -->
+  <div class="question-item" id="ex4-qg-item">
+    <div class="q-header"><div class="q-num">7g</div><div class="q-text">Lina says that the best thing she has done this year has been</div><div class="q-marks">[1]</div></div>
+    <div class="abc-row" id="ex4-qg-btns">
+      <button class="abc-btn" onclick="selectABC('ex4-qg','A')">A</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qg','B')">B</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qg','C')">C</button>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5;">A&nbsp;judging a competition &nbsp;&nbsp; B&nbsp;creating a TV show &nbsp;&nbsp; C&nbsp;working on a ship</div>
+    <div class="feedback" id="ex4-qg-fb"></div>
+  </div>
+
+  <!-- 7h -->
+  <div class="question-item" id="ex4-qh-item">
+    <div class="q-header"><div class="q-num">7h</div><div class="q-text">What is Lina going to do next?</div><div class="q-marks">[1]</div></div>
+    <div class="abc-row" id="ex4-qh-btns">
+      <button class="abc-btn" onclick="selectABC('ex4-qh','A')">A</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qh','B')">B</button>
+      <button class="abc-btn" onclick="selectABC('ex4-qh','C')">C</button>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5;">A&nbsp;produce a book &nbsp;&nbsp; B&nbsp;train an assistant &nbsp;&nbsp; C&nbsp;set up a website</div>
+    <div class="feedback" id="ex4-qh-fb"></div>
+  </div>
+
+  <div class="total-note">[Total: 8 marks]</div>
+</div>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────
+const state = { ex1:{}, ex2:{}, ex3:{}, ex4:{} };
+
+// ── TABS ──────────────────────────────────────────────────────
+function switchTab(n) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('ex' + n).classList.add('active');
+  document.querySelectorAll('.tab-btn')[n - 1].classList.add('active');
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function normalise(s) { return s.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim(); }
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const d = Array.from({length: m+1}, (_,i) => Array.from({length: n+1}, (_,j) => i ? (j ? 0 : i) : j));
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+(a[i-1]!==b[j-1]?1:0));
+  return d[m][n];
+}
+
+// Moderately forgiving: flags spelling but awards the mark
+function isSpellingClose(val, answers) {
+  for (const ans of answers) {
+    const na = normalise(ans);
+    if (na.length < 3) continue;
+    const nv = normalise(val);
+    const dist = levenshtein(nv, na);
+    const threshold = na.length <= 5 ? 1 : (na.length <= 8 ? 2 : 3);
+    if (dist > 0 && dist <= threshold) return true;
+  }
+  return false;
+}
+
+function matchesAnswer(val, answers) {
+  const nv = normalise(val);
+  if (!nv) return false;
+  for (const ans of answers) {
+    if (nv.includes(normalise(ans))) return true;
+  }
+  return false;
+}
+
+// ── EX1 ANSWERS (generous matching for listening) ─────────────
+const ex1Answers = {
+  q1a: { answers: ['castle','the castle'], model: 'castle' },
+  q1b: { answers: ['near the river','near river','the river','river'], model: 'near (the) river' },
+  q2a: { answers: ['printer','the printer'], model: 'printer' },
+  q2b: { answers: ['instruction','instructions','the instruction','the instructions'], model: 'instructions' },
+  q3a: { answers: ['electricity bill','the electricity bill','electric bill'], model: 'electricity bill' },
+  q3b: { answers: ['technology'], model: 'technology' },
+  q4a: { answers: ['registration','registrations','checking registration','checking registrations'], model: '(checking) registration(s)' },
+  q4b: { answers: ['finishing line','the finishing line','finishing','finish line'], model: 'finishing (line)' }
+};
+
+function submitEx1() {
+  let total = 0;
+  const keys = ['q1a','q1b','q2a','q2b','q3a','q3b','q4a','q4b'];
+  keys.forEach(key => {
+    const el = document.getElementById('ex1-' + key);
+    const val = el.value;
+    el.disabled = true;
+    const item = document.getElementById('ex1-' + key + '-item');
+    const fb = document.getElementById('ex1-' + key + '-fb');
+    const ans = ex1Answers[key];
+
+    if (matchesAnswer(val, ans.answers)) {
+      total++; state.ex1[key] = 'correct';
+      item.className = 'question-item correct';
+      fb.innerHTML = '✓ Correct!'; fb.style.display = 'block'; fb.style.color = '#2e7d32'; fb.style.background = '#c8e6c9';
+    } else if (isSpellingClose(val, ans.answers)) {
+      total++; state.ex1[key] = 'spelling';
+      item.className = 'question-item spelling';
+      fb.innerHTML = '⚠️ Correct idea, check spelling! <span class="answer-reveal">Answer: ' + ans.model + '</span>';
+      fb.style.display = 'block'; fb.style.color = '#7d4e00'; fb.style.background = '#ffe0b2';
+    } else {
+      state.ex1[key] = 'wrong';
+      item.className = 'question-item wrong';
+      fb.innerHTML = '✗ Incorrect. <span class="answer-reveal">Answer: ' + ans.model + '</span>';
+      fb.style.display = 'block'; fb.style.color = '#b71c1c'; fb.style.background = '#ffcdd2';
+    }
+  });
+  document.getElementById('ex1-result').style.display = 'block';
+  document.getElementById('ex1-score').textContent = total;
+  const hasWrong = Object.values(state.ex1).some(s => s === 'wrong');
+  document.getElementById('ex1-redo').style.display = hasWrong ? 'inline-block' : 'none';
+}
+
+// ── EX2 ANSWERS ───────────────────────────────────────────────
+const ex2Answers = {
+  '5a': { answers: ['design'], model: 'design' },
+  '5b': { answers: ['flexible'], model: 'flexible' },
+  '5c': { answers: ['sound','sounds'], model: 'sound(s)' },
+  '5d': { answers: ['rooftop','rooftops','roof top','roof tops','roof-top','roof-tops'], model: 'roof-top(s)' },
+  '5e': { answers: ['art studio','arts studio','art studios','arts studios'], model: 'art(s) studio' },
+  '5f': { answers: ['sports centre','sport centre','sports center','sport center'], model: 'sport(s) centre' },
+  '5g': { answers: ['january'], model: 'January' },
+  '5h': { answers: ['display'], model: 'display' }
+};
+
+function submitEx2() {
+  let total = 0;
+  const keys = ['5a','5b','5c','5d','5e','5f','5g','5h'];
+  keys.forEach(key => {
+    const el = document.getElementById('ex2-' + key);
+    const val = el.value;
+    el.disabled = true;
+    const fb = document.getElementById('ex2-' + key + '-fb');
+    const ans = ex2Answers[key];
+
+    if (matchesAnswer(val, ans.answers)) {
+      total++; state.ex2[key] = 'correct';
+      el.className = 'input-correct';
+      fb.className = 'gapfill-feedback show fb-correct';
+      fb.innerHTML = '✓ ' + ans.model;
+    } else if (isSpellingClose(val, ans.answers)) {
+      total++; state.ex2[key] = 'spelling';
+      el.className = 'input-spelling';
+      fb.className = 'gapfill-feedback show fb-spelling';
+      fb.innerHTML = '⚠️ Check spelling → ' + ans.model;
+    } else {
+      state.ex2[key] = 'wrong';
+      el.className = 'input-wrong';
+      fb.className = 'gapfill-feedback show fb-wrong';
+      fb.innerHTML = '✗ Answer: ' + ans.model;
+    }
+  });
+  document.getElementById('ex2-result').style.display = 'block';
+  document.getElementById('ex2-score').textContent = total;
+  const hasWrong = Object.values(state.ex2).some(s => s === 'wrong');
+  document.getElementById('ex2-redo').style.display = hasWrong ? 'inline-block' : 'none';
+}
+
+// ── EX3 ANSWERS (speaker matching) ────────────────────────────
+const ex3Answers = { s1:'C', s2:'B', s3:'F', s4:'E', s5:'D', s6:'G' };
+const opinionLabels = {
+  A:'Everyone should learn how to repair their own clothes.',
+  B:'I prefer to buy second-hand clothes.',
+  C:'I buy myself something almost every week.',
+  D:"It's better to buy fewer items and get better quality.",
+  E:'I think more people should learn to make their own clothes.',
+  F:'It makes sense to hire clothes for special occasions.',
+  G:"My friends and I often borrow each other's clothes."
+};
+
+function submitEx3() {
+  let total = 0;
+  ['s1','s2','s3','s4','s5','s6'].forEach(key => {
+    const sel = document.getElementById('ex3-' + key);
+    const val = sel.value;
+    sel.disabled = true;
+    const row = document.getElementById('ex3-' + key + '-row');
+    const fb = document.getElementById('ex3-' + key + '-fb');
+    const correct = ex3Answers[key];
+
+    if (val === correct) {
+      total++; state.ex3[key] = 'correct';
+      row.className = 'speaker-row correct';
+      fb.innerHTML = '✓ Correct';
+    } else {
+      state.ex3[key] = 'wrong';
+      row.className = 'speaker-row wrong';
+      fb.innerHTML = '✗ Answer: ' + correct;
+    }
+  });
+  document.getElementById('ex3-result').style.display = 'block';
+  document.getElementById('ex3-score').textContent = total;
+  const hasWrong = Object.values(state.ex3).some(s => s === 'wrong');
+  document.getElementById('ex3-redo').style.display = hasWrong ? 'inline-block' : 'none';
+}
+
+// ── EX4 ANSWERS (ABC multiple choice) ─────────────────────────
+const ex4Answers = { qa:'B', qb:'A', qc:'C', qd:'A', qe:'B', qf:'C', qg:'C', qh:'B' };
+const ex4Selections = {};
+
+function selectABC(qId, letter) {
+  ex4Selections[qId] = letter;
+  const btns = document.querySelectorAll('#' + qId + '-btns .abc-btn');
+  btns.forEach(b => b.classList.toggle('selected', b.textContent === letter));
+}
+
+function submitEx4() {
+  let total = 0;
+  ['qa','qb','qc','qd','qe','qf','qg','qh'].forEach(key => {
+    const qId = 'ex4-' + key;
+    const sel = ex4Selections[qId] || '';
+    const correct = ex4Answers[key];
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    const btns = document.querySelectorAll('#' + qId + '-btns .abc-btn');
+    btns.forEach(b => b.disabled = true);
+
+    if (sel === correct) {
+      total++; state.ex4[key] = 'correct';
+      item.className = 'question-item correct';
+      btns.forEach(b => { if (b.textContent === correct) b.classList.add('correct-answer'); });
+      fb.innerHTML = '✓ Correct!'; fb.style.display = 'block'; fb.style.color = '#2e7d32'; fb.style.background = '#c8e6c9';
+    } else {
+      state.ex4[key] = 'wrong';
+      item.className = 'question-item wrong';
+      btns.forEach(b => {
+        if (b.textContent === sel) b.classList.add('wrong-answer');
+        if (b.textContent === correct) b.classList.add('correct-answer');
+      });
+      fb.innerHTML = '✗ Incorrect. <span class="answer-reveal">Answer: ' + correct + '</span>';
+      fb.style.display = 'block'; fb.style.color = '#b71c1c'; fb.style.background = '#ffcdd2';
+    }
+  });
+  document.getElementById('ex4-result').style.display = 'block';
+  document.getElementById('ex4-score').textContent = total;
+  const hasWrong = Object.values(state.ex4).some(s => s === 'wrong');
+  document.getElementById('ex4-redo').style.display = hasWrong ? 'inline-block' : 'none';
+}
+
+// ── REDO WRONG ────────────────────────────────────────────────
+function redoWrong(ex) {
+  if (ex === 'ex1') {
+    ['q1a','q1b','q2a','q2b','q3a','q3b','q4a','q4b'].forEach(key => {
+      if (state.ex1[key] === 'wrong') {
+        const el = document.getElementById('ex1-' + key);
+        el.value = ''; el.disabled = false;
+        document.getElementById('ex1-' + key + '-item').className = 'question-item';
+        document.getElementById('ex1-' + key + '-fb').style.display = 'none';
+        state.ex1[key] = null;
+      }
+    });
+    document.getElementById('ex1-result').style.display = 'none';
+    document.getElementById('ex1-redo').style.display = 'none';
+  } else if (ex === 'ex2') {
+    ['5a','5b','5c','5d','5e','5f','5g','5h'].forEach(key => {
+      if (state.ex2[key] === 'wrong') {
+        const el = document.getElementById('ex2-' + key);
+        el.value = ''; el.disabled = false; el.className = '';
+        const fb = document.getElementById('ex2-' + key + '-fb');
+        fb.className = 'gapfill-feedback'; fb.innerHTML = '';
+        state.ex2[key] = null;
+      }
+    });
+    document.getElementById('ex2-result').style.display = 'none';
+    document.getElementById('ex2-redo').style.display = 'none';
+  } else if (ex === 'ex3') {
+    ['s1','s2','s3','s4','s5','s6'].forEach(key => {
+      if (state.ex3[key] === 'wrong') {
+        const sel = document.getElementById('ex3-' + key);
+        sel.value = ''; sel.disabled = false;
+        document.getElementById('ex3-' + key + '-row').className = 'speaker-row';
+        document.getElementById('ex3-' + key + '-fb').innerHTML = '';
+        state.ex3[key] = null;
+      }
+    });
+    document.getElementById('ex3-result').style.display = 'none';
+    document.getElementById('ex3-redo').style.display = 'none';
+  } else if (ex === 'ex4') {
+    ['qa','qb','qc','qd','qe','qf','qg','qh'].forEach(key => {
+      if (state.ex4[key] === 'wrong') {
+        const qId = 'ex4-' + key;
+        const btns = document.querySelectorAll('#' + qId + '-btns .abc-btn');
+        btns.forEach(b => { b.disabled = false; b.classList.remove('selected','correct-answer','wrong-answer'); });
+        delete ex4Selections[qId];
+        document.getElementById(qId + '-item').className = 'question-item';
+        document.getElementById(qId + '-fb').style.display = 'none';
+        state.ex4[key] = null;
+      }
+    });
+    document.getElementById('ex4-result').style.display = 'none';
+    document.getElementById('ex4-redo').style.display = 'none';
+  }
+}
+
+// ── RESET ─────────────────────────────────────────────────────
+function resetEx(ex) {
+  if (ex === 'ex1') {
+    ['q1a','q1b','q2a','q2b','q3a','q3b','q4a','q4b'].forEach(key => {
+      const el = document.getElementById('ex1-' + key);
+      el.value = ''; el.disabled = false;
+      document.getElementById('ex1-' + key + '-item').className = 'question-item';
+      document.getElementById('ex1-' + key + '-fb').style.display = 'none';
+    });
+    state.ex1 = {};
+    document.getElementById('ex1-result').style.display = 'none';
+    document.getElementById('ex1-redo').style.display = 'none';
+  } else if (ex === 'ex2') {
+    ['5a','5b','5c','5d','5e','5f','5g','5h'].forEach(key => {
+      const el = document.getElementById('ex2-' + key);
+      el.value = ''; el.disabled = false; el.className = '';
+      const fb = document.getElementById('ex2-' + key + '-fb');
+      fb.className = 'gapfill-feedback'; fb.innerHTML = '';
+    });
+    state.ex2 = {};
+    document.getElementById('ex2-result').style.display = 'none';
+    document.getElementById('ex2-redo').style.display = 'none';
+  } else if (ex === 'ex3') {
+    ['s1','s2','s3','s4','s5','s6'].forEach(key => {
+      const sel = document.getElementById('ex3-' + key);
+      sel.value = ''; sel.disabled = false;
+      document.getElementById('ex3-' + key + '-row').className = 'speaker-row';
+      document.getElementById('ex3-' + key + '-fb').innerHTML = '';
+    });
+    state.ex3 = {};
+    document.getElementById('ex3-result').style.display = 'none';
+    document.getElementById('ex3-redo').style.display = 'none';
+  } else if (ex === 'ex4') {
+    ['qa','qb','qc','qd','qe','qf','qg','qh'].forEach(key => {
+      const qId = 'ex4-' + key;
+      const btns = document.querySelectorAll('#' + qId + '-btns .abc-btn');
+      btns.forEach(b => { b.disabled = false; b.classList.remove('selected','correct-answer','wrong-answer'); });
+      delete ex4Selections[qId];
+      document.getElementById(qId + '-item').className = 'question-item';
+      document.getElementById(qId + '-fb').style.display = 'none';
+    });
+    state.ex4 = {};
+    document.getElementById('ex4-result').style.display = 'none';
+    document.getElementById('ex4-redo').style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
