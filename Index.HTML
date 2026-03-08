@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classroom Tools Hub</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #FCFBF7; /* Cream/Off-white background */
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 1rem;
+            margin: 0;
+        }
+        h1 {
+            color: #2C2C2C;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid #D4AF37; /* Gold accent */
+            padding-bottom: 10px;
+        }
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 800px;
+        }
+        .tool-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.2rem 2rem;
+            background-color: #FFFFFF;
+            color: #2C2C2C;
+            text-decoration: none;
+            font-size: 1.05rem;
+            border: 1px solid #EAEAEA;
+            border-left: 5px solid #D4AF37; /* Gold accent border */
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out;
+            text-align: center;
+        }
+        .tool-button:hover {
+            background-color: #FDFDFD;
+            border-left: 5px solid #B5952F; /* Darker gold on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .github-link {
+            margin-top: 4rem;
+            color: #888888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .github-link:hover {
+            color: #D4AF37;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Classroom Tools Hub</h1>
+
+    <div class="button-container">
+        <a href="grammar-exercises.html" class="tool-button">Grammar Exercises</a>
+        <a href="research-projects.html" class="tool-button">Research Projects</a>
+        <a href="game-cards.html" class="tool-button">Game Cards</a>
+        <a href="tool-template.html" class="tool-button">Blank Tool Template</a>
+    </div>
+
+    <a href="https://github.com/paulbolter/School" class="github-link" target="_blank">View Repository on GitHub</a>
+
+</body>
+</html>
