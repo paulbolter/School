@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul's Classroom Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e1a;
+    --card: #16162a;
+    --card-hover: #1e1e38;
+    --border: #2a2a4a;
+    --text: #f0eef8;
+    --muted: #7a7a9a;
+    --coming: #2a2a3e;
+
+    --grade6: #4fc3f7;
+    --grade8: #f06292;
+    --igcse: #81c784;
+    --general: #ffb74d;
+    --staff: #ce93d8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(79,195,247,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(240,98,146,0.07) 0%, transparent 50%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    letter-spacing: 5px;
+    line-height: 1;
+    background: linear-gradient(135deg, #4fc3f7, #f06292, #ffb74d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* Sections */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto 50px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 18px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+    opacity: 0.8;
+  }
+
+  .card:hover {
+    background: var(--card-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  .card.grade6::before { background: var(--grade6); }
+  .card.grade8::before { background: var(--grade8); }
+  .card.igcse::before  { background: var(--igcse); }
+  .card.general::before { background: var(--general); }
+  .card.staff::before  { background: var(--staff); }
+
+  .card:hover.grade6  { border-color: var(--grade6); box-shadow: 0 8px 30px rgba(79,195,247,0.15); }
+  .card:hover.grade8  { border-color: var(--grade8); box-shadow: 0 8px 30px rgba(240,98,146,0.15); }
+  .card:hover.igcse   { border-color: var(--igcse);  box-shadow: 0 8px 30px rgba(129,199,132,0.15); }
+  .card:hover.general { border-color: var(--general);box-shadow: 0 8px 30px rgba(255,183,77,0.15); }
+  .card:hover.staff   { border-color: var(--staff);  box-shadow: 0 8px 30px rgba(206,147,216,0.15); }
+
+  .card-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+
+  .card-name {
+    font-weight: 800;
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .card-arrow {
+    margin-top: auto;
+    padding-top: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    transition: opacity 0.18s;
+  }
+
+  .card:hover .card-arrow { opacity: 1; }
+
+  /* Coming soon cards */
+  .card.coming {
+    background: var(--coming);
+    border-style: dashed;
+    border-color: #333355;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .card.coming::before { background: #444466; }
+
+  .coming-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: #333355;
+    color: #8888aa;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 4px;
+    width: fit-content;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Classroom Tools</h1>
+  <p>Presidential School &nbsp;·&nbsp; Paul Bolter &nbsp;·&nbsp; 2025–26</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--grade6)"></div> Grade 6</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--grade8)"></div> Grade 8</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--igcse)"></div> IGCSE Practice</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--general)"></div> All Grades</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--staff)"></div> Staff</div>
+</div>
+
+<!-- GRADE 6 -->
+<div class="section">
+  <div class="section-title">
+    <div class="dot" style="background:var(--grade6)"></div>
+    Grade 6
+  </div>
+  <div class="grid">
+
+    <a class="card grade6" href="Grade-6-unit-9_vocab.html">
+      <div class="card-icon">📚</div>
+      <div class="card-name">Unit 9 Vocabulary Quiz</div>
+      <div class="card-desc">Interactive vocab practice for Grade 6, Unit 9</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card grade6" href="Grade6_compare_game.html">
+      <div class="card-icon">⚖️</div>
+      <div class="card-name">Can We Compare?</div>
+      <div class="card-desc">Comparison discussion game for Grade 6</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card grade6" href="Thinking_prompts_grade6.html">
+      <div class="card-icon">💭</div>
+      <div class="card-name">Thinking Prompts — Grade 6</div>
+      <div class="card-desc">Discussion and critical thinking question randomiser</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card grade6" href="student-picker-6-GREEN.html">
+      <div class="card-icon">🎯</div>
+      <div class="card-name">Student Picker — 6 Green</div>
+      <div class="card-desc">Random student name selector for 6 Green</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- GRADE 8 -->
+<div class="section">
+  <div class="section-title">
+    <div class="dot" style="background:var(--grade8)"></div>
+    Grade 8
+  </div>
+  <div class="grid">
+
+    <a class="card grade8" href="Grade-8-unit_9_vocab.html">
+      <div class="card-icon">📚</div>
+      <div class="card-name">Unit 9 Vocabulary Quiz</div>
+      <div class="card-desc">Interactive vocab practice for Grade 8, Unit 9</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card grade8" href="can-we-compare-Grade8.html">
+      <div class="card-icon">⚖️</div>
+      <div class="card-name">Can We Compare? — Grade 8</div>
+      <div class="card-desc">Comparison discussion game for Grade 8</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card grade8" href="jobs-showdown.html">
+      <div class="card-icon">💼</div>
+      <div class="card-name">Jobs Showdown!</div>
+      <div class="card-desc">Which job wins? Randomised jobs comparison game</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card grade8" href="team-challenge-grd8.html">
+      <div class="card-icon">🏆</div>
+      <div class="card-name">Team Challenge — Grade 8</div>
+      <div class="card-desc">Team-based classroom challenge activity</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card grade8" href="student-picker-HORROR-pics_8_BLUE(2).html">
+      <div class="card-icon">👻</div>
+      <div class="card-name">Student Picker — 8 Blue (Horror)</div>
+      <div class="card-desc">Spooky themed random student picker for 8 Blue</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card grade8" href="student-pickerMECH_SHAKE_.html">
+      <div class="card-icon">🤖</div>
+      <div class="card-name">Student Picker — Mech Shake</div>
+      <div class="card-desc">Mechanical/anime themed student name picker</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ALL GRADES -->
+<div class="section">
+  <div class="section-title">
+    <div class="dot" style="background:var(--general)"></div>
+    All Grades
+  </div>
+  <div class="grid">
+
+    <a class="card general" href="Passive_Voice_Builder_v3.html">
+      <div class="card-icon">🔧</div>
+      <div class="card-name">Passive Voice Builder</div>
+      <div class="card-desc">Scaffolded passive voice sentence construction tool (v3)</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card general" href="Sentence-machine(2).html">
+      <div class="card-icon">⚙️</div>
+      <div class="card-name">Sentence Machine</div>
+      <div class="card-desc">Grammar-based sentence starter generator</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card general" href="Thinking_prompts_all_grades.html">
+      <div class="card-icon">🧠</div>
+      <div class="card-name">Thinking Prompts — All Grades</div>
+      <div class="card-desc">Discussion and critical thinking prompts for any class</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- IGCSE -->
+<div class="section">
+  <div class="section-title">
+    <div class="dot" style="background:var(--igcse)"></div>
+    IGCSE Practice Papers
+  </div>
+  <div class="grid">
+
+    <a class="card igcse" href="igcse-June-11-2022.html">
+      <div class="card-icon">📝</div>
+      <div class="card-name">June 2022 — Paper 1</div>
+      <div class="card-desc">IGCSE 0510 ESL Core — June 2022</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card igcse" href="igcse-June-12-2021.html">
+      <div class="card-icon">📝</div>
+      <div class="card-name">June 2021 — Paper 2</div>
+      <div class="card-desc">IGCSE 0510 ESL Core — June 2021</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card igcse" href="igcse-June-12-2023.html">
+      <div class="card-icon">📝</div>
+      <div class="card-name">June 2023 — Paper 2</div>
+      <div class="card-desc">IGCSE 0510 ESL Core — June 2023</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <a class="card igcse" href="igcse-Nov-30-2023-listening.html">
+      <div class="card-icon">🎧</div>
+      <div class="card-name">November 2023 — Listening</div>
+      <div class="card-desc">IGCSE 0510 ESL Core — November 2023 listening practice</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- STAFF -->
+<div class="section">
+  <div class="section-title">
+    <div class="dot" style="background:var(--staff)"></div>
+    Staff
+  </div>
+  <div class="grid">
+
+    <a class="card staff" href="Staff-compare.html">
+      <div class="card-icon">👩‍🏫</div>
+      <div class="card-name">Staff Compare</div>
+      <div class="card-desc">Staff comparison game — just for fun!</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+
+    <!-- Coming soon placeholders -->
+    <div class="card staff coming">
+      <div class="card-icon">📅</div>
+      <div class="card-name">Weekly Schedule Tracker</div>
+      <div class="card-desc">Lesson schedule overview tool</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  paulbolter.github.io/School &nbsp;·&nbsp; Updated 2026
+</footer>
+
+</body>
+</html>
