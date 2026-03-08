@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Scenarios · Grade 8</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef6ff;
+    --white: #ffffff;
+    --text: #1c1f3a;
+    --muted: #90a0b8;
+    --border: #dce8f5;
+    --bubble: rgba(255,255,255,0.55);
+    --bubble-border: rgba(255,255,255,0.9);
+    --task-bg: #fff9e6;
+    --task-border: #fde68a;
+    --task-text: #5c4a00;
+    --accent: #3b82f6;
+    --word-color: #0f4c9e;
+    --shadow: 0 8px 32px rgba(60,100,180,0.10);
+    --shadow-lg: 0 24px 64px rgba(60,100,180,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 20px 60px;
+    background-image:
+      radial-gradient(ellipse at 15% 25%, rgba(147,197,253,0.35) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 70%, rgba(196,231,255,0.40) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 95%, rgba(254,240,138,0.25) 0%, transparent 40%);
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(30px, 5vw, 52px);
+    color: var(--text);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .header h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header p {
+    margin-top: 8px;
+    font-size: clamp(13px, 1.6vw, 16px);
+    color: var(--muted);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── Main card ── */
+  .card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 32px;
+    padding: clamp(36px, 5vw, 60px) clamp(28px, 6vw, 72px);
+    width: 100%;
+    max-width: 980px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    border: 1.5px solid rgba(255,255,255,0.85);
+    position: relative;
+  }
+
+  /* ── Glassy role bubbles ── */
+  .bubbles-row {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .bubble {
+    flex: 1;
+    min-width: 270px;
+    max-width: 430px;
+    border-radius: 28px;
+    padding: clamp(28px, 4vw, 44px) clamp(24px, 3.5vw, 40px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    background: rgba(255,255,255,0.60);
+    border: 2px solid rgba(255,255,255,0.92);
+    box-shadow:
+      0 8px 32px rgba(100,140,220,0.12),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .bubble::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20px; right: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,1), transparent);
+    border-radius: 2px;
+  }
+
+  .bubble-label {
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bubble-label::before {
+    content: '';
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+    flex-shrink: 0;
+  }
+
+  .bubble-b .bubble-label { color: #0891b2; }
+  .bubble-b .bubble-label::before {
+    background: #0891b2;
+    box-shadow: 0 0 0 3px rgba(8,145,178,0.2);
+  }
+
+  .bubble-role {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(22px, 3.5vw, 36px);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text);
+  }
+
+  /* ── Task box ── */
+  .task-box {
+    background: var(--task-bg);
+    border: 2px solid var(--task-border);
+    border-radius: 20px;
+    padding: clamp(18px, 2.5vw, 26px) clamp(22px, 3.5vw, 44px);
+    width: 100%;
+    max-width: 820px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(251,191,36,0.18);
+  }
+
+  .task-label {
+    font-size: clamp(10px, 1.2vw, 13px);
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #b45309;
+    margin-bottom: 8px;
+  }
+
+  .task-text {
+    font-size: clamp(17px, 2.5vw, 26px);
+    font-weight: 700;
+    color: var(--task-text);
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+
+
+  /* ── Placeholder ── */
+  .placeholder-msg {
+    text-align: center;
+    padding: 32px 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .placeholder-msg p {
+    font-size: clamp(15px, 2vw, 20px);
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .spacebar-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.8);
+    border: 2px dashed #bdd4f0;
+    border-radius: 14px;
+    padding: 12px 28px;
+    font-size: clamp(13px, 1.6vw, 16px);
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .key-badge {
+    background: white;
+    border: 2px solid #bdd4f0;
+    border-radius: 7px;
+    padding: 3px 14px 5px;
+    font-size: clamp(11px, 1.3vw, 13px);
+    font-weight: 900;
+    color: var(--text);
+    box-shadow: 0 3px 0 #bdd4f0;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Assign students button ── */
+  .assign-row {
+    display: none;
+    justify-content: center;
+    width: 100%;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .assign-row.visible { display: flex; }
+
+  .pick-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 13px 36px;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(13px, 1.6vw, 16px);
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    box-shadow: 0 6px 22px rgba(59,130,246,0.35);
+    transition: all 0.2s ease;
+  }
+
+  .pick-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(59,130,246,0.45);
+  }
+
+  .pick-btn:active { transform: translateY(0); }
+
+  /* ── Names attached below bubbles ── */
+  .bubble-wrapper {
+    flex: 1;
+    min-width: 270px;
+    max-width: 430px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bubble {
+    width: 100%;
+  }
+
+  .bubble-student-name {
+    display: none;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(20px, 3vw, 32px);
+    font-weight: 700;
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+    padding: 2px 0;
+  }
+
+  .bubble-student-name.visible { display: block; }
+
+  .name-a { color: var(--accent); }
+  .name-b { color: #0891b2; }
+
+
+  /* ── Footer ── */
+  .footer-hint {
+    margin-top: 22px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: 100%;
+    max-width: 820px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ── Animations ── */
+  @keyframes slideup {
+    0% { transform: translateY(32px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+
+  .roles-wrapper {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+
+  @media (max-width: 600px) {
+    .bubbles-row { flex-direction: column; align-items: stretch; }
+    .bubble-wrapper { min-width: unset; max-width: 100%; }
+    .bubble { min-width: unset; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Speaking <em>Scenarios</em></h1>
+  <p>Grade 8 · Pair Activity</p>
+</div>
+
+<div class="card">
+
+  <!-- Roles (hidden until generated) -->
+  <div class="roles-wrapper" id="scenario-roles">
+    <div class="bubbles-row">
+      <div class="bubble-wrapper">
+        <div class="bubble bubble-a">
+          <div class="bubble-label">Student A</div>
+          <div class="bubble-role" id="role-a-text"></div>
+        </div>
+        <div class="bubble-student-name name-a" id="student-a-name"></div>
+      </div>
+      <div class="bubble-wrapper">
+        <div class="bubble bubble-b">
+          <div class="bubble-label">Student B</div>
+          <div class="bubble-role" id="role-b-text"></div>
+        </div>
+        <div class="bubble-student-name name-b" id="student-b-name"></div>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="task-label">Your Task</div>
+      <div class="task-text" id="scenario-task"></div>
+
+    </div>
+  </div>
+
+  <!-- Placeholder -->
+  <div class="placeholder-msg" id="scenario-placeholder">
+    <p>Ready when you are!</p>
+    <div class="spacebar-hint">
+      <span class="key-badge">SPACE</span> to generate a scenario
+    </div>
+  </div>
+
+  <div class="assign-row" id="assign-row">
+    <button class="pick-btn" onclick="assignStudents()">🎲 Assign Students to Roles</button>
+  </div>
+
+  <div class="divider"></div>
+
+</div>
+
+<div class="footer-hint">
+  <span class="key-badge" style="box-shadow:0 3px 0 #bdd4f0;">SPACE</span> new scenario
+</div>
+
+<script>
+
+// ── SCENARIOS ─────────────────────────────────────────
+const scenarios = [
+  { a:"a tourist visiting this place for the very first time", b:"a local guide who knows everything about the area", task:"Have a conversation about what to see and do." },
+  { a:"a customer who is unhappy with a product or service", b:"a company representative trying to resolve the issue", task:"Have the complaint conversation. Try to find a solution." },
+  { a:"a young person with ambitious plans for the future", b:"an older family member who is experienced but cautious", task:"Discuss the plans. Try to reach an understanding." },
+  { a: "a parent who is worried about their teenager staying out too late", b: "the teenager who thinks they are being treated unfairly", task: "Have the conversation." },
+  { a: "a student who missed an important exam", b: "the teacher who has to decide what happens next", task: "Have the conversation." },
+  { a: "a student with an idea for improving something at school", b: "the school principal who controls the budget", task: "Have the conversation." },
+  { a: "someone dealing with a difficult personal problem", b: "a supportive friend who listens carefully and wants to help", task: "Have the conversation." },
+  { a: "an old friend who moved away two years ago and has just come back", b: "the friend who stayed — a lot has happened!", task: "Catch up on everything." },
+  { a: "someone who believes something needs to change", b: "someone who is happy with the way things are", task: "Discuss your views." },
+  { a: "a student who completely forgot to do last night's homework", b: "the teacher who is waiting for it and wants an explanation", task: "Have the conversation." },
+  { a: "a student who always does homework immediately after school", b: "a friend who leaves everything until midnight", task: "Discuss your routines." },
+  { a: "a student who really does not want to participate in Sports Day", b: "the PE teacher trying to motivate and persuade them", task: "Have the conversation." },
+  { a: "a friend who keeps cancelling plans at the last minute", b: "the frustrated friend who wants to sort things out", task: "Have the conversation." },
+  { a: "a friend who wants to go out this weekend", b: "a friend who wants to stay in and play mobile games", task: "Try to agree on a plan." },
+  { a: "a student planning their holiday destination", b: "a friend who thinks they are bad plans and suggest something else", task: "Try to agree on one destination." },
+  { a: "someone who just got back from an amazing holiday", b: "a curious friend who wants to hear every detail", task: "Tell the story." },
+  { a: "a student who got a very dramatic new haircut or hair colour", b: "a friend who has a very strong — and very honest — opinion about it", task: "Have the conversation." },
+  { a: "a teenager who wants to dye their hair an unusual colour", b: "a parent who is completely against the idea", task: "Have the conversation." },
+  { a: "someone who loved a movie they just watched", b: "a friend who thought the same movie was terrible", task: "Discuss your opinions." },
+  { a: "a huge fan of a popular TV series", b: "a friend who has never seen it and doesn't like that kind of series", task: "Have the conversation." },
+  { a: "a student who plays online games for 4–5 hours every day", b: "a worried friend who feels ignored and left out", task: "Have the conversation." },
+  { a: "a teenager who wants permission to buy a new video game", b: "a parent who thinks they already spend too much time gaming", task: "Have the conversation." },
+  { a: "a teenager who regularly stays up until 2am on their phone", b: "a parent who just found out and is not happy", task: "Have the conversation." },
+  { a: "a teenager who thinks they do more than their fair share of chores at home", b: "a parent or sibling who strongly disagrees", task: "Have the argument." },
+  { a: "two siblings who need to divide up the household chores for the week", b: "neither of you wants the jobs they dislike most", task: "Try to agree on a fair arrangement." },
+  { a: "a student who thinks social media is mostly harmful for teenagers", b: "a friend who thinks it is mostly positive and useful", task: "Debate the topic." },
+  { a: "a teenager who wants a later curfew on weekends", b: "a parent who thinks the current curfew is already fair", task: "Have the conversation." },
+  { a: "a student who is stressed about upcoming exams", b: "a relaxed friend who has a very different attitude to studying", task: "Have the conversation." },
+];
+
+
+
+// ── STUDENTS ──────────────────────────────────────────
+const students = [
+  "Saidakbar","Rushana","Robiya","Azizbek","Ulugbek","Shojahon",
+  "Alisher","Umidjon","Mardon","Abdulaziz","Abirbek","Azimjon"
+];
+
+let lastStudentA = '', lastStudentB = '';
+
+function assignStudents() {
+  let a, b;
+  do { a = students[Math.floor(Math.random() * students.length)]; } while (a === lastStudentA && students.length > 1);
+  do { b = students[Math.floor(Math.random() * students.length)]; } while (b === a);
+  lastStudentA = a; lastStudentB = b;
+
+  const nameA = document.getElementById('student-a-name');
+  const nameB = document.getElementById('student-b-name');
+
+  nameA.textContent = a;
+  nameB.textContent = b;
+  nameA.classList.add('visible');
+  nameB.classList.add('visible');
+
+  // Change button to re-roll
+  document.querySelector('.pick-btn').textContent = '🔄 New Students';
+}
+
+// ── STATE ─────────────────────────────────────────────
+let lastScenario = null;
+
+function pick(arr, last) {
+  let c;
+  do { c = arr[Math.floor(Math.random() * arr.length)]; } while (c === last && arr.length > 1);
+  return c;
+}
+
+// ── GENERATE ──────────────────────────────────────────
+function generate() {
+  const scenario = pick(scenarios, lastScenario);
+  lastScenario = scenario;
+
+  const rolesEl = document.getElementById('scenario-roles');
+  const placeholderEl = document.getElementById('scenario-placeholder');
+
+  document.getElementById('role-a-text').textContent = scenario.a.charAt(0).toUpperCase() + scenario.a.slice(1) + '.';
+  document.getElementById('role-b-text').textContent = scenario.b.charAt(0).toUpperCase() + scenario.b.slice(1) + '.';
+  document.getElementById('scenario-task').textContent = scenario.task;
+  placeholderEl.style.display = 'none';
+
+  // Clear student names on new scenario
+  const nameA = document.getElementById('student-a-name');
+  const nameB = document.getElementById('student-b-name');
+  nameA.classList.remove('visible');
+  nameB.classList.remove('visible');
+  lastStudentA = ''; lastStudentB = '';
+  document.querySelector('.pick-btn').textContent = '🎲 Assign Students to Roles';
+
+  // Show assign button
+  document.getElementById('assign-row').classList.add('visible');
+
+  rolesEl.style.display = 'none';
+  rolesEl.style.display = 'flex';
+  rolesEl.style.animation = 'none';
+  void rolesEl.offsetWidth;
+  rolesEl.style.animation = 'slideup 0.45s cubic-bezier(0.22,0.61,0.36,1) both';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { e.preventDefault(); generate(); }
+});
+</script>
+</body>
+</html>
