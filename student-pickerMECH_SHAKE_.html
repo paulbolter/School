@@ -153,14 +153,14 @@
             0%   { transform: translate(0,    0)    rotate(0deg);   }
             3%   { transform: translate(-20px,-14px) rotate(-2.5deg); }
             6%   { transform: translate(22px,  16px) rotate( 2.8deg); }
-            9%   { transform: translate(-25px, 10px) rotate(-2deg);   }
-            12%  { transform: translate(28px, -18px) rotate( 3deg);   }
+            9%   { transform: translate(-23px, 10px) rotate(-2deg);   }
+            12%  { transform: translate(24px, -18px) rotate( 3deg);   }
             15%  { transform: translate(-22px, 20px) rotate(-2.8deg); }
-            18%  { transform: translate(26px, -14px) rotate( 2.5deg); }
+            18%  { transform: translate(22px, -14px) rotate( 2.5deg); }
             21%  { transform: translate(-18px, 16px) rotate(-2deg);   }
-            24%  { transform: translate(24px, -12px) rotate( 2.2deg); }
+            24%  { transform: translate(20px, -12px) rotate( 2.2deg); }
             27%  { transform: translate(-20px, 18px) rotate(-2.5deg); }
-            30%  { transform: translate(22px, -10px) rotate( 2deg);   }
+            30%  { transform: translate(20px, -10px) rotate( 2deg);   }
             33%  { transform: translate(-16px, 14px) rotate(-1.8deg); }
             36%  { transform: translate(20px,  -8px) rotate( 1.5deg); }
             40%  { transform: translate(-14px, 12px) rotate(-1.5deg); }
@@ -375,7 +375,7 @@
             container.classList.remove('shaking');
             void container.offsetWidth; // force reflow so animation restarts if picked again quickly
             container.classList.add('shaking');
-            setTimeout(() => container.classList.remove('shaking'), 2100);
+            setTimeout(() => container.classList.remove('shaking'), 1400);
 
             // --- Single fat laser blast across the full screen ---
             const laser = document.getElementById('laser1');
