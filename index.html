@@ -1,118 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classroom Tools Hub</title>
-    <style>
-        body {
-            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #FCFBF7;
-            color: #333333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 3rem 1rem;
-            margin: 0;
-        }
-        h1 {
-            color: #2C2C2C;
-            font-weight: 300;
-            letter-spacing: 1px;
-            margin-bottom: 2.5rem;
-            border-bottom: 2px solid #D4AF37;
-            padding-bottom: 10px;
-        }
-        .button-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
-            max-width: 1000px; /* Widened slightly to fit the new buttons nicely */
-        }
-        .tool-button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1.2rem 1.5rem;
-            background-color: #FFFFFF;
-            color: #2C2C2C;
-            text-decoration: none;
-            font-size: 1.05rem;
-            border: 1px solid #EAEAEA;
-            border-left: 5px solid #D4AF37;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.2s ease-in-out;
-            text-align: center;
-        }
-        .tool-button:hover {
-            background-color: #FDFDFD;
-            border-left: 5px solid #B5952F;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .github-link {
-            margin-top: 4rem;
-            color: #888888;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        .github-link:hover {
-            color: #D4AF37;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul's Classroom Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --gold: #e3b341;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --card: #1c2128;
+    --card-hover: #222930;
+    --tag-bg: #1f2f40;
+    --tag-text: #58a6ff;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 48px 40px 36px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    opacity: 0.8;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  header h1 span { color: var(--gold); }
+  .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 460px;
+    line-height: 1.7;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    max-width: 860px;
+    margin: 28px auto 0;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .stat-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent2);
+    box-shadow: 0 0 6px var(--accent2);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .stat strong { color: var(--text); }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 40px;
+  }
+
+  /* ── SEARCH ── */
+  .search-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+  #search {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 14px 10px 40px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #search:focus { border-color: var(--accent); }
+  #search::placeholder { color: var(--muted); }
+
+  .sort-select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 10px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .sort-select:focus { border-color: var(--accent); color: var(--text); }
+
+  /* ── GRID ── */
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease both;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .card:hover {
+    background: var(--card-hover);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .card:hover::before { opacity: 1; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+  .card-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.35;
+    word-break: break-word;
+  }
+  .card-filename {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    word-break: break-all;
+  }
+  .card-tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    align-self: flex-start;
+    margin-top: auto;
+  }
+
+  /* ── STATES ── */
+  .state-msg {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .state-msg .big { font-size: 36px; margin-bottom: 12px; }
+  .state-msg p { font-size: 14px; line-height: 1.7; }
+  .state-msg code {
+    font-family: 'DM Mono', monospace;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+    font-size: 12px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  @media (max-width: 600px) {
+    header, main { padding-left: 20px; padding-right: 20px; }
+    .stats-bar { gap: 16px; }
+  }
+</style>
 </head>
 <body>
 
-    <h1>Classroom Tools Hub</h1>
-
-    <div class="button-container">
-        <a href="Grade-6-unit-9_vocab.html" class="tool-button" target="_blank">Grade 6 Unit 9 Vocab</a>
-        <a href="Grade-8-unit_9_vocab.html" class="tool-button" target="_blank">Grade 8 Unit 9 Vocab</a>
-        <a href="Passive_Voice_Builder_v3.html" class="tool-button" target="_blank">Passive Voice Builder</a>
-        <a href="Sentence-machine(2).html" class="tool-button" target="_blank">Sentence Machine</a>
-
-        <a href="Thinking_prompts_grade6.html" class="tool-button" target="_blank">Thinking Prompts (Grade 6)</a>
-        <a href="Thinking_prompts_all_grades.html" class="tool-button" target="_blank">Thinking Prompts (All Grades)</a>
-        <a href="Grade6_compare_game.html" class="tool-button" target="_blank">Grade 6 Compare Game</a>
-        <a href="can-we-compare-Grade8.html" class="tool-button" target="_blank">Can We Compare? (Grade 8)</a>
-        <a href="Staff-compare.html" class="tool-button" target="_blank">Staff Compare</a>
-       <a href="Speaking_Scenario_Grade8BLUE.html" class="tool-button" target="_blank">Speaking_Scenario_Grade8BLUE</a>
-    <a href="Speaking_Scenario_Grade8GREEN.html" class="tool-button" target="_blank">Speaking_Scenario_Grade8GREEN</a>
-
-        <a href="igcse-LISTENING-Nov-31-2023fixed.html" class="tool-button" target="_blank">IGCSE LISTENING-Nov 31 (2023)</a>
-        <a href="igcse-READING-June-11-2022fixed.html" class="tool-button" target="_blank">IGCSE READING-June 11 (2022)</a>
-        <a href="igcse-READING-June-12-2021fixed.html" class="tool-button" target="_blank">IGCSE READING-June 12 (2021)</a>
-        <a href="igcse-READING-June-12-2023fixed.html" class="tool-button" target="_blank">IGCSE READING-Nov 12 (2023)</a>
-        <a href="jobs-showdown.html" class="tool-button" target="_blank">Jobs Showdown</a>
-        <a href="team-challenge-grd8.html" class="tool-button" target="_blank">Team Challenge Grade 8</a>
-        <a href="student-picker-6-GREEN.html" class="tool-button" target="_blank">Student Picker 6 Green</a>
-        <a href="student-picker-HORROR-pics_8_BLUE(2).html" class="tool-button" target="_blank">Student Picker 8 Blue Horror</a>
-        <a href="student-pickerMECH_SHAKE_.html" class="tool-button" target="_blank">Student Picker 8 Green Mech</a>
-        <a href="student-picker-6-GREEN_MECH2.html" class="tool-button" target="_blank">Student Picker 6 GREEN_MECH2</a>
-        <a href="student-picker-unicorn.html" class="tool-button" target="_blank">Unicorn-picker</a>
-        <a href="frog_name_picker6GREEN.html" class="tool-button" target="_blank">Frog-name</a>
-        <a href="past-perfect-builder.html" class="tool-button" target="_blank">Past perfect builder</a>
+<header>
+  <div class="header-inner">
+    <p class="eyebrow">paulbolter.github.io / School</p>
+    <h1>Classroom <span>Tools</span></h1>
+    <p class="subtitle">Interactive HTML resources for Grade 6 · Grade 8 IGCSE · Speaking &amp; Vocabulary activities</p>
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-dot"></span>
+        <span id="file-count">Loading…</span>
+      </div>
+      <div class="stat">
+        <span>Last updated: <strong id="last-updated">—</strong></span>
+      </div>
     </div>
+  </div>
+</header>
 
-    <a href="https://github.com/paulbolter/School" class="github-link" target="_blank">View Repository on GitHub</a>
+<main>
+  <div class="search-row">
+    <div class="search-wrap">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input id="search" type="text" placeholder="Filter tools…" autocomplete="off">
+    </div>
+    <select class="sort-select" id="sort">
+      <option value="alpha">A → Z</option>
+      <option value="recent">Newest</option>
+    </select>
+  </div>
 
+  <div id="grid">
+    <div class="state-msg">
+      <div class="big">⏳</div>
+      <p>Fetching your tools from GitHub…</p>
+    </div>
+  </div>
+</main>
+
+<footer>PRESIDENTIAL SCHOOL · JIZZAKH · UZBEKISTAN</footer>
+
+<script>
+// ── CONFIGURATION ──────────────────────────────────────────────
+const GITHUB_USER = 'paulbolter';
+const GITHUB_REPO = 'School';
+const GITHUB_BRANCH = 'main'; // change to 'master' if needed
+// ──────────────────────────────────────────────────────────────
+
+// Pretty names: if the filename matches a key here, use that label.
+// Otherwise the name is auto-generated from the filename.
+const PRETTY_NAMES = {
+  // Add your own overrides here, e.g.:
+  // 'igcse-ex1-ex2-2023.html': 'IGCSE Reading 2023 — Exercise 1 & 2',
+};
+
+// Icons assigned by keyword in the filename
+function iconFor(name) {
+  const n = name.toLowerCase();
+  if (n.includes('igcse') || n.includes('reading') || n.includes('listen')) return '📄';
+  if (n.includes('vocab') || n.includes('word'))   return '📝';
+  if (n.includes('speak') || n.includes('scenario')) return '🗣️';
+  if (n.includes('grammar') || n.includes('passive') || n.includes('perfect')) return '✏️';
+  if (n.includes('name') || n.includes('picker') || n.includes('slot')) return '🎰';
+  if (n.includes('game') || n.includes('quiz') || n.includes('would')) return '🎮';
+  if (n.includes('schedule') || n.includes('timetable')) return '📅';
+  if (n.includes('portfolio') || n.includes('dashboard')) return '📊';
+  if (n.includes('frog'))   return '🐸';
+  if (n.includes('horror')) return '💀';
+  if (n.includes('mech') || n.includes('cyber') || n.includes('proto')) return '🤖';
+  if (n.includes('unicorn')) return '🦄';
+  return '🔧';
+}
+
+// Tag assigned by keyword
+function tagFor(name) {
+  const n = name.toLowerCase();
+  if (n.includes('igcse') || n.includes('reading') || n.includes('listen')) return 'IGCSE';
+  if (n.includes('grade6') || n.includes('grade-6') || n.includes('g6'))    return 'Grade 6';
+  if (n.includes('grade8') || n.includes('grade-8') || n.includes('g8'))    return 'Grade 8';
+  if (n.includes('speak')) return 'Speaking';
+  if (n.includes('vocab') || n.includes('word'))  return 'Vocab';
+  if (n.includes('grammar') || n.includes('passive') || n.includes('perfect')) return 'Grammar';
+  if (n.includes('name') || n.includes('picker')) return 'Name Picker';
+  if (n.includes('game') || n.includes('quiz'))   return 'Game';
+  if (n.includes('schedule') || n.includes('timetable')) return 'Admin';
+  return 'Tool';
+}
+
+// Convert filename → display name
+function prettyName(filename) {
+  if (PRETTY_NAMES[filename]) return PRETTY_NAMES[filename];
+  return filename
+    .replace(/\.html$/i, '')
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// ── FETCH & RENDER ──────────────────────────────────────────────
+let allFiles = [];
+
+async function loadFiles() {
+  const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/?ref=${GITHUB_BRANCH}`;
+
+  try {
+    const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+    if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+    const data = await res.json();
+
+    // Keep only .html files, skip index.html itself
+    allFiles = data
+      .filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.html') && f.name.toLowerCase() !== 'index.html')
+      .map(f => ({
+        name: f.name,
+        url: `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/${f.name}`,
+        lastModified: f.sha, // used as stable sort key
+      }));
+
+    document.getElementById('file-count').innerHTML =
+      `<strong>${allFiles.length}</strong> tool${allFiles.length !== 1 ? 's' : ''} available`;
+
+    const now = new Date();
+    document.getElementById('last-updated').textContent =
+      now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    renderGrid(allFiles);
+  } catch (err) {
+    document.getElementById('grid').innerHTML = `
+      <div class="state-msg" style="grid-column:1/-1">
+        <div class="big">⚠️</div>
+        <p>Couldn't load files from GitHub.<br>
+        Check the repo is public and the branch is set to <code>${GITHUB_BRANCH}</code>.<br><br>
+        Error: ${err.message}</p>
+      </div>`;
+    document.getElementById('file-count').textContent = 'Could not load';
+  }
+}
+
+function renderGrid(files) {
+  const grid = document.getElementById('grid');
+  if (!files.length) {
+    grid.innerHTML = `<div class="state-msg" style="grid-column:1/-1">
+      <div class="big">🔍</div><p>No tools match your search.</p></div>`;
+    return;
+  }
+  grid.innerHTML = files.map((f, i) => `
+    <a class="card" href="${f.url}" target="_blank" rel="noopener" style="animation-delay:${i * 40}ms">
+      <div class="card-icon">${iconFor(f.name)}</div>
+      <div class="card-name">${prettyName(f.name)}</div>
+      <div class="card-filename">${f.name}</div>
+      <span class="card-tag">${tagFor(f.name)}</span>
+    </a>`).join('');
+}
+
+// ── SEARCH & SORT ───────────────────────────────────────────────
+function filtered() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const sort = document.getElementById('sort').value;
+
+  let files = allFiles.filter(f =>
+    !q || f.name.toLowerCase().includes(q) || prettyName(f.name).toLowerCase().includes(q)
+  );
+
+  if (sort === 'alpha') {
+    files.sort((a, b) => a.name.localeCompare(b.name));
+  }
+  // 'recent' keeps GitHub API order (newest commits first by default)
+
+  return files;
+}
+
+document.getElementById('search').addEventListener('input', () => renderGrid(filtered()));
+document.getElementById('sort').addEventListener('change', () => renderGrid(filtered()));
+
+// ── INIT ────────────────────────────────────────────────────────
+loadFiles();
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
