@@ -177,7 +177,7 @@
 
   .card-icon   { font-size: 24px; line-height: 1; }
   .card-name   { font-size: 14px; font-weight: 600; line-height: 1.35; word-break: break-word; }
-  .card-filename { font-size: 11px; color: var(--muted); word-break: break-all; font-family: monospace; }
+  .card-filename { font-size: 13px; font-weight: 600; color: var(--ink); word-break: break-all; font-family: monospace; }
   .card-tag {
     display: inline-block;
     background: var(--gold-light);
@@ -344,10 +344,7 @@ function renderGrid(files) {
   }
   grid.innerHTML = files.map((f, i) => `
     <a class="card" href="${f.url}" target="_blank" rel="noopener" style="animation-delay:${i * 35}ms">
-      <div class="card-icon">${iconFor(f.name)}</div>
-      <div class="card-name">${prettyName(f.name)}</div>
       <div class="card-filename">${f.name}</div>
-      <span class="card-tag">${tagFor(f.name)}</span>
     </a>`).join('');
 }
 
