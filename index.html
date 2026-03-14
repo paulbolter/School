@@ -143,32 +143,25 @@
   .card {
     background: var(--card);
     border: 1px solid var(--border);
+    border-left: 5px solid var(--gold);
     border-radius: 10px;
-    padding: 20px 18px;
+    padding: 28px 22px;
     text-decoration: none;
     color: var(--ink);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    justify-content: center;
+    min-height: 90px;
     position: relative;
     overflow: hidden;
-    transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    transition: box-shadow 0.15s, transform 0.15s, background 0.15s;
     animation: fadeUp 0.35s ease both;
   }
-  .card::after {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--gold), #f0c040);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
   .card:hover {
-    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
     transform: translateY(-3px);
-    border-color: var(--gold);
+    background: var(--gold-light);
   }
-  .card:hover::after { opacity: 1; }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(10px); }
@@ -177,7 +170,7 @@
 
   .card-icon   { font-size: 24px; line-height: 1; }
   .card-name   { font-size: 14px; font-weight: 600; line-height: 1.35; word-break: break-word; }
-  .card-filename { font-size: 13px; font-weight: 600; color: var(--ink); word-break: break-all; font-family: monospace; }
+  .card-filename { font-size: 15px; font-weight: 600; color: var(--ink); word-break: break-word; font-family: 'DM Sans', sans-serif; line-height: 1.5; }
   .card-tag {
     display: inline-block;
     background: var(--gold-light);
