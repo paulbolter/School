@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 8 – Making Lists | Vocabulary Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFE033;
+    --green: #3EE88A;
+    --red: #FF5E7A;
+    --blue: #5BC8FF;
+    --purple: #C77DFF;
+    --white: #FFFFFF;
+    --muted: rgba(255,255,255,0.45);
+    --border: rgba(255,255,255,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #0a4a7a 0%, #0d6eaa 40%, #0a5a8a 70%, #1a7ab0 100%);
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px; position: relative; overflow-x: hidden;
+  }
+  .blob { position:fixed;border-radius:50%;filter:blur(80px);opacity:0.22;pointer-events:none;animation:blobFloat 12s ease-in-out infinite; }
+  .blob1 { width:500px;height:500px;background:#0099CC;top:-100px;left:-150px; }
+  .blob2 { width:400px;height:400px;background:#00AADD;bottom:-100px;right:-100px;animation-delay:-4s; }
+  .blob3 { width:300px;height:300px;background:#66CCFF;top:40%;left:60%;animation-delay:-8s; }
+  @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(20px,-30px) scale(1.05);}66%{transform:translate(-15px,20px) scale(0.97);} }
+  .stars { position:fixed;inset:0;pointer-events:none;overflow:hidden; }
+  .star { position:absolute;background:white;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0.1;transform:scale(1);}50%{opacity:0.8;transform:scale(1.4);} }
+
+  .header { text-align:center;margin-bottom:18px;position:relative;z-index:2; }
+  .unit-badge { display:inline-block;background:var(--yellow);color:#1a1060;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:0.15em;text-transform:uppercase;padding:6px 20px;border-radius:50px;margin-bottom:12px;box-shadow:0 4px 20px rgba(255,224,51,0.4); }
+  h1 { font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,50px);color:var(--white);line-height:1.1;text-shadow:0 0 40px rgba(255,224,51,0.3); }
+  h1 span { color:var(--yellow); }
+
+  /* Progress */
+  .progress-bar-wrap { width:100%;max-width:820px;margin:0 auto 14px;position:relative;z-index:2; }
+  .progress-info { display:flex;justify-content:space-between;color:var(--muted);font-size:13px;font-weight:700;margin-bottom:8px; }
+  .progress-track { height:8px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden; }
+  .progress-fill { height:100%;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:10px;transition:width 0.5s ease;box-shadow:0 0 12px rgba(91,200,255,0.5); }
+
+  /* Quiz Card */
+  .quiz-card { background:rgba(255,255,255,0.07);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:32px;padding:clamp(24px,5vw,52px) clamp(20px,6vw,60px);width:100%;max-width:820px;position:relative;z-index:2;box-shadow:0 30px 80px rgba(0,0,0,0.5); }
+  .quiz-card::before { content:'';position:absolute;top:-1px;left:60px;right:60px;height:3px;background:linear-gradient(90deg,transparent,var(--yellow),var(--green),var(--blue),transparent);border-radius:0 0 4px 4px; }
+  .word-label { font-size:12px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px; }
+  .word { font-family:'Fredoka One',cursive;font-size:clamp(36px,8vw,80px);color:var(--white);line-height:1;margin-bottom:8px;text-shadow:0 0 60px rgba(255,255,255,0.15); }
+  .pos-badge { display:inline-block;font-size:12px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue);background:rgba(91,200,255,0.12);border:1px solid rgba(91,200,255,0.25);padding:4px 14px;border-radius:50px;margin-bottom:28px; }
+
+  /* Options */
+  .options { display:flex;flex-direction:column;gap:12px; }
+  .option { background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.12);border-radius:18px;padding:16px 22px;cursor:pointer;display:flex;align-items:flex-start;gap:14px;transition:all 0.2s;text-align:left; }
+  .option:hover { background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+  .option-letter { width:36px;height:36px;min-width:36px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:17px;color:var(--white);transition:all 0.2s; }
+  .option-text { font-size:clamp(14px,2vw,17px);font-weight:600;color:rgba(255,255,255,0.85);line-height:1.45;transition:all 0.2s;padding-top:5px; }
+  .option.selected { border-color:var(--yellow);background:rgba(255,224,51,0.1); }
+  .option.selected .option-letter { background:var(--yellow);color:#1a1060; }
+  .option.correct { border-color:var(--green) !important;background:rgba(62,232,138,0.12) !important; }
+  .option.correct .option-letter { background:var(--green) !important;color:#0d3320 !important; }
+  .option.correct .option-text { color:var(--green) !important;font-weight:700; }
+  .option.wrong { border-color:var(--red) !important;background:rgba(255,94,122,0.1) !important;opacity:0.55; }
+  .option.wrong .option-letter { background:var(--red) !important;color:white !important; }
+  .option.wrong .option-text { color:rgba(255,255,255,0.4) !important; }
+  .option.faded { opacity:0.28;transform:none !important; }
+  .option.faded:hover { transform:none;border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.06); }
+  .option.disabled { cursor:default;pointer-events:none; }
+
+  /* Buttons */
+  .btn-row { display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;justify-content:center; }
+  .btn { font-family:'Fredoka One',cursive;font-size:clamp(15px,2.2vw,19px);border:none;border-radius:14px;padding:13px 34px;cursor:pointer;transition:all 0.2s; }
+  .btn-reveal { background:var(--yellow);color:#1a1060;box-shadow:0 8px 24px rgba(255,224,51,0.35);display:none; }
+  .btn-reveal:hover { transform:translateY(-3px);box-shadow:0 14px 32px rgba(255,224,51,0.5); }
+  .btn-reveal.visible { display:block; }
+  .btn-next { background:linear-gradient(135deg,var(--blue),var(--purple));color:white;box-shadow:0 8px 24px rgba(91,200,255,0.3);display:none; }
+  .btn-next:hover { transform:translateY(-3px); }
+  .btn-next.visible { display:block; }
+  .score-area { display:flex;gap:20px;justify-content:center;margin-top:20px;flex-wrap:wrap; }
+  .score-pill { display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--muted);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:7px 16px;border-radius:50px; }
+  .dot { width:10px;height:10px;border-radius:50%; }
+  .dot-correct { background:var(--green);box-shadow:0 0 8px var(--green); }
+  .dot-wrong { background:var(--red);box-shadow:0 0 8px var(--red); }
+
+  /* Animations */
+  .pop { animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes popIn { 0%{transform:scale(0.8);opacity:0;}100%{transform:scale(1);opacity:1;} }
+  .slide-up { animation:slideUp 0.35s ease; }
+  @keyframes slideUp { 0%{transform:translateY(16px);opacity:0;}100%{transform:translateY(0);opacity:1;} }
+
+  /* End Screen */
+  .end-screen { text-align:center;display:none; }
+  .end-screen.visible { display:block; }
+  .end-screen .big-emoji { font-size:80px;margin-bottom:16px;animation:popIn 0.5s ease; }
+  .end-screen h2 { font-family:'Fredoka One',cursive;font-size:clamp(30px,5vw,54px);color:var(--yellow);margin-bottom:10px; }
+  .end-screen p { font-size:18px;color:rgba(255,255,255,0.7);margin-bottom:28px; }
+  .end-score { font-family:'Fredoka One',cursive;font-size:clamp(44px,8vw,76px);color:var(--white);margin-bottom:24px; }
+  .end-score span { color:var(--green); }
+  .quiz-content.hidden { display:none; }
+
+  /* Review badge */
+  .review-badge {
+    display: none;
+    align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #FF8C00, #FF5E00);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    padding: 7px 20px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 18px rgba(255,120,0,0.5);
+    animation: pulse-orange 1.8s ease-in-out infinite;
+  }
+  .review-badge.visible { display: inline-flex; }
+  @keyframes pulse-orange {
+    0%,100% { box-shadow: 0 4px 18px rgba(255,120,0,0.5); }
+    50%      { box-shadow: 0 6px 28px rgba(255,120,0,0.85); }
+  }
+  /* Review end screen button */
+  .btn-review { background: linear-gradient(135deg, #FF8C00, #FF5E00); color: white; box-shadow: 0 8px 24px rgba(255,120,0,0.4); display: none; }
+  .btn-review:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(255,120,0,0.6); }
+  .btn-review.visible { display: inline-block; }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+
+<div class="header">
+  <div class="unit-badge">📚 Vocabulary Quiz</div>
+  <h1>8 Blue · <span>Unit 8: Making Lists</span></h1>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-info">
+    <span id="progress-label">Question 1 of 30</span>
+    <span id="score-label">Score: 0</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-content" id="quiz-content">
+    <div class="word-label">What does this word / phrase mean?</div>
+    <div class="word" id="word-display">—</div>
+    <div class="pos-badge" id="pos-display">noun</div>
+    <div class="review-badge" id="review-badge">⚠️ REVIEW — you missed this one!</div>
+    <div class="options" id="options-container"></div>
+    <div class="btn-row">
+      <button class="btn btn-reveal" id="btn-reveal" onclick="reveal()">🔍 Reveal Answer</button>
+      <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Next Word ➜</button>
+    </div>
+    <div class="score-area">
+      <div class="score-pill"><div class="dot dot-correct"></div><span id="correct-count">0 correct</span></div>
+      <div class="score-pill"><div class="dot dot-wrong"></div><span id="wrong-count">0 wrong</span></div>
+    </div>
+  </div>
+  <div class="end-screen" id="end-screen">
+    <div class="big-emoji" id="end-emoji">🎉</div>
+    <h2 id="end-title">Quiz Complete!</h2>
+    <p id="end-message">Great work on Unit 8 vocabulary!</p>
+    <div class="end-score">You scored <span id="final-score">—</span></div>
+    <div id="end-review-note" style="font-size:16px;color:rgba(255,180,80,0.9);margin-bottom:20px;display:none;"></div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-review" id="btn-start-review" onclick="startReview()" style="display:none">⚠️ Review Missed Words</button>
+      <button class="btn btn-next visible" onclick="restartQuiz()" style="display:inline-block">🔄 Play Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ── VOCABULARY ────────────────────────────────────────
+const vocab = [
+  // Key words
+  { word: "apparently", pos: "adverb", correct: "It seems that something is true, based on what people say or how things look", wrong: ["In a way that is very clear and easy to understand", "Happening slowly over a long period of time"] },
+  { word: "calculations", pos: "noun (plural)", correct: "Sums or mathematical processes done to find an answer", wrong: ["Written instructions explaining how to do something safely", "Scientific tests done to check if a theory is correct"] },
+  { word: "concrete", pos: "noun", correct: "A hard building material made by mixing cement, sand, and water", wrong: ["A type of metal used to make strong structures", "A natural stone found in rivers and mountains"] },
+  { word: "infection", pos: "noun", correct: "An illness caused by bacteria or a virus entering the body", wrong: ["A type of medicine given to patients after surgery", "A serious injury caused by an accident in hospital"] },
+  { word: "procedure", pos: "noun", correct: "An official or agreed way of doing something, step by step", wrong: ["A piece of equipment used to carry out medical tests", "A written report produced at the end of an experiment"] },
+  { word: "relevant", pos: "adjective", correct: "Directly connected to and important for the subject being discussed", wrong: ["Happening very frequently and difficult to control", "Too complicated to explain in simple language"] },
+  { word: "sacred", pos: "adjective", correct: "Connected to religion or a god, and treated with great respect", wrong: ["Extremely old and impossible to find anywhere else", "Something that is private and not shared with others"] },
+  { word: "specific", pos: "adjective", correct: "Particular and exact, rather than general or vague", wrong: ["Very large in size and difficult to handle", "Happening by accident without any planning"] },
+  { word: "statement", pos: "noun", correct: "Something you say or write that gives information or an opinion clearly", wrong: ["A question asked to find out more information", "A form you fill in to make an official complaint"] },
+  { word: "structure", pos: "noun", correct: "Something that has been built, like a building or bridge", wrong: ["A piece of equipment used to measure distances", "A type of material used to make modern buildings"] },
+  // Phrasal verbs
+  { word: "carry out", pos: "phrasal verb", correct: "To do or complete a task or activity", wrong: ["To remove something from a place and throw it away", "To explain a process clearly to someone else"] },
+  { word: "come down with", pos: "phrasal verb", correct: "To become ill with a particular sickness", wrong: ["To fall from a high place and land on the ground", "To feel very tired after a long period of work"] },
+  { word: "come up with", pos: "phrasal verb", correct: "To think of or produce an idea, plan or answer", wrong: ["To accidentally find something you were not looking for", "To walk quickly towards someone to speak to them"] },
+  { word: "look into", pos: "phrasal verb", correct: "To investigate or research something carefully", wrong: ["To stare at something for a long time without blinking", "To check whether an item is stored in the right place"] },
+  { word: "point out", pos: "phrasal verb", correct: "To draw attention to a fact or piece of information", wrong: ["To choose someone from a group to answer a question", "To show someone where to go by using your finger"] },
+  { word: "run through", pos: "phrasal verb", correct: "To quickly go through or check a list or set of steps", wrong: ["To move very fast past a group of people", "To use up all of a supply of something important"] },
+  { word: "turn out", pos: "phrasal verb", correct: "To happen or develop in a particular way in the end", wrong: ["To switch off a light or electronic device", "To produce a very large number of products quickly"] },
+  { word: "work out", pos: "phrasal verb", correct: "To understand or calculate something by thinking carefully", wrong: ["To do an outdoor job", "To solve an argument at work peacefully"] },
+  // Alternatives to 'if'
+  { word: "unless", pos: "conjunction", correct: "Except if; used to say something will happen if a condition is not met", wrong: ["Even though something is true or has happened", "Because of the fact that something occurred"] },
+  { word: "provided", pos: "conjunction", correct: "On the condition that; only if a particular thing happens", wrong: ["In spite of the fact that something is difficult", "At the same time as something else is happening"] },
+  // From the Seven Wonders reading
+  { word: "succession", pos: "noun", correct: "A number of things of the same kind coming one after another", wrong: ["A very long wall built to keep enemies out of a city", "The process of voting to choose a new world wonder"] },
+  { word: "hostile", pos: "adjective", correct: "Unfriendly and aggressive, likely to attack or cause harm", wrong: ["Very large in size and impossible to move easily", "Built a very long time ago and no longer standing"] },
+  { word: "abandoned", pos: "verb (past)", correct: "Left a place permanently and never went back", wrong: ["Carefully restored a building to its original condition", "Protected a site so that tourists could visit it safely"] },
+  { word: "flourished", pos: "verb (past)", correct: "Grew and developed very successfully", wrong: ["Was suddenly destroyed by a natural disaster", "Was built using materials brought from far away"] },
+  // NEW WORDS
+  { word: "icon", pos: "noun", correct: "A famous person or thing that is seen as a symbol of something important", wrong: ["A small decorative object kept as a souvenir from a trip", "A detailed painting or drawing found inside an old building"] },
+  { word: "carve", pos: "verb", correct: "To cut a shape or design out of a hard material such as stone or wood", wrong: ["To paint a picture onto a flat surface using bright colours", "To carefully wrap an object so that it does not get damaged"] },
+  { word: "spectacle", pos: "noun", correct: "An impressive or dramatic event or sight that attracts attention", wrong: ["A small piece of equipment used to look at distant stars", "A written description of an important historical event"] },
+  { word: "drill", pos: "verb", correct: "To make a hole in something using a special rotating tool", wrong: ["To polish a surface until it becomes perfectly smooth", "To attach two pieces of material together using strong glue"] },
+  { word: "dread", pos: "verb", correct: "To feel very worried or frightened about something that may happen", wrong: ["To feel excited and eager about something coming soon", "To think carefully before making an important decision"] },
+  { word: "observatory", pos: "noun", correct: "A building containing equipment used to study stars and the sky", wrong: ["A large underground tunnel built to connect two cities", "A government building where official records are kept and stored"] }
+];
+
+// ── QUIZ LOGIC ────────────────────────────────────────
+let questions = [];
+let current = 0;
+let score = 0;
+let correct = 0;
+let wrong = 0;
+let answered = false;
+let missedWords = [];   // vocab items where player hit "Reveal"
+let isReviewMode = false;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function buildQuestions() {
+  const shuffledVocab = shuffle(vocab);
+  const positions = [];
+  const perSlot = Math.floor(shuffledVocab.length / 3);
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < perSlot; j++) positions.push(i);
+  }
+  while (positions.length < shuffledVocab.length) {
+    positions.push(Math.floor(Math.random() * 3));
+  }
+  const shuffledPositions = shuffle(positions);
+
+  questions = shuffledVocab.map(function(v, idx) {
+    const correctPos = shuffledPositions[idx];
+    const wrongOpts = shuffle([
+      { text: v.wrong[0], isCorrect: false },
+      { text: v.wrong[1], isCorrect: false }
+    ]);
+    const opts = wrongOpts.slice();
+    opts.splice(correctPos, 0, { text: v.correct, isCorrect: true });
+    return { word: v.word, pos: v.pos, opts: opts };
+  });
+}
+
+function render() {
+  answered = false;
+  const q = questions[current];
+  const wordEl = document.getElementById('word-display');
+  wordEl.textContent = q.word;
+  wordEl.className = 'word pop';
+  document.getElementById('pos-display').textContent = q.pos;
+  const total = questions.length;
+  const label = isReviewMode ? 'Review ' : 'Question ';
+  document.getElementById('progress-label').textContent = label + (current + 1) + ' of ' + total;
+  document.getElementById('score-label').textContent = isReviewMode ? '⚠️ Review Mode' : 'Score: ' + score;
+  document.getElementById('progress-fill').style.width = ((current / total) * 100) + '%';
+
+  // Show/hide review badge
+  const badge = document.getElementById('review-badge');
+  if (isReviewMode) { badge.classList.add('visible'); } else { badge.classList.remove('visible'); }
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  container.className = 'options slide-up';
+  const letters = ['A','B','C'];
+  q.opts.forEach(function(opt, i) {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.dataset.correct = opt.isCorrect;
+    div.innerHTML = '<div class="option-letter">' + letters[i] + '</div><div class="option-text">' + opt.text + '</div>';
+    div.addEventListener('click', function() { selectOption(div, opt.isCorrect); });
+    container.appendChild(div);
+  });
+  document.getElementById('btn-reveal').classList.remove('visible');
+  document.getElementById('btn-next').classList.remove('visible');
+}
+
+function selectOption(el, isCorrect) {
+  if (answered) return;
+  answered = true;
+  document.querySelectorAll('.option').forEach(function(o) { o.classList.add('disabled'); });
+  el.classList.add('selected');
+  if (isCorrect) {
+    el.classList.add('correct');
+    score++; correct++;
+    document.querySelectorAll('.option').forEach(function(o) { if (o !== el) o.classList.add('faded'); });
+    document.getElementById('btn-next').classList.add('visible');
+  } else {
+    el.classList.add('wrong');
+    wrong++;
+    document.getElementById('btn-reveal').classList.add('visible');
+  }
+  document.getElementById('correct-count').textContent = correct + ' correct';
+  document.getElementById('wrong-count').textContent = wrong + ' wrong';
+  document.getElementById('score-label').textContent = 'Score: ' + score;
+}
+
+function reveal() {
+  // Track which vocab item was missed (only during main quiz)
+  if (!isReviewMode) {
+    const q = questions[current];
+    // Store original vocab entry for review
+    const vocabEntry = vocab.find(function(v) { return v.word === q.word; });
+    if (vocabEntry && !missedWords.find(function(m) { return m.word === vocabEntry.word; })) {
+      missedWords.push(vocabEntry);
+    }
+  }
+  document.querySelectorAll('.option').forEach(function(o) {
+    if (o.dataset.correct === 'true') { o.classList.add('correct'); o.classList.remove('faded'); }
+    else if (!o.classList.contains('wrong')) { o.classList.add('faded'); }
+  });
+  document.getElementById('btn-reveal').classList.remove('visible');
+  document.getElementById('btn-next').classList.add('visible');
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) { showEnd(); return; }
+  render();
+}
+
+function showEnd() {
+  document.getElementById('quiz-content').classList.add('hidden');
+  document.getElementById('end-screen').classList.add('visible');
+
+  if (isReviewMode) {
+    // End of review round
+    document.getElementById('end-emoji').textContent = '✅';
+    document.getElementById('end-title').textContent = 'Review Complete!';
+    document.getElementById('end-message').textContent = 'Well done for going back over the tricky ones!';
+    document.getElementById('final-score').textContent = 'All ' + questions.length + ' reviewed';
+    document.getElementById('btn-start-review').style.display = 'none';
+    document.getElementById('end-review-note').style.display = 'none';
+  } else {
+    const pct = Math.round((correct / questions.length) * 100);
+    document.getElementById('final-score').textContent = correct + ' / ' + questions.length;
+    let emoji = '🎉', title = 'Quiz Complete!', msg = 'Great work on Unit 8 vocabulary!';
+    if (pct >= 80) { emoji = '🏆'; title = 'Outstanding!'; msg = 'You really know your Unit 8 vocabulary!'; }
+    else if (pct >= 60) { emoji = '🎉'; title = 'Great job!'; msg = 'Good solid knowledge — keep practising!'; }
+    else if (pct >= 40) { emoji = '💪'; title = 'Good effort!'; msg = 'Review the words you missed and try again!'; }
+    else { emoji = '📚'; title = 'Keep studying!'; msg = 'Go back to Unit 8 and try the quiz again!'; }
+    document.getElementById('end-emoji').textContent = emoji;
+    document.getElementById('end-title').textContent = title;
+    document.getElementById('end-message').textContent = msg;
+
+    // Show review button if any words were missed
+    if (missedWords.length > 0) {
+      const reviewBtn = document.getElementById('btn-start-review');
+      reviewBtn.style.display = 'inline-block';
+      const note = document.getElementById('end-review-note');
+      note.style.display = 'block';
+      note.textContent = '⚠️ You revealed the answer for ' + missedWords.length + ' word' + (missedWords.length > 1 ? 's' : '') + ' — want to practise them again?';
+    }
+  }
+  document.getElementById('progress-fill').style.width = '100%';
+}
+
+function startReview() {
+  isReviewMode = true;
+  current = 0;
+  // Build review questions from missed words
+  questions = shuffle(missedWords).map(function(v) {
+    const opts = shuffle([
+      { text: v.correct, isCorrect: true },
+      { text: v.wrong[0], isCorrect: false },
+      { text: v.wrong[1], isCorrect: false }
+    ]);
+    return { word: v.word, pos: v.pos, opts: opts };
+  });
+  document.getElementById('end-screen').classList.remove('visible');
+  document.getElementById('quiz-content').classList.remove('hidden');
+  render();
+}
+
+function restartQuiz() {
+  current = 0; score = 0; correct = 0; wrong = 0;
+  missedWords = []; isReviewMode = false;
+  buildQuestions();
+  document.getElementById('end-screen').classList.remove('visible');
+  document.getElementById('quiz-content').classList.remove('hidden');
+  document.getElementById('correct-count').textContent = '0 correct';
+  document.getElementById('wrong-count').textContent = '0 wrong';
+  render();
+}
+
+// ── STARS ─────────────────────────────────────────────
+(function() {
+  const s = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2.5 + 1;
+    star.style.cssText = 'width:' + size + 'px;height:' + size + 'px;top:' + (Math.random()*100) + '%;left:' + (Math.random()*100) + '%;--dur:' + (Math.random()*3+2) + 's;animation-delay:' + (Math.random()*4) + 's;';
+    s.appendChild(star);
+  }
+})();
+
+// ── INIT ──────────────────────────────────────────────
+buildQuestions();
+render();
+
+document.addEventListener('keydown', function(e) {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (document.getElementById('btn-next').classList.contains('visible')) nextQuestion();
+    else if (document.getElementById('btn-reveal').classList.contains('visible')) reveal();
+  }
+});
+</script>
+</body>
+</html>
