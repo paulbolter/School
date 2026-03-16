@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Paul's Classroom Tools</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -21,6 +21,7 @@
 
   body {
     font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
     background: var(--paper);
     color: var(--ink);
     min-height: 100vh;
@@ -48,6 +49,7 @@
   }
   .eyebrow {
     font-size: 10px;
+    font-weight: 300;
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--gold);
@@ -55,14 +57,16 @@
   }
   header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 400;
+    font-size: clamp(26px, 4vw, 38px);
     color: white;
     line-height: 1.2;
     margin-bottom: 10px;
   }
   header p.sub {
     color: #9999bb;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 300;
     line-height: 1.6;
     max-width: 500px;
   }
@@ -72,8 +76,8 @@
     gap: 24px;
     flex-wrap: wrap;
   }
-  .stat { font-size: 13px; color: #9999bb; }
-  .stat strong { color: var(--gold); }
+  .stat { font-size: 12px; font-weight: 300; color: #9999bb; }
+  .stat strong { color: var(--gold); font-weight: 400; }
 
   /* ── MAIN ── */
   main {
@@ -103,6 +107,7 @@
     border-radius: 8px;
     color: var(--ink);
     font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
     font-size: 14px;
     padding: 10px 14px 10px 40px;
     outline: none;
@@ -120,6 +125,7 @@
     border-radius: 8px;
     color: var(--muted);
     font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
     font-size: 13px;
     padding: 10px 14px;
     outline: none;
@@ -145,13 +151,13 @@
     border: 1px solid var(--border);
     border-left: 5px solid var(--gold);
     border-radius: 10px;
-    padding: 28px 22px;
+    padding: 22px 18px;
     text-decoration: none;
     color: var(--ink);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 90px;
+    min-height: 80px;
     position: relative;
     overflow: hidden;
     transition: box-shadow 0.15s, transform 0.15s, background 0.15s;
@@ -168,21 +174,12 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .card-icon   { font-size: 24px; line-height: 1; }
-  .card-name   { font-size: 14px; font-weight: 600; line-height: 1.35; word-break: break-word; }
-  .card-filename { font-size: 15px; font-weight: 600; color: var(--ink); word-break: break-word; font-family: 'DM Sans', sans-serif; line-height: 1.5; }
-  .card-tag {
-    display: inline-block;
-    background: var(--gold-light);
-    color: #7a5a00;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    align-self: flex-start;
-    margin-top: auto;
-    text-transform: uppercase;
+  .card-title {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.45;
+    word-break: break-word;
   }
 
   /* ── STATES ── */
@@ -193,7 +190,7 @@
     color: var(--muted);
   }
   .state-msg .big { font-size: 40px; margin-bottom: 14px; }
-  .state-msg p    { font-size: 14px; line-height: 1.8; }
+  .state-msg p    { font-size: 14px; font-weight: 300; line-height: 1.8; }
   .state-msg code {
     background: var(--cream);
     border: 1px solid var(--border);
@@ -206,6 +203,7 @@
     text-align: center;
     padding: 28px;
     font-size: 11px;
+    font-weight: 300;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--muted);
@@ -257,41 +255,38 @@ const GITHUB_USER   = 'paulbolter';
 const GITHUB_REPO   = 'School';
 const GITHUB_BRANCH = 'main';
 
-const PRETTY_NAMES = {};
-
-function iconFor(name) {
-  const n = name.toLowerCase();
-  if (n.includes('igcse') || n.includes('reading') || n.includes('listen')) return '📄';
-  if (n.includes('vocab') || n.includes('word'))    return '📝';
-  if (n.includes('speak') || n.includes('scenario')) return '🗣️';
-  if (n.includes('grammar') || n.includes('passive') || n.includes('perfect')) return '✏️';
-  if (n.includes('name') || n.includes('picker') || n.includes('slot')) return '🎰';
-  if (n.includes('game') || n.includes('quiz') || n.includes('would')) return '🎮';
-  if (n.includes('schedule') || n.includes('timetable')) return '📅';
-  if (n.includes('portfolio') || n.includes('dashboard')) return '📊';
-  if (n.includes('frog'))    return '🐸';
-  if (n.includes('horror'))  return '💀';
-  if (n.includes('mech') || n.includes('cyber') || n.includes('proto')) return '🤖';
-  if (n.includes('unicorn')) return '🦄';
-  return '🔧';
-}
-
-function tagFor(name) {
-  const n = name.toLowerCase();
-  if (n.includes('igcse') || n.includes('reading') || n.includes('listen')) return 'IGCSE';
-  if (n.includes('grade6') || n.includes('grade-6') || n.includes('g6'))    return 'Grade 6';
-  if (n.includes('grade8') || n.includes('grade-8') || n.includes('g8'))    return 'Grade 8';
-  if (n.includes('speak'))  return 'Speaking';
-  if (n.includes('vocab') || n.includes('word'))   return 'Vocab';
-  if (n.includes('grammar') || n.includes('passive') || n.includes('perfect')) return 'Grammar';
-  if (n.includes('name') || n.includes('picker'))  return 'Name Picker';
-  if (n.includes('game') || n.includes('quiz'))    return 'Game';
-  if (n.includes('schedule') || n.includes('timetable')) return 'Admin';
-  return 'Tool';
-}
+// Pretty titles keyed by exact filename
+const PRETTY_NAMES = {
+  'Compare-game-Grade8.html':               'Compare Game · Grade 8',
+  'Compare-game-Staff.html':                'Compare Game · Staff',
+  'Compare_game-Grade-6.html':              'Compare Game · Grade 6',
+  'Passive-Builder.html':                   'Passive Voice Builder',
+  'Past-perfect-builder.html':              'Past Perfect Builder',
+  'Picker-6-GREEN-Frog.html':               'Name Picker · Frog',
+  'Picker-6-GREEN.html':                    'Name Picker · Grade 6',
+  'Picker-6-GREEN_MECH.html':               'Name Picker · Grade 6 Mech',
+  'Picker-Grade-8-HORROR.html':             'Name Picker · Grade 8B Horror',
+  'Picker-Grade-8-MECH.html':               'Name Picker · Grade 8 Mech',
+  'Picker-unicorn.html':                    'Name Picker · Unicorn',
+  'Sentence-machine(2).html':               'Sentence Machine',
+  'Speaking_Scenario_Grade8BLUE.html':      'Speaking Scenarios · Grade 8 Blue',
+  'Speaking_Scenario_Grade8GREEN.html':     'Speaking Scenarios · Grade 8 Green',
+  'Team-challenge-Grade-8.html':            'Team Challenge · Grade 8',
+  'Thinking_prompts_all_grades.html':       'Thinking Prompts · All Grades',
+  'Thinking_prompts_grade6.html':           'Thinking Prompts · Grade 6',
+  'Vocab-Grade-6-unit-9.html':              'Vocabulary · Grade 6 Unit 9',
+  'Vocab-Grade-8-Unit-8.html':              'Vocabulary · Grade 8 Unit 8',
+  'Vocab-Grade-8-unit_9.html':              'Vocabulary · Grade 8 Unit 9',
+  'igcse-LISTENING-Nov-31-2023fixed.html':  'IGCSE Listening · Nov 2023',
+  'igcse-READING-June-11-2022fixed.html':   'IGCSE Reading · June 2022',
+  'igcse-READING-June-12-2021fixed.html':   'IGCSE Reading · June 2021',
+  'igcse-READING-June-12-2023fixed.html':   'IGCSE Reading · June 2023',
+  'jobs-showdown.html':                     'Jobs Showdown',
+};
 
 function prettyName(filename) {
   if (PRETTY_NAMES[filename]) return PRETTY_NAMES[filename];
+  // Fallback for any future files not yet in the list
   return filename
     .replace(/\.html$/i, '')
     .replace(/[-_]/g, ' ')
@@ -337,7 +332,7 @@ function renderGrid(files) {
   }
   grid.innerHTML = files.map((f, i) => `
     <a class="card" href="${f.url}" target="_blank" rel="noopener" style="animation-delay:${i * 35}ms">
-      <div class="card-filename">${f.name}</div>
+      <div class="card-title">${prettyName(f.name)}</div>
     </a>`).join('');
 }
 
@@ -347,7 +342,7 @@ function filtered() {
     !q || f.name.toLowerCase().includes(q) || prettyName(f.name).toLowerCase().includes(q)
   );
   if (document.getElementById('sort').value === 'alpha') {
-    files.sort((a, b) => a.name.localeCompare(b.name));
+    files.sort((a, b) => prettyName(a.name).localeCompare(prettyName(b.name)));
   }
   return files;
 }
