@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>This Weekend I…</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #e8e0d0;
+    --accent1: #ff4d6d;
+    --accent2: #4361ee;
+    --accent3: #06d6a0;
+    --accent4: #ffd166;
+    --text: #1a1a2e;
+    --muted: #777;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 40px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── FLOATING BACKGROUND ── */
+  .bg-dots {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  /* ── BURST ── */
+  .burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    font-size: 2rem;
+    animation: burst-anim 0.7s ease-out forwards;
+  }
+  @keyframes burst-anim {
+    0%   { transform: scale(0) translateY(0); opacity: 1; }
+    60%  { transform: scale(1.4) translateY(-40px); opacity: 1; }
+    100% { transform: scale(1) translateY(-80px); opacity: 0; }
+  }
+
+  .everything {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── HEADER ── */
+  .header { text-align: center; margin-bottom: 28px; }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.4rem, 7vw, 4rem);
+    color: var(--accent1);
+    text-shadow: 4px 4px 0 #ffd166, 7px 7px 0 rgba(255,77,109,0.15);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  /* ── CLASS PICKER SCREEN ── */
+  #classScreen {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 10px;
+  }
+
+  .class-pick-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: var(--accent2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .class-btns {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-class {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    padding: 22px 44px;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s;
+    user-select: none;
+  }
+  .btn-class:active { transform: translateY(3px); }
+
+  .btn-class-6g {
+    background: var(--accent3);
+    color: #fff;
+    box-shadow: 0 7px 0 #04a87e, 0 12px 30px rgba(6,214,160,0.25);
+  }
+  .btn-class-8b {
+    background: var(--accent2);
+    color: #fff;
+    box-shadow: 0 7px 0 #2d3db5, 0 12px 30px rgba(67,97,238,0.25);
+  }
+  .btn-class-8g {
+    background: var(--accent1);
+    color: #fff;
+    box-shadow: 0 7px 0 #c0293d, 0 12px 30px rgba(255,77,109,0.25);
+  }
+
+  /* ── SPINNER SCREEN ── */
+  #spinnerScreen { display: none; width: 100%; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    width: 100%;
+    background: #d9d0bf;
+    border-radius: 50px;
+    height: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent1), var(--accent4));
+    border-radius: 50px;
+    transition: width 0.5s ease;
+  }
+  .progress-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* ── MAIN CARD ── */
+  .main-card {
+    width: 100%;
+    background: #fff;
+    border-radius: 32px;
+    border: 3px solid #e8e8f0;
+    box-shadow: 0 8px 0 #e0d8c8, 0 14px 40px rgba(0,0,0,0.10);
+    overflow: hidden;
+    margin-bottom: 28px;
+    border-top: 7px solid var(--accent2);
+    transition: box-shadow 0.2s;
+  }
+
+  .main-card.active {
+    box-shadow: 0 0 0 4px var(--accent2), 0 14px 40px rgba(67,97,238,0.2);
+  }
+
+  @keyframes wiggle {
+    0%,100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-1.5deg); }
+    75%      { transform: rotate(1.5deg); }
+  }
+  .main-card.wiggle { animation: wiggle 0.35s ease; }
+
+  /* ── SPOTLIGHT SECTION ── */
+  .spotlight {
+    padding: 32px 28px 24px;
+    text-align: center;
+    border-bottom: 2px dashed #eee;
+  }
+
+  .spotlight-label {
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+
+  .student-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.2rem, 8vw, 3.8rem);
+    color: var(--text);
+    letter-spacing: 1px;
+    min-height: 1.2em;
+    display: block;
+    transition: opacity 0.05s;
+  }
+
+  .student-name.blur { opacity: 0.15; }
+
+  /* ── SENTENCE SECTION ── */
+  .sentence-section {
+    padding: 28px 28px 36px;
+    text-align: center;
+  }
+
+  .sentence-fixed {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.3rem, 3.5vw, 2rem);
+    color: var(--muted);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* ── VERB PILL ── */
+  .verb-pill {
+    display: inline-block;
+    background: var(--accent4);
+    border-radius: 50px;
+    padding: 12px 48px;
+    box-shadow: 0 5px 0 #e6a800;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .verb-word {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+    color: var(--text);
+    letter-spacing: 1px;
+    display: block;
+    transition: opacity 0.05s;
+  }
+
+  .verb-word.blur { opacity: 0.15; }
+
+  .sentence-tail {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    color: var(--muted);
+    margin-top: 16px;
+    letter-spacing: 1px;
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s, opacity 0.2s;
+    user-select: none;
+  }
+  .btn:active { transform: translateY(3px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-spin {
+    background: var(--accent1);
+    color: #fff;
+    box-shadow: 0 6px 0 #c0293d, 0 10px 24px rgba(255,77,109,0.3);
+    font-size: 1.25rem;
+    padding: 16px 56px;
+  }
+  .btn-spin:active { box-shadow: 0 2px 0 #c0293d; }
+
+  .btn-edit {
+    background: #f0eee8;
+    color: var(--muted);
+    box-shadow: 0 4px 0 #d5d0c5;
+    font-size: 0.95rem;
+    padding: 12px 28px;
+  }
+
+  .btn-reset {
+    background: var(--accent3);
+    color: #fff;
+    box-shadow: 0 4px 0 #04a87e;
+    font-size: 0.95rem;
+    padding: 12px 28px;
+  }
+
+  .btn-back {
+    background: #f0eee8;
+    color: var(--muted);
+    box-shadow: 0 4px 0 #d5d0c5;
+    font-size: 0.95rem;
+    padding: 12px 28px;
+  }
+
+  .hint {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  /* ── EDIT PANEL ── */
+  .edit-panel {
+    width: 100%;
+    background: #fff;
+    border-radius: 24px;
+    border: 3px solid #e8e8f0;
+    box-shadow: 0 6px 0 #e0d8c8;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease, margin 0.4s ease;
+    margin-bottom: 0;
+  }
+  .edit-panel.open {
+    max-height: 700px;
+    margin-bottom: 24px;
+  }
+
+  .edit-inner { padding: 24px; }
+
+  .edit-inner h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: var(--accent2);
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+  }
+
+  .edit-cols {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .edit-col {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .edit-col label {
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .edit-col textarea {
+    width: 100%;
+    height: 180px;
+    border: 2px solid #e8e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    resize: vertical;
+    outline: none;
+  }
+  .edit-col textarea:focus { border-color: var(--accent2); }
+
+  .edit-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: flex-end;
+  }
+
+  .btn-apply {
+    background: var(--accent2);
+    color: #fff;
+    box-shadow: 0 4px 0 #2d3db5;
+    font-size: 1rem;
+    padding: 11px 30px;
+  }
+  .btn-cancel {
+    background: #f0eee8;
+    color: var(--muted);
+    box-shadow: 0 4px 0 #d5d0c5;
+    font-size: 1rem;
+    padding: 11px 24px;
+  }
+
+  /* ── CLASS BADGE ── */
+  .class-badge {
+    display: inline-block;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    padding: 5px 18px;
+    border-radius: 50px;
+    color: #fff;
+    margin-top: 8px;
+  }
+  .badge-6g { background: var(--accent3); }
+  .badge-8b { background: var(--accent2); }
+  .badge-8g { background: var(--accent1); }
+</style>
+</head>
+<body>
+<div class="bg-dots" id="bgDots"></div>
+
+<div class="everything">
+
+  <div class="header">
+    <h1>This Weekend I…</h1>
+    <p class="subtitle">Speaking Activity</p>
+  </div>
+
+  <!-- ── CLASS PICKER SCREEN ── -->
+  <div id="classScreen">
+    <div class="class-pick-label">Choose a class</div>
+    <div class="class-btns">
+      <button class="btn-class btn-class-6g" onclick="startClass('6g')">🟢 Grade 6 Green</button>
+      <button class="btn-class btn-class-8b" onclick="startClass('8b')">🔵 Grade 8 Blue</button>
+      <button class="btn-class btn-class-8g" onclick="startClass('8g')">🔴 Grade 8 Green</button>
+    </div>
+  </div>
+
+  <!-- ── SPINNER SCREEN ── -->
+  <div id="spinnerScreen">
+
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar" style="width:0%"></div>
+    </div>
+    <p class="progress-label" id="progressLabel">0 of ? students</p>
+
+    <!-- EDIT PANEL -->
+    <div class="edit-panel" id="editPanel">
+      <div class="edit-inner">
+        <h3>✏️ Edit Lists</h3>
+        <div class="edit-cols">
+          <div class="edit-col">
+            <label>Students (one per line)</label>
+            <textarea id="editStudents"></textarea>
+          </div>
+          <div class="edit-col">
+            <label>Verbs (one per line)</label>
+            <textarea id="editVerbs"></textarea>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button class="btn btn-cancel" onclick="toggleEdit()">Cancel</button>
+          <button class="btn btn-apply" onclick="applyEdits()">Apply & Spin</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CARD -->
+    <div class="main-card" id="mainCard">
+      <div class="spotlight">
+        <div class="spotlight-label">🌟 On the Spot</div>
+        <span class="student-name" id="studentName">?</span>
+        <span class="class-badge" id="classBadge"></span>
+      </div>
+      <div class="sentence-section">
+        <div class="sentence-fixed">This weekend I …</div>
+        <div class="verb-pill">
+          <span class="verb-word" id="verbWord">?</span>
+        </div>
+        <div class="sentence-tail">…</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-spin" id="spinBtn" onclick="spinAll()">🎲 Spin!</button>
+    </div>
+    <div class="controls" style="margin-top:4px;">
+      <button class="btn btn-edit" onclick="toggleEdit()">✏️ Edit Lists</button>
+      <button class="btn btn-reset" onclick="resetDeck()">🔄 Reset Cycle</button>
+      <button class="btn btn-back" onclick="goBack()">⬅️ Change Class</button>
+    </div>
+    <p class="hint" style="margin-top:14px;">Press <strong>Space</strong> to spin</p>
+
+  </div><!-- /spinnerScreen -->
+
+</div><!-- /everything -->
+
+<script>
+  // ── CLASS DATA ────────────────────────────────────────────────────
+  const classData = {
+    '6g': {
+      label: 'Grade 6 Green',
+      badgeClass: 'badge-6g',
+      students: [
+        "Durdona","Ifora","Setora","Akramjon","Sador","Xushnud","Shamshod",
+        "Otabek","Azizbek","Durbek","Davlat","Samandar","Shaxrizoda","Sabina",
+        "Zarina","Bunyod","Jamshidbek","Yigitali","Behzodbek","Sarvarjon",
+        "Abror","Masrurbek","Mahmudnazar","Jahongir"
+      ]
+    },
+    '8b': {
+      label: 'Grade 8 Blue',
+      badgeClass: 'badge-8b',
+      students: [
+        "Masrur","Fayozbek","Firdavs","Islom","Shojahon","Iroda","Zarina",
+        "Miraziz","Maxmud","Jahongir","Abror","Azizbek"
+      ]
+    },
+    '8g': {
+      label: 'Grade 8 Green',
+      badgeClass: 'badge-8g',
+      students: [
+        "Azimjon","Saidakbar","Abirbek","Azizbek","Alisher","Shojahon",
+        "Robiya","Rushana","Umidjon","Mardon","Ulugbek","Abdulaziz"
+      ]
+    }
+  };
+
+  // ── VERBS ─────────────────────────────────────────────────────────
+  let verbs = [
+    "visited","saw","dreamed about","celebrated","watched","cooked",
+    "accidentally broke","lost","forgot to","slept","drew","listened to",
+    "chatted with","walked","cycled to","swam","traveled to","drove",
+    "explored","climbed","met","talked to","laughed because","invited",
+    "shared","hung out","threw","caught","practised","scrolled","posted",
+    "streamed","downloaded","messaged","searched"
+  ];
+
+  // ── STATE ─────────────────────────────────────────────────────────
+  let currentClass = null;
+  let students     = [];
+  let studentDeck  = [];
+  let verbDeck     = [];
+  let isSpinning   = false;
+
+  // ── DECK HELPERS ──────────────────────────────────────────────────
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function refillStudentDeck() { studentDeck = shuffle(students); }
+  function refillVerbDeck()    { verbDeck    = shuffle(verbs); }
+
+  function pickStudent() {
+    if (studentDeck.length === 0) refillStudentDeck();
+    return studentDeck.pop();
+  }
+
+  function pickVerb() {
+    if (verbDeck.length === 0) refillVerbDeck();
+    return verbDeck.pop();
+  }
+
+  // ── CLASS START / BACK ────────────────────────────────────────────
+  function startClass(key) {
+    currentClass = key;
+    const data = classData[key];
+    students = [...data.students];
+    refillStudentDeck();
+    refillVerbDeck();
+
+    // badge
+    const badge = document.getElementById('classBadge');
+    badge.textContent = data.label;
+    badge.className = 'class-badge ' + data.badgeClass;
+
+    updateProgress();
+    document.getElementById('studentName').textContent = '?';
+    document.getElementById('verbWord').textContent = '?';
+
+    document.getElementById('classScreen').style.display  = 'none';
+    document.getElementById('spinnerScreen').style.display = 'block';
+  }
+
+  function goBack() {
+    document.getElementById('spinnerScreen').style.display = 'none';
+    document.getElementById('classScreen').style.display   = 'flex';
+    document.getElementById('editPanel').classList.remove('open');
+  }
+
+  // ── PROGRESS ──────────────────────────────────────────────────────
+  function updateProgress() {
+    const total = students.length;
+    const done  = total - studentDeck.length;
+    const pct   = Math.round((done / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent =
+      done + ' of ' + total + ' students this round';
+  }
+
+  // ── FLOATING EMOJIS ───────────────────────────────────────────────
+  const floatEmojis = ['📅','🗓️','🌤️','🎮','📚','🍕','⚽','🎬','🏖️','🎵','🛍️','🧁','🏀','🎲','🌈','✨','🎉','🏃','🎤','🌙'];
+  const bgContainer = document.getElementById('bgDots');
+
+  for (let i = 0; i < 24; i++) {
+    const el = document.createElement('div');
+    el.style.cssText = `position:absolute;font-size:1.5rem;opacity:0;pointer-events:none;`;
+    const startX = Math.random() * 100;
+    const startY = Math.random() * 100;
+    const angle  = Math.random() * 2 * Math.PI;
+    const dist   = 100 + Math.random() * 180;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+    const dur   = 10 + Math.random() * 14;
+    const delay = -(Math.random() * dur);
+    el.textContent = floatEmojis[Math.floor(Math.random() * floatEmojis.length)];
+    el.style.left = startX + 'vw';
+    el.style.top  = startY + 'vh';
+    bgContainer.appendChild(el);
+    el.animate([
+      { transform: 'translate(0,0) rotate(0deg)', opacity: 0 },
+      { transform: 'translate(0,0) rotate(10deg)', opacity: 0.22, offset: 0.08 },
+      { transform: `translate(${dx}px,${dy}px) rotate(${Math.random()*50-25}deg)`, opacity: 0.22, offset: 0.92 },
+      { transform: `translate(${dx}px,${dy}px)`, opacity: 0 }
+    ], { duration: dur * 1000, delay: delay * 1000, iterations: Infinity, easing: 'linear' });
+  }
+
+  // ── BURST ──────────────────────────────────────────────────────────
+  const burstEmojis = ['🎉','⭐','🔥','💥','✨','🎊','👏','🚀','🌟','🎈'];
+  function spawnBurst() {
+    for (let i = 0; i < 7; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'burst';
+        el.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+        el.style.left = (15 + Math.random() * 70) + 'vw';
+        el.style.top  = (25 + Math.random() * 45) + 'vh';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 800);
+      }, i * 90);
+    }
+  }
+
+  // ── ANIMATE HELPERS ───────────────────────────────────────────────
+  function animateName(finalName) {
+    return new Promise(resolve => {
+      const el = document.getElementById('studentName');
+      el.classList.add('blur');
+      let ticks = 0;
+      const iv = setInterval(() => {
+        el.textContent = students[Math.floor(Math.random() * students.length)];
+        ticks++;
+        if (ticks >= 20) {
+          clearInterval(iv);
+          el.textContent = finalName;
+          el.classList.remove('blur');
+          resolve();
+        }
+      }, 55);
+    });
+  }
+
+  function animateVerb(finalVerb) {
+    return new Promise(resolve => {
+      const el = document.getElementById('verbWord');
+      el.classList.add('blur');
+      let ticks = 0;
+      const iv = setInterval(() => {
+        el.textContent = verbs[Math.floor(Math.random() * verbs.length)];
+        ticks++;
+        if (ticks >= 16) {
+          clearInterval(iv);
+          el.textContent = finalVerb;
+          el.classList.remove('blur');
+          resolve();
+        }
+      }, 60);
+    });
+  }
+
+  // ── SPIN ──────────────────────────────────────────────────────────
+  function spinAll() {
+    if (isSpinning) return;
+    isSpinning = true;
+    document.getElementById('spinBtn').disabled = true;
+
+    const name = pickStudent();
+    const verb = pickVerb();
+
+    const card = document.getElementById('mainCard');
+    card.classList.add('active');
+
+    Promise.all([animateName(name), animateVerb(verb)]).then(() => {
+      card.classList.remove('active');
+      card.classList.add('wiggle');
+      setTimeout(() => card.classList.remove('wiggle'), 400);
+      spawnBurst();
+      updateProgress();
+      isSpinning = false;
+      document.getElementById('spinBtn').disabled = false;
+    });
+  }
+
+  // ── RESET ─────────────────────────────────────────────────────────
+  function resetDeck() {
+    refillStudentDeck();
+    refillVerbDeck();
+    updateProgress();
+    document.getElementById('studentName').textContent = '?';
+    document.getElementById('verbWord').textContent = '?';
+  }
+
+  // ── EDIT PANEL ────────────────────────────────────────────────────
+  function toggleEdit() {
+    const panel = document.getElementById('editPanel');
+    const isOpen = panel.classList.toggle('open');
+    if (isOpen) {
+      document.getElementById('editStudents').value = students.join('\n');
+      document.getElementById('editVerbs').value    = verbs.join('\n');
+    }
+  }
+
+  function applyEdits() {
+    const parse = str => str.split('\n').map(s => s.trim()).filter(Boolean);
+    const newStudents = parse(document.getElementById('editStudents').value);
+    const newVerbs    = parse(document.getElementById('editVerbs').value);
+    if (newStudents.length < 1) { alert('Please add at least 1 student!'); return; }
+    if (newVerbs.length < 1)    { alert('Please add at least 1 verb!'); return; }
+    students = newStudents;
+    verbs    = newVerbs;
+    document.getElementById('editPanel').classList.remove('open');
+    refillStudentDeck();
+    refillVerbDeck();
+    updateProgress();
+    spinAll();
+  }
+
+  // ── KEYBOARD ──────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && document.activeElement.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      if (document.getElementById('spinnerScreen').style.display !== 'none') spinAll();
+    }
+  });
+</script>
+</body>
+</html>
