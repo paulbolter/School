@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Have You Ever...?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #e8e0d0;
+    --accent1: #ff4d6d;
+    --accent2: #4361ee;
+    --accent3: #06d6a0;
+    --accent4: #ffd166;
+    --text: #1a1a2e;
+    --muted: #777;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg-dots {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    font-size: 2rem;
+    animation: burst-anim 0.7s ease-out forwards;
+  }
+  @keyframes burst-anim {
+    0%   { transform: scale(0) translateY(0); opacity: 1; }
+    60%  { transform: scale(1.4) translateY(-40px); opacity: 1; }
+    100% { transform: scale(1) translateY(-80px); opacity: 0; }
+  }
+
+  .everything {
+    position: relative;
+    z-index: 1;
+    width: 95%;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: -80px;
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    color: var(--accent1);
+    text-shadow: 4px 4px 0 #ffd166, 7px 7px 0 rgba(255,77,109,0.15);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  .progress-wrap {
+    width: 100%;
+    background: #d9d0bf;
+    border-radius: 50px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent1), var(--accent4));
+    border-radius: 50px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-label { display: none; }
+
+  /* Main 2-column layout */
+  .main-card {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 22px;
+    align-items: center;
+  }
+
+  /* ── CIRCULAR QUESTION CARD ── */
+  .question-card {
+    /* Make it a circle */
+    aspect-ratio: 1 / 1;
+    width: min(44vw, 420px);
+    border-radius: 50%;
+    justify-self: center;
+
+    background: radial-gradient(circle at 35% 30%, #fff 60%, #f0eaff 100%);
+    border: 5px solid #e8e8f0;
+    border-top: 8px solid var(--accent2);
+    box-shadow:
+      0 10px 0 #d4cbba,
+      0 18px 50px rgba(0,0,0,0.13),
+      inset 0 -6px 20px rgba(67,97,238,0.06);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14%;
+    text-align: center;
+  }
+
+  @keyframes wiggle {
+    0%,100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-1.5deg); }
+    75%      { transform: rotate(1.5deg); }
+  }
+  .question-card.wiggle { animation: wiggle 0.35s ease; }
+
+  .have-you-ever-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.85rem, 1.6vw, 1.2rem);
+    color: var(--muted);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .prompt-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.5rem, 3.2vw, 2.8rem);
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: 1px;
+    transition: opacity 0.06s;
+  }
+  .prompt-text.blur { opacity: 0.1; }
+
+  /* ── ANIMATED ANSWER BALLS ── */
+  .answer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Each ball floats independently */
+  .response-card {
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    width: min(26vw, 185px);
+    box-shadow: 0 8px 0 rgba(0,0,0,0.18);
+    cursor: default;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    /* floating animation applied individually below */
+    transition: transform 0.12s;
+  }
+  .response-card:hover { transform: scale(1.1) !important; }
+
+  /* Each ball gets a slightly different float rhythm */
+  .response-card.yes {
+    background: radial-gradient(circle at 35% 30%, #2effcc, var(--accent3) 70%);
+    box-shadow: 0 8px 0 #04a87e, 0 14px 30px rgba(6,214,160,0.3);
+    animation: float-a 3.2s ease-in-out infinite;
+  }
+  .response-card.want {
+    background: radial-gradient(circle at 35% 30%, #ffe899, var(--accent4) 70%);
+    box-shadow: 0 8px 0 #e6a800, 0 14px 30px rgba(255,209,102,0.35);
+    animation: float-b 2.8s ease-in-out infinite;
+    animation-delay: -0.9s;
+  }
+  .response-card.no {
+    background: radial-gradient(circle at 35% 30%, #ff8fa3, var(--accent1) 70%);
+    box-shadow: 0 8px 0 #c0293d, 0 14px 30px rgba(255,77,109,0.3);
+    animation: float-c 3.5s ease-in-out infinite;
+    animation-delay: -1.7s;
+  }
+
+  /* Three slightly different float arcs */
+  @keyframes float-a {
+    0%,100% { transform: translateY(0px) rotate(-1deg); box-shadow: 0 8px 0 #04a87e, 0 14px 30px rgba(6,214,160,0.3); }
+    50%      { transform: translateY(-14px) rotate(1deg); box-shadow: 0 22px 10px rgba(6,214,160,0.15); }
+  }
+  @keyframes float-b {
+    0%,100% { transform: translateY(0px) rotate(1.5deg); box-shadow: 0 8px 0 #e6a800, 0 14px 30px rgba(255,209,102,0.35); }
+    50%      { transform: translateY(-18px) rotate(-1deg); box-shadow: 0 26px 10px rgba(255,209,102,0.15); }
+  }
+  @keyframes float-c {
+    0%,100% { transform: translateY(0px) rotate(-0.5deg); box-shadow: 0 8px 0 #c0293d, 0 14px 30px rgba(255,77,109,0.3); }
+    50%      { transform: translateY(-11px) rotate(1.5deg); box-shadow: 0 20px 10px rgba(255,77,109,0.12); }
+  }
+
+  /* Glossy shine on each ball */
+  .response-card::before {
+    content: '';
+    position: absolute;
+    top: 14%;
+    left: 22%;
+    width: 32%;
+    height: 18%;
+    background: rgba(255,255,255,0.45);
+    border-radius: 50%;
+    filter: blur(3px);
+    pointer-events: none;
+  }
+  .response-card { position: relative; overflow: visible; }
+
+  .response-main {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.85rem, 1.8vw, 1.3rem);
+    color: #fff;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 2px 0 rgba(0,0,0,0.18);
+    line-height: 1.2;
+    z-index: 1;
+  }
+  .response-card.want .response-main { color: var(--text); text-shadow: none; }
+
+
+
+  /* Buttons */
+  .controls {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-next {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+    background: var(--accent2);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 60px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 7px 0 #2d3db5, 0 12px 30px rgba(67,97,238,0.25);
+    transition: transform 0.12s, box-shadow 0.12s;
+    user-select: none;
+  }
+  .btn-next:hover  { transform: translateY(-2px); box-shadow: 0 9px 0 #2d3db5; }
+  .btn-next:active { transform: translateY(3px); box-shadow: 0 3px 0 #2d3db5; }
+  .btn-next:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+  .btn-shuffle {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    background: transparent;
+    color: var(--muted);
+    border: 2px solid #ccc;
+    border-radius: 50px;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-shuffle:hover { color: var(--text); border-color: #999; }
+
+  /* Done screen */
+  .done-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+  }
+  .done-screen.visible { display: flex; }
+  .done-emoji { font-size: 5rem; animation: bob 1s ease-in-out infinite; }
+  @keyframes bob {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  .done-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--accent1);
+    text-shadow: 4px 4px 0 #ffd166;
+  }
+  .done-sub { color: var(--muted); font-size: 1.15rem; font-weight: 700; }
+
+  .main-area.hidden { display: none !important; }
+
+  @media (max-width: 640px) {
+    .main-card { grid-template-columns: 1fr; }
+    .question-card {
+      width: min(80vw, 340px);
+      padding: 12%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-dots" id="bgDots"></div>
+
+<div class="everything">
+
+  <h1>Have You Ever...? 🤔</h1>
+
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 21 prompts</div>
+
+  <!-- Activity -->
+  <div class="main-area" id="mainArea" style="width:100%;">
+    <div class="main-card">
+
+      <!-- LEFT: circular question ball -->
+      <div class="question-card" id="questionCard">
+        <div class="have-you-ever-label">Have you ever...</div>
+        <div class="prompt-text" id="promptText">?</div>
+      </div>
+
+      <!-- RIGHT: floating answer balls -->
+      <div class="answer-col">
+        <div class="response-card yes">
+          <div class="response-main">Yes, I have!</div>
+        </div>
+        <div class="response-card want">
+          <div class="response-main">No, but I <span style="font-size:1.1em;letter-spacing:1px;">WANT TO</span> because...</div>
+        </div>
+        <div class="response-card no">
+          <div class="response-main">No, and I <span style="font-size:1.1em;letter-spacing:1px;">DON'T WANT TO</span> because...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="height:14px"></div>
+
+    <div class="controls">
+      <button class="btn-shuffle" onclick="shuffleAndRestart()">🔀 Shuffle</button>
+      <button class="btn-next" id="nextBtn" onclick="next()">Next ➜</button>
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div class="done-screen" id="doneScreen">
+    <div class="done-emoji">🎉</div>
+    <div class="done-title">Great speaking today!</div>
+    <div class="done-sub">All 21 prompts done!</div>
+    <button class="btn-next" onclick="restart()">▶ Start Again</button>
+  </div>
+
+</div>
+
+<script>
+  const allPrompts = [
+    "eaten a bug",
+    "tried durian fruit",
+    "drunk horse milk",
+    "swallowed something by accident",
+    "touched a snake",
+    "ridden a donkey",
+    "been bitten by a dog",
+    "held a spider in your hand",
+    "slept under the stars",
+    "gotten lost in a city",
+    "swum in the ocean at night",
+    "jumped out of a plane",
+    "worn clothes inside out all day",
+    "sent a message to the wrong person",
+    "won a competition",
+    "had a serious injury",
+    "met a famous person",
+    "seen a ghost",
+    "been chased by an animal",
+    "found something valuable on the street",
+    "seen a shark"
+  ];
+
+  let deck = [];
+  let shown = 0;
+  let isAnimating = false;
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function init() {
+    deck = shuffle(allPrompts);
+    shown = 0;
+    document.getElementById('mainArea').classList.remove('hidden');
+    document.getElementById('doneScreen').classList.remove('visible');
+    document.getElementById('promptText').textContent = '?';
+    updateProgress();
+  }
+
+  function shuffleAndRestart() {
+    init();
+    spawnBurst(['🔀','🎲','✨']);
+  }
+
+  function updateProgress() {
+    const pct = Math.round((shown / allPrompts.length) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = shown + ' of ' + allPrompts.length + ' prompts';
+  }
+
+  function next() {
+    if (isAnimating) return;
+    if (shown >= deck.length) {
+      document.getElementById('mainArea').classList.add('hidden');
+      document.getElementById('doneScreen').classList.add('visible');
+      spawnBurst(['🎉','🌟','🎊','🥳','✨','🎈']);
+      return;
+    }
+    isAnimating = true;
+    document.getElementById('nextBtn').disabled = true;
+
+    const finalText = deck[shown];
+    const el = document.getElementById('promptText');
+    el.classList.add('blur');
+
+    let ticks = 0;
+    const iv = setInterval(() => {
+      el.textContent = allPrompts[Math.floor(Math.random() * allPrompts.length)] + "?";
+      ticks++;
+      if (ticks >= 16) {
+        clearInterval(iv);
+        el.textContent = finalText + "?";
+        el.classList.remove('blur');
+        const card = document.getElementById('questionCard');
+        card.classList.add('wiggle');
+        setTimeout(() => card.classList.remove('wiggle'), 400);
+        shown++;
+        updateProgress();
+        spawnBurst(['⭐','🔥','💥','✨','🎉','👏','🚀','🌟']);
+        isAnimating = false;
+        document.getElementById('nextBtn').disabled = false;
+      }
+    }, 55);
+  }
+
+  function restart() {
+    init();
+    spawnBurst(['🔁','✨','🎊']);
+  }
+
+  function spawnBurst(emojis) {
+    for (let i = 0; i < 7; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'burst';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = (15 + Math.random() * 70) + 'vw';
+        el.style.top  = (25 + Math.random() * 45) + 'vh';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 800);
+      }, i * 90);
+    }
+  }
+
+  // Floating background emojis
+  const floatEmojis = ['🐍','🕷️','🌊','🏆','👻','🦈','🐕','🌟','🎯','🏝️','🎲','🌙','🔥','💫','🌈','🐟','🦁','✈️','🎭','🤔'];
+  const bgContainer = document.getElementById('bgDots');
+  for (let i = 0; i < 24; i++) {
+    const el = document.createElement('div');
+    el.style.cssText = `position:absolute;font-size:1.6rem;opacity:0;pointer-events:none;`;
+    const startX = Math.random() * 100;
+    const startY = Math.random() * 100;
+    const angle  = Math.random() * 2 * Math.PI;
+    const dist   = 100 + Math.random() * 180;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+    const dur   = 10 + Math.random() * 14;
+    const delay = -(Math.random() * dur);
+    el.textContent = floatEmojis[Math.floor(Math.random() * floatEmojis.length)];
+    el.style.left = startX + 'vw';
+    el.style.top  = startY + 'vh';
+    bgContainer.appendChild(el);
+    el.animate([
+      { transform: 'translate(0,0) rotate(0deg)', opacity: 0 },
+      { transform: 'translate(0,0) rotate(10deg)', opacity: 0.18, offset: 0.08 },
+      { transform: `translate(${dx}px,${dy}px) rotate(${Math.random()*50-25}deg)`, opacity: 0.18, offset: 0.92 },
+      { transform: `translate(${dx}px,${dy}px)`, opacity: 0 }
+    ], { duration: dur * 1000, delay: delay * 1000, iterations: Infinity, easing: 'linear' });
+  }
+
+  // Spacebar = next
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && document.activeElement.tagName !== 'BUTTON') {
+      e.preventDefault();
+      next();
+    }
+  });
+
+  init();
+</script>
+</body>
+</html>
