@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE 0510 – Exercises 1, 2 & 3 | May/June 2021</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1a2e; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; }
+
+  .tab-bar { display: flex; background: #13132a; border-bottom: 2px solid var(--gold); }
+  .tab-btn {
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #8888aa; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #ccccee; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 16px; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+  .section-label { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--ink); margin: 18px 0 6px; }
+  .section-label:first-child { margin-top: 0; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.revealed { border-color: #9090bb; background: #f4f2fb; }
+  .question-item.sc-correct { border-color: var(--self-yes); background: #e8f5e9; }
+  .question-item.sc-wrong { border-color: var(--self-no); background: #fdecea; }
+  .question-item.sc-half { border-color: var(--self-partial); background: #fffde7; }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .self-check-box {
+    width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 4px;
+    background: white; cursor: pointer; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+    font-size: 15px; line-height: 1; user-select: none;
+    box-sizing: border-box; vertical-align: middle;
+  }
+  .self-check-box:hover { border-color: #4caf50; background: #f0faf0; }
+  .self-check-box.ticked { background: #4caf50; border-color: #4caf50; color: white; }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: #1a1a2e; }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-icon { font-size: 18px; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+  .inputs-row { display: flex; flex-direction: column; gap: 7px; }
+
+  .abcd-row { display: flex; gap: 8px; margin-top: 2px; }
+  .abcd-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .abcd-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .abcd-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abcd-btn:disabled { cursor: default; }
+  .abcd-btn.correct-answer { background: #4caf50; color: white; border-color: #4caf50; }
+  .abcd-btn.wrong-answer { background: #e53935; color: white; border-color: #e53935; }
+
+  input[type="text"] {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 4px;
+    padding: 8px 11px; font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+    color: var(--ink); background: white; transition: border-color 0.2s; outline: none;
+  }
+  input[type="text"]:focus { border-color: var(--ink); }
+  input[type="text"]:disabled { background: #f0ece6; cursor: default; color: var(--muted); }
+
+  .answer-reveal-box {
+    display: none; margin-top: 10px; padding: 10px 13px; border-radius: 5px;
+    background: #fffbea; border: 1.5px solid #e8c84a; font-size: 13px; line-height: 1.6;
+  }
+  .answer-reveal-box.show { display: block; }
+  .answer-label { font-weight: 700; color: #7a5c00; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .answer-text { font-weight: 600; color: #1a6e2a; font-size: 14px; }
+
+  .self-check-row { display: none; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .self-check-row.show { display: flex; }
+  .self-check-label { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .sc-btn {
+    padding: 5px 14px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
+    border: 2px solid; cursor: pointer; transition: all 0.15s; background: white;
+  }
+  .sc-btn:disabled { cursor: default; opacity: 0.6; }
+  .sc-yes { border-color: var(--self-yes); color: var(--self-yes); }
+  .sc-yes:hover:not(:disabled), .sc-yes.active { background: var(--self-yes); color: white; }
+  .sc-no { border-color: var(--self-no); color: var(--self-no); }
+  .sc-no:hover:not(:disabled), .sc-no.active { background: var(--self-no); color: white; }
+  .sc-partial { border-color: var(--self-partial); color: var(--self-partial); }
+  .sc-partial:hover:not(:disabled), .sc-partial.active { background: var(--self-partial); color: white; }
+
+  .btn-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar span { color: var(--gold); }
+  .total-note { margin-top: 8px; padding: 9px 12px; background: var(--cream); border: 1px solid var(--border); border-radius: 4px; font-size: 11.5px; color: var(--muted); }
+
+  .instruction-note {
+    background: #1e1e38; color: #ccccee; border-radius: 6px; padding: 10px 14px;
+    font-size: 12px; line-height: 1.7; margin-bottom: 16px; border-left: 3px solid var(--gold);
+  }
+  .instruction-note strong { color: var(--gold); }
+
+  .text-panel::-webkit-scrollbar, .questions-panel::-webkit-scrollbar { width: 5px; }
+  .text-panel::-webkit-scrollbar-thumb, .questions-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .text-panel, .questions-panel, .article-body, .article-title {
+    -webkit-user-drag: none; user-drag: none;
+  }
+
+  @media (max-width: 820px) {
+    .exercise.active { grid-template-columns: 1fr; height: auto; }
+    .text-panel { border-right: none; border-bottom: 2px solid var(--border); max-height: 50vh; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">Cambridge IGCSE 0510 · Core · May/June 2021</span>
+    <h1>Paper 1 – Reading Practice</h1>
+  </div>
+  <div class="score-badge">Self-Check Mode</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab(1)">Exercise 1 — The Icehotel</button>
+  <button class="tab-btn" onclick="switchTab(2)">Exercise 2 — Fitness Classes</button>
+  <button class="tab-btn" onclick="switchTab(3)">Exercise 3 — One Month, One Dress</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ EXERCISE 1 ═══ -->
+<div class="exercise active" id="ex1">
+  <div class="text-panel">
+    <div class="panel-label">📖 Read the article</div>
+    <div class="article-box">
+      <div class="article-title">Sweden's famous Icehotel</div>
+      <div class="article-body">
+        <p>The idea of spending a night in a room built entirely of ice, where the temperature never rises above −5 °C, isn't everyone's idea of comfort. But for the hundreds of people who visit the famous Icehotel in northern Sweden each winter, doing exactly that is a dream come true!</p>
+        <p>Every November, artists from around the world arrive in Jukkasjärvi, a village 200 kilometres north of the Arctic Circle, to create a hotel from ice, where guests sleep on a bed of ice surrounded by spectacular ice sculptures. The Icehotel lasts for just one winter, melts each spring, and is rebuilt each November. Hundreds of artists want to be involved, but only those who submit an original idea get to take part. The focus of the Icehotel is as much on beautiful art as it is on accommodation, and guests are encouraged to find out about the artists' work before they visit.</p>
+        <p>All the bedrooms in the Icehotel have thermal sleeping bags, but as the bedrooms don't have electricity, visitors are reminded to fully charge their phones before they check in. During the day, the bedrooms are open to the public, so overnight guests are warned to check out before 7.30 a.m. This means they can avoid someone walking through their room while they're still asleep! After a hot breakfast, guests can join an ice sculpture class. Or, for those who are more adventurous, the Icehotel can arrange a snowmobile safari.</p>
+        <p>So where did the idea for the Icehotel come from? Well, like many great ideas, it happened by chance. The village of Jukkasjärvi had long been popular for activities like hiking and canoeing. However, these only took place during the summer months. The owner of a company in the village had just returned home from Japan and saw an opportunity to attract tourists in the long, dark winters. In Japan, he'd seen artists creating amazing sculptures out of ice. As ice is in plentiful supply in Jukkasjärvi in winter, he realised that an ice sculpture workshop could be successful.</p>
+        <p>The village held its first ice sculpture workshop in 1989, and artists from all over northern Sweden came to take part, staying in warm, wooden huts at night. That year was also when artists started learning how to construct buildings out of ice. In 1992, they created a large exhibition hall made entirely from ice. While they were doing that, some visitors to the village wanted to stay but there was no accommodation available. Their only option was to sleep in the icy exhibition hall. Each person was given a thick blanket and advised to wear a warm hat in bed, a tip the Icehotel still gives visitors today. The next morning, they couldn't stop talking about their amazing experience of sleeping in the ice, and the idea for the Icehotel was born!</p>
+        <p>Rebuilding the Icehotel each year isn't easy. During winter, the river freezes into ice and people are employed to sweep snow off the river so that the ice thickens and becomes as hard as possible. As spring starts, huge blocks of ice are cut out and kept in cold storage throughout the summer, until construction starts in November. Yet despite all the hard work that goes into creating the Icehotel, and the fact that it recommends guests only stay one night, the Icehotel has become one of the most successful tourist destinations in Sweden. And the tourist season in Jukkasjärvi now lasts all year round.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">✏️ Answer the questions</div>
+    <div class="btn-row">
+      <button class="btn-reveal" onclick="revealAll('ex1')">Show All Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex1')">Reset All</button>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-item" id="ex1-q1-item">
+      <div class="q-header"><div class="q-num">1</div><div class="q-text">What do artists have to produce if they want to help build the Icehotel?</div><div class="q-marks">[1]</div></div>
+      <input type="text" id="ex1-q1" placeholder="Your answer…">
+      <div class="answer-reveal-box" id="ex1-q1-reveal"><div class="answer-label">✔ Correct Answer</div><div class="answer-text">an original idea</div></div>
+      <div class="self-check-row" id="ex1-q1-sc">
+        <span class="self-check-label">Correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q1',1,this)">✔ Yes</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q1',0,this)">✘ No</button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-item" id="ex1-q2-item">
+      <div class="q-header"><div class="q-num">2</div><div class="q-text">What equipment does the Icehotel provide for guests sleeping in an ice bedroom?</div><div class="q-marks">[1]</div></div>
+      <input type="text" id="ex1-q2" placeholder="Your answer…">
+      <div class="answer-reveal-box" id="ex1-q2-reveal"><div class="answer-label">✔ Correct Answer</div><div class="answer-text">thermal sleeping bags</div></div>
+      <div class="self-check-row" id="ex1-q2-sc">
+        <span class="self-check-label">Correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q2',1,this)">✔ Yes</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q2',0,this)">✘ No</button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-item" id="ex1-q3-item">
+      <div class="q-header"><div class="q-num">3</div><div class="q-text">Which daytime activities can Icehotel visitors take part in? Give <strong>two</strong> details.</div><div class="q-marks">[2]</div></div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q3a" placeholder="Activity 1…">
+        <input type="text" id="ex1-q3b" placeholder="Activity 2…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q3-reveal">
+        <div class="answer-label">✔ Correct Answers (both)</div>
+        <div class="answer-text">ice sculpture class &nbsp;·&nbsp; snowmobile safari</div>
+      </div>
+      <div class="self-check-row" id="ex1-q3-sc">
+        <span class="self-check-label">How many correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q3',2,this)">✔ Both (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheck('ex1','q3',1,this)">½ One (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q3',0,this)">✘ Neither (0)</button>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-item" id="ex1-q4-item">
+      <div class="q-header"><div class="q-num">4</div><div class="q-text">What was the aim of the local businessman when he set up an ice sculpture event in Jukkasjärvi?</div><div class="q-marks">[1]</div></div>
+      <input type="text" id="ex1-q4" placeholder="Your answer…">
+      <div class="answer-reveal-box" id="ex1-q4-reveal"><div class="answer-label">✔ Correct Answer</div><div class="answer-text">attract tourists in winter(s)</div></div>
+      <div class="self-check-row" id="ex1-q4-sc">
+        <span class="self-check-label">Correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q4',1,this)">✔ Yes</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q4',0,this)">✘ No</button>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-item" id="ex1-q5-item">
+      <div class="q-header"><div class="q-num">5</div><div class="q-text">Where did the artists sleep during the village's first ice sculpture event?</div><div class="q-marks">[1]</div></div>
+      <input type="text" id="ex1-q5" placeholder="Your answer…">
+      <div class="answer-reveal-box" id="ex1-q5-reveal"><div class="answer-label">✔ Correct Answer</div><div class="answer-text">huts / wooden huts</div></div>
+      <div class="self-check-row" id="ex1-q5-sc">
+        <span class="self-check-label">Correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q5',1,this)">✔ Yes</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q5',0,this)">✘ No</button>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-item" id="ex1-q6-item">
+      <div class="q-header"><div class="q-num">6</div><div class="q-text">In which year did visitors first experience sleeping in the ice?</div><div class="q-marks">[1]</div></div>
+      <input type="text" id="ex1-q6" placeholder="Your answer…">
+      <div class="answer-reveal-box" id="ex1-q6-reveal"><div class="answer-label">✔ Correct Answer</div><div class="answer-text">1992</div></div>
+      <div class="self-check-row" id="ex1-q6-sc">
+        <span class="self-check-label">Correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q6',1,this)">✔ Yes</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q6',0,this)">✘ No</button>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-item" id="ex1-q7-item">
+      <div class="q-header"><div class="q-num">7</div><div class="q-text">What do workers do to make sure that solid ice develops each year?</div><div class="q-marks">[1]</div></div>
+      <input type="text" id="ex1-q7" placeholder="Your answer…">
+      <div class="answer-reveal-box" id="ex1-q7-reveal"><div class="answer-label">✔ Correct Answer</div><div class="answer-text">sweep snow off the river</div></div>
+      <div class="self-check-row" id="ex1-q7-sc">
+        <span class="self-check-label">Correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q7',1,this)">✔ Yes</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q7',0,this)">✘ No</button>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-item" id="ex1-q8-item">
+      <div class="q-header"><div class="q-num">8</div><div class="q-text">When is the ice for building the Icehotel collected from the frozen river?</div><div class="q-marks">[1]</div></div>
+      <input type="text" id="ex1-q8" placeholder="Your answer…">
+      <div class="answer-reveal-box" id="ex1-q8-reveal"><div class="answer-label">✔ Correct Answer</div><div class="answer-text">spring / when spring starts</div></div>
+      <div class="self-check-row" id="ex1-q8-sc">
+        <span class="self-check-label">Correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q8',1,this)">✔ Yes</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q8',0,this)">✘ No</button>
+      </div>
+    </div>
+
+    <div class="total-note">[Total: 9 marks] &nbsp;—&nbsp; Your score: <span id="ex1-score-display" style="font-weight:700; color:var(--ink);">0</span> / 9</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ EXERCISE 2 ═══ -->
+<div class="exercise" id="ex2">
+  <div class="text-panel">
+    <div class="panel-label">📖 Read the article</div>
+    <div class="article-box">
+      <div class="article-title">Fitness classes, anyone?</div>
+      <div class="article-body">
+        <p>When I started university, I decided to try as many different fitness classes at the student sports centre as possible. Four months later, I'm proud to say I've been to quite a few! Here are some of the classes I've tried and my experiences of each.</p>
+
+        <div class="section-label">A &nbsp; Pilates</div>
+        <p>I know from following videos at home that Pilates involves controlled movements and stretching, but this class wasn't really what I'd expected. Admittedly, there was calming background music and a focus on breathing, but the instructor just wasn't clear what she wanted us to do. So despite her repeated attempts to explain, there was quite a lot of confusion in this particular class. And although the class is meant to be for all levels, it is assumed you have basic knowledge and are not completely inexperienced. I've heard that different instructors tend to have very different teaching styles, although the basic exercises are similar, so I won't give up yet – perhaps I'll try a different one.</p>
+
+        <div class="section-label">B &nbsp; Bollywood Dance Beats</div>
+        <p>If you don't know what happens in a Bollywood Dance Beats class, there's a 15-minute warm-up followed by 45 minutes learning a dance routine set to a Bollywood movie soundtrack. I've been to one class so far and, although it was a mixed group of beginners and more experienced regulars, we were all made to feel completely at ease. I felt a little foolish dancing at first but soon gained confidence. The upbeat Indian music was new to me too. When the class finished, I was exhausted but in high spirits, even though it had been a constant challenge to remember the routine!</p>
+
+        <div class="section-label">C &nbsp; Capoeira Moves</div>
+        <p>Capoeira is a Brazilian martial art which includes elements of dance, gymnastics and music, and this class involved practising basic kicks and other movements in pairs. The teacher gave very few instructions, as many of the students were regulars, instead using body language to demonstrate. Other beginners found this approach slightly puzzling, but for me watching the teacher was all I needed to be able to follow the routine. I found the pace of the movements too fast to begin with, but when I thought about the class the next day, I realised I'd definitely learned something. Most beginners can probably cope with this class. However, to make the most of it, you might consider one or two easier classes before going to this one.</p>
+
+        <div class="section-label">D &nbsp; Flow Fit</div>
+        <p>This is the class I've attended most frequently. I never know what exercises to expect each week, which keeps it interesting. It's a good workout, mainly strengthening your leg and stomach muscles, with some arm exercises too, and your body aches for days afterwards! Before the first class, I was worried I wouldn't be able to do it. However, the instructor explained everything clearly, from beginner's exercises up to more advanced options. In fact, it struck me at one point during the class that I was already familiar with many of the movements, so now I often just do the advanced options.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">✏️ Answer the questions</div>
+    <div class="instruction-note">
+      <strong>Instructions:</strong> For each question, click the correct letter — <strong>A, B, C or D</strong>. When you have answered all 8 questions, click <strong>Check Answers</strong>.
+    </div>
+    <div class="nudge-banner" id="ex2-nudge"><span class="nudge-icon">💡</span><span></span></div>
+
+    <!-- 9a -->
+    <div class="question-item" id="ex2-qa-item">
+      <div class="q-header"><div class="q-num">9a</div><div class="q-text">the use of music for relaxation</div><div class="q-marks">[1]</div></div>
+      <div class="abcd-row" id="ex2-qa-btns">
+        <button class="abcd-btn" onclick="selectABCD('ex2-qa','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qa','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qa','C',this)">C</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qa','D',this)">D</button>
+      </div>
+      <div class="feedback" id="ex2-qa-fb"></div>
+      <div id="ex2-qa-check-row" style="display:none; gap:6px; margin-top:8px; align-items:center;">
+        <div class="self-check-box" id="ex2-qa-check" title="Tick if correct"></div>
+      </div>
+    </div>
+
+    <!-- 9b -->
+    <div class="question-item" id="ex2-qb-item">
+      <div class="q-header"><div class="q-num">9b</div><div class="q-text">a welcoming atmosphere for people of all levels</div><div class="q-marks">[1]</div></div>
+      <div class="abcd-row" id="ex2-qb-btns">
+        <button class="abcd-btn" onclick="selectABCD('ex2-qb','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qb','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qb','C',this)">C</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qb','D',this)">D</button>
+      </div>
+      <div class="feedback" id="ex2-qb-fb"></div>
+      <div id="ex2-qb-check-row" style="display:none; gap:6px; margin-top:8px; align-items:center;">
+        <div class="self-check-box" id="ex2-qb-check" title="Tick if correct"></div>
+      </div>
+    </div>
+
+    <!-- 9c -->
+    <div class="question-item" id="ex2-qc-item">
+      <div class="q-header"><div class="q-num">9c</div><div class="q-text">the fact that each class is unpredictable</div><div class="q-marks">[1]</div></div>
+      <div class="abcd-row" id="ex2-qc-btns">
+        <button class="abcd-btn" onclick="selectABCD('ex2-qc','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qc','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qc','C',this)">C</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qc','D',this)">D</button>
+      </div>
+      <div class="feedback" id="ex2-qc-fb"></div>
+      <div id="ex2-qc-check-row" style="display:none; gap:6px; margin-top:8px; align-items:center;">
+        <div class="self-check-box" id="ex2-qc-check" title="Tick if correct"></div>
+      </div>
+    </div>
+
+    <!-- 9d -->
+    <div class="question-item" id="ex2-qd-item">
+      <div class="q-header"><div class="q-num">9d</div><div class="q-text">a positive feeling at the end of the class</div><div class="q-marks">[1]</div></div>
+      <div class="abcd-row" id="ex2-qd-btns">
+        <button class="abcd-btn" onclick="selectABCD('ex2-qd','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qd','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qd','C',this)">C</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qd','D',this)">D</button>
+      </div>
+      <div class="feedback" id="ex2-qd-fb"></div>
+      <div id="ex2-qd-check-row" style="display:none; gap:6px; margin-top:8px; align-items:center;">
+        <div class="self-check-box" id="ex2-qd-check" title="Tick if correct"></div>
+      </div>
+    </div>
+
+    <!-- 9e -->
+    <div class="question-item" id="ex2-qe-item">
+      <div class="q-header"><div class="q-num">9e</div><div class="q-text">the writer's negative opinion of the teacher</div><div class="q-marks">[1]</div></div>
+      <div class="abcd-row" id="ex2-qe-btns">
+        <button class="abcd-btn" onclick="selectABCD('ex2-qe','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qe','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qe','C',this)">C</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qe','D',this)">D</button>
+      </div>
+      <div class="feedback" id="ex2-qe-fb"></div>
+      <div id="ex2-qe-check-row" style="display:none; gap:6px; margin-top:8px; align-items:center;">
+        <div class="self-check-box" id="ex2-qe-check" title="Tick if correct"></div>
+      </div>
+    </div>
+
+    <!-- 9f -->
+    <div class="question-item" id="ex2-qf-item">
+      <div class="q-header"><div class="q-num">9f</div><div class="q-text">advice for getting maximum benefit from the class</div><div class="q-marks">[1]</div></div>
+      <div class="abcd-row" id="ex2-qf-btns">
+        <button class="abcd-btn" onclick="selectABCD('ex2-qf','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qf','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qf','C',this)">C</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qf','D',this)">D</button>
+      </div>
+      <div class="feedback" id="ex2-qf-fb"></div>
+      <div id="ex2-qf-check-row" style="display:none; gap:6px; margin-top:8px; align-items:center;">
+        <div class="self-check-box" id="ex2-qf-check" title="Tick if correct"></div>
+      </div>
+    </div>
+
+    <!-- 9g -->
+    <div class="question-item" id="ex2-qg-item">
+      <div class="q-header"><div class="q-num">9g</div><div class="q-text">the writer realising in the class that she knew more than she thought</div><div class="q-marks">[1]</div></div>
+      <div class="abcd-row" id="ex2-qg-btns">
+        <button class="abcd-btn" onclick="selectABCD('ex2-qg','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qg','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qg','C',this)">C</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qg','D',this)">D</button>
+      </div>
+      <div class="feedback" id="ex2-qg-fb"></div>
+      <div id="ex2-qg-check-row" style="display:none; gap:6px; margin-top:8px; align-items:center;">
+        <div class="self-check-box" id="ex2-qg-check" title="Tick if correct"></div>
+      </div>
+    </div>
+
+    <!-- 9h -->
+    <div class="question-item" id="ex2-qh-item">
+      <div class="q-header"><div class="q-num">9h</div><div class="q-text">an initial struggle to keep up with the exercises</div><div class="q-marks">[1]</div></div>
+      <div class="abcd-row" id="ex2-qh-btns">
+        <button class="abcd-btn" onclick="selectABCD('ex2-qh','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qh','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qh','C',this)">C</button>
+        <button class="abcd-btn" onclick="selectABCD('ex2-qh','D',this)">D</button>
+      </div>
+      <div class="feedback" id="ex2-qh-fb"></div>
+      <div id="ex2-qh-check-row" style="display:none; gap:6px; margin-top:8px; align-items:center;">
+        <div class="self-check-box" id="ex2-qh-check" title="Tick if correct"></div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-top:4px;">
+      <button class="btn-reveal" id="ex2-submit" onclick="submitEx2()">Check Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex2')">Reset All</button>
+    </div>
+    <div class="total-note">[Total: 8 marks] &nbsp;—&nbsp; Your score: <span id="ex2-score-display" style="font-weight:700; color:var(--ink);">0</span> / 8</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ EXERCISE 3 ═══ -->
+<div class="exercise" id="ex3">
+  <div class="text-panel">
+    <div class="panel-label">📖 Read the article</div>
+    <div class="article-box">
+      <div class="article-title">One month, one dress</div>
+      <div class="article-body">
+        <p>When 17-year-old Sophia Aleman arrived to meet her friends wearing a plain, grey dress, they didn't take much notice. The next day she had the same dress on, and her friends still didn't comment. After a week of turning up in the same dress, Sophia revealed her 'One month, one dress' challenge – to wear the same dress every day for a month. She worked out that she'd be able to wash her dress before going to bed and still wear it the next day.</p>
+        <p>Sophia's aim was to get people, boys and girls, thinking about how their choice of clothes affects the environment. Fashion is influenced by the latest trends and celebrities, and nowadays it's produced very quickly and cheaply. New styles replace old ones almost instantly, at a price that most can afford. 'My friends and I love fashion, but it comes at an environmental cost,' says Sophia. 'People throw good clothes away. That means tons of clothing is buried as waste. Unbelievably only 15% is actually recycled – people should at least pass on their unwanted clothes to others. And, every year, as a result of clothes production, 1.2 billion tonnes of carbon dioxide is added to our atmosphere. I had to do something.'</p>
+        <p>Sophia chose the dress for her challenge carefully. She decided on a plain design as she could combine it with different scarves that she already owned. She now encourages people to use their existing clothes more creatively. This means they'll be less tempted to buy new clothes. She knew that chemicals used in the production of clothes pollute the soil. That's why she chose a dress made from bamboo, a material free of chemicals. 'My friends had never heard of clothes made from bamboo before, so I used this dress as a way of persuading them to buy clothes made from natural materials. So many clothes these days include some man-made material. When they're washed, tiny bits of plastic end up in the oceans, but that doesn't happen with natural material.'</p>
+        <p>In week two of the challenge, Sophia accidentally ripped the sleeve of her dress. She thought she might have to wear something different and her challenge might fail. Fortunately, she managed to sew it back together herself.</p>
+        <p>To create publicity, Sophia posted on social media every day, attracting lots of attention. 'One day, I wrote that mass production of clothes uses vast quantities of water. That's hardly going to help the environment, is it? The post really got all my friends talking. They began to understand the point I was trying to make – it's better to buy quality clothes that last longer.'</p>
+        <p>Sophia wore the dress for the whole month. 'It made me think that appearance isn't everything – although the next day I did enjoy wearing my favourite red skirt, which I'd really missed!' The teenager intends to continue promoting environmentally friendly fashion. 'I'm not saying that everyone should do this particular challenge, but I am encouraging all my friends to use recycled materials to make their own clothes.' She has even thought about taking her grey dress apart to make a shirt from the material. 'For now though, I still enjoy wearing the dress occasionally.'</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">✏️ Answer the questions</div>
+    <div class="instruction-note">
+      <strong>Instructions:</strong> You are preparing notes for a talk to your class. Write <strong>short notes</strong> under each heading. When finished, click <strong>Show Answers</strong> — then tick each bullet point you got right.
+    </div>
+    <div class="nudge-banner" id="ex3-nudge"><span class="nudge-icon">💡</span><span></span></div>
+
+    <!-- Q10 -->
+    <div style="background:var(--ink); color:white; padding:10px 14px; border-radius:6px 6px 0 0; font-size:13px; font-weight:600; margin-bottom:0;">
+      10 &nbsp;What Sophia says are the negative impacts of fashion on the environment <span style="color:var(--gold); font-size:11px; float:right; margin-top:2px;">[3 marks — give 3 details]</span>
+    </div>
+    <div style="border:1.5px solid var(--border); border-top:none; border-radius:0 0 6px 6px; padding:12px 14px; margin-bottom:20px; background:white;">
+      <div class="question-item" id="ex3-q10a-item" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:16px;color:var(--muted);">•</span>
+          <input type="text" id="ex3-q10a" placeholder="" style="flex:1;">
+          <div class="self-check-box" id="ex3-q10a-check" onclick="toggleCheck('ex3-q10a-check','ex3')" style="display:none;flex-shrink:0;" title="Tick if correct"></div>
+        </div>
+      </div>
+      <div class="question-item" id="ex3-q10b-item" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:16px;color:var(--muted);">•</span>
+          <input type="text" id="ex3-q10b" placeholder="" style="flex:1;">
+          <div class="self-check-box" id="ex3-q10b-check" onclick="toggleCheck('ex3-q10b-check','ex3')" style="display:none;flex-shrink:0;" title="Tick if correct"></div>
+        </div>
+      </div>
+      <div class="question-item" id="ex3-q10c-item" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:16px;color:var(--muted);">•</span>
+          <input type="text" id="ex3-q10c" placeholder="" style="flex:1;">
+          <div class="self-check-box" id="ex3-q10c-check" onclick="toggleCheck('ex3-q10c-check','ex3')" style="display:none;flex-shrink:0;" title="Tick if correct"></div>
+        </div>
+      </div>
+      <div id="ex3-q10-reveal" style="display:none; margin-top:12px; padding:12px 16px; background:#f0f4ff; border:1.5px solid #c5d0f0; border-radius:6px; font-size:12.5px; color:#1a1a2e;">
+        <div style="font-weight:700; margin-bottom:8px; font-family:'Playfair Display',serif; font-size:13px;">✔ Acceptable answers — any 3 of these 5:</div>
+        <ol style="margin:0; padding-left:20px; line-height:2;">
+          <li>people throw (good) clothes away / tons of clothing buried as waste / only 15% recycled</li>
+          <li>1.2 billion tonnes of carbon dioxide (released) every year</li>
+          <li>chemicals pollute the soil</li>
+          <li>plastic ends up in the oceans</li>
+          <li>uses vast quantities of water</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div style="background:var(--ink); color:white; padding:10px 14px; border-radius:6px 6px 0 0; font-size:13px; font-weight:600; margin-bottom:0;">
+      11 &nbsp;What Sophia suggests people do to reduce the negative impacts of fashion on the environment <span style="color:var(--gold); font-size:11px; float:right; margin-top:2px;">[4 marks — give 4 details]</span>
+    </div>
+    <div style="border:1.5px solid var(--border); border-top:none; border-radius:0 0 6px 6px; padding:12px 14px; margin-bottom:20px; background:white;">
+      <div class="question-item" id="ex3-q11a-item" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:16px;color:var(--muted);">•</span>
+          <input type="text" id="ex3-q11a" placeholder="" style="flex:1;">
+          <div class="self-check-box" id="ex3-q11a-check" onclick="toggleCheck('ex3-q11a-check','ex3')" style="display:none;flex-shrink:0;" title="Tick if correct"></div>
+        </div>
+      </div>
+      <div class="question-item" id="ex3-q11b-item" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:16px;color:var(--muted);">•</span>
+          <input type="text" id="ex3-q11b" placeholder="" style="flex:1;">
+          <div class="self-check-box" id="ex3-q11b-check" onclick="toggleCheck('ex3-q11b-check','ex3')" style="display:none;flex-shrink:0;" title="Tick if correct"></div>
+        </div>
+      </div>
+      <div class="question-item" id="ex3-q11c-item" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:16px;color:var(--muted);">•</span>
+          <input type="text" id="ex3-q11c" placeholder="" style="flex:1;">
+          <div class="self-check-box" id="ex3-q11c-check" onclick="toggleCheck('ex3-q11c-check','ex3')" style="display:none;flex-shrink:0;" title="Tick if correct"></div>
+        </div>
+      </div>
+      <div class="question-item" id="ex3-q11d-item" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:16px;color:var(--muted);">•</span>
+          <input type="text" id="ex3-q11d" placeholder="" style="flex:1;">
+          <div class="self-check-box" id="ex3-q11d-check" onclick="toggleCheck('ex3-q11d-check','ex3')" style="display:none;flex-shrink:0;" title="Tick if correct"></div>
+        </div>
+      </div>
+      <div id="ex3-q11-reveal" style="display:none; margin-top:12px; padding:12px 16px; background:#f0f4ff; border:1.5px solid #c5d0f0; border-radius:6px; font-size:12.5px; color:#1a1a2e;">
+        <div style="font-weight:700; margin-bottom:8px; font-family:'Playfair Display',serif; font-size:13px;">✔ Acceptable answers — any 4 of these 5:</div>
+        <ol style="margin:0; padding-left:20px; line-height:2;">
+          <li>pass on clothes / don't throw clothes away / recycle clothes</li>
+          <li>use (existing) clothes creatively / buy fewer clothes</li>
+          <li>buy clothes made from natural materials (e.g. bamboo) / don't buy clothes with man-made materials</li>
+          <li>buy quality clothes / buy clothes that last longer</li>
+          <li>use recycled materials to make clothes</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex3-submit" onclick="submitEx3()">Show Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex3')">Reset All</button>
+    </div>
+
+    <div class="total-note">[Total: 7 marks] &nbsp;—&nbsp; Your score: <span id="ex3-score-display" style="font-weight:700; color:var(--ink);">0</span> / 7</div>
+    <div class="total-note" style="margin-top:8px; background:var(--ink); color:white; border-color:var(--ink);">Total score (all three exercises): &nbsp;<span id="grand-total-display" style="font-weight:700; color:var(--gold);">0</span> / 24</div>
+  </div>
+</div>
+
+<script>
+// ── TAB SWITCHING ──────────────────────────────────────────────
+function switchTab(n) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('ex' + n).classList.add('active');
+  document.querySelectorAll('.tab-btn')[n-1].classList.add('active');
+}
+
+// ── ABCD SELECTION ─────────────────────────────────────────────
+const ex2Selections = {};
+function selectABCD(qId, letter, btn) {
+  document.querySelectorAll('#' + qId + '-btns .abcd-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  ex2Selections[qId] = letter;
+}
+
+// ── SELF-CHECK TICK BOXES ─────────────────────────────────────
+function toggleCheck(id, ex) {
+  const box = document.getElementById(id);
+  if (!box) return;
+  box.classList.toggle('ticked');
+  box.textContent = box.classList.contains('ticked') ? '✓' : '';
+  updateScores();
+}
+
+function setCheck(id, ticked) {
+  const box = document.getElementById(id);
+  if (!box) return;
+  if (ticked) { box.classList.add('ticked'); box.textContent = '✓'; }
+  else { box.classList.remove('ticked'); box.textContent = ''; }
+}
+
+function showInlineCheck(id) {
+  const box = document.getElementById(id);
+  if (box) box.style.display = 'flex';
+}
+
+// ── SCORES ─────────────────────────────────────────────────────
+const scores = { ex1: {} };
+
+function updateScores() {
+  // Ex1 — self-check buttons
+  let ex1total = 0;
+  for (const k in scores.ex1) ex1total += scores.ex1[k];
+  const ex1disp = document.getElementById('ex1-score-display');
+  if (ex1disp) ex1disp.textContent = ex1total;
+
+  // Ex2 — tick boxes
+  const ex2checks = ['ex2-qa-check','ex2-qb-check','ex2-qc-check','ex2-qd-check',
+                     'ex2-qe-check','ex2-qf-check','ex2-qg-check','ex2-qh-check'];
+  const ex2score = ex2checks.filter(id => {
+    const el = document.getElementById(id); return el && el.classList.contains('ticked');
+  }).length;
+  const ex2disp = document.getElementById('ex2-score-display');
+  if (ex2disp) ex2disp.textContent = ex2score;
+
+  // Ex3 — tick boxes
+  const ex3checks = ['ex3-q10a-check','ex3-q10b-check','ex3-q10c-check',
+                     'ex3-q11a-check','ex3-q11b-check','ex3-q11c-check','ex3-q11d-check'];
+  const ex3score = ex3checks.filter(id => {
+    const el = document.getElementById(id); return el && el.classList.contains('ticked');
+  }).length;
+  const ex3disp = document.getElementById('ex3-score-display');
+  if (ex3disp) ex3disp.textContent = ex3score;
+
+  const grandDisp = document.getElementById('grand-total-display');
+  if (grandDisp) grandDisp.textContent = ex1total + ex2score + ex3score;
+}
+
+// ── NUDGE ──────────────────────────────────────────────────────
+const nudgeMessages = [
+  "Almost there! Fill in all the boxes first, then check your answers. 😊",
+  "Not quite ready yet — make sure every question has an answer before checking! ✏️",
+  "Take your time and answer all the questions first — then hit Check Answers! 🌟",
+  "You're nearly there! Just finish all the questions and then check. 👍"
+];
+function showNudge(ex) {
+  const el = document.getElementById(ex + '-nudge');
+  if (!el) return;
+  const msg = nudgeMessages[Math.floor(Math.random() * nudgeMessages.length)];
+  el.innerHTML = '<span class="nudge-icon">💡</span><span>' + msg + '</span>';
+  el.style.display = 'flex';
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// EXERCISE 1 — self-check reveal style
+// ══════════════════════════════════════════════════════════════
+function selfCheck(ex, qKey, points, btn) {
+  scores[ex] = scores[ex] || {};
+  scores[ex][qKey] = points;
+  const item = document.getElementById(ex + '-' + qKey + '-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  const maxPts = (ex === 'ex1' && qKey === 'q3') ? 2 : 1;
+  if (points > 0 && points >= maxPts) item.classList.add('sc-correct');
+  else if (points === 0) item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const row = document.getElementById(ex + '-' + qKey + '-sc');
+  row.querySelectorAll('.sc-btn').forEach(b => { b.disabled=true; b.classList.remove('active'); });
+  btn.classList.add('active');
+  updateScores();
+}
+
+function revealAll(ex) {
+  if (ex === 'ex1') {
+    ['q1','q2','q3','q4','q5','q6','q7','q8'].forEach(qKey => {
+      document.getElementById('ex1-' + qKey + '-reveal').classList.add('show');
+      document.getElementById('ex1-' + qKey + '-sc').classList.add('show');
+      document.getElementById('ex1-' + qKey + '-item').classList.add('revealed');
+    });
+    ['ex1-q1','ex1-q2','ex1-q3a','ex1-q3b','ex1-q4','ex1-q5','ex1-q6','ex1-q7','ex1-q8'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.disabled = true;
+    });
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// EXERCISE 2 — auto-check
+// ══════════════════════════════════════════════════════════════
+const ex2Correct = {
+  'ex2-qa':'A', 'ex2-qb':'B', 'ex2-qc':'D', 'ex2-qd':'B',
+  'ex2-qe':'A', 'ex2-qf':'C', 'ex2-qg':'D', 'ex2-qh':'C'
+};
+const ex2Explanations = {
+  'ex2-qa': 'Section A (Pilates) — the instructor used calming background music and focused on breathing.',
+  'ex2-qb': 'Section B (Bollywood) — although it was a mixed group, everyone was made to feel completely at ease.',
+  'ex2-qc': 'Section D (Flow Fit) — "I never know what exercises to expect each week."',
+  'ex2-qd': 'Section B (Bollywood) — "I was exhausted but in high spirits" at the end of the class.',
+  'ex2-qe': 'Section A (Pilates) — the instructor "just wasn\'t clear what she wanted us to do."',
+  'ex2-qf': 'Section C (Capoeira) — "you might consider one or two easier classes before going to this one."',
+  'ex2-qg': 'Section D (Flow Fit) — "it struck me at one point during the class that I was already familiar with many of the movements."',
+  'ex2-qh': 'Section C (Capoeira) — "I found the pace of the movements too fast to begin with."'
+};
+
+function submitEx2() {
+  const keys = ['ex2-qa','ex2-qb','ex2-qc','ex2-qd','ex2-qe','ex2-qf','ex2-qg','ex2-qh'];
+  if (!keys.every(k => ex2Selections[k])) { showNudge('ex2'); return; }
+
+  keys.forEach(qId => {
+    const correct = ex2Correct[qId];
+    const selected = ex2Selections[qId];
+    const btns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+    btns.forEach(b => b.disabled = true);
+    btns.forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = `✓ Correct! ${ex2Explanations[qId]}`;
+      fb.style.display = 'block';
+      setCheck(qId + '-check', true);
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = `✗ The answer is <strong>${correct}</strong>. ${ex2Explanations[qId]}`;
+      fb.style.display = 'block';
+    }
+    document.getElementById(qId + '-check-row').style.display = 'flex';
+  });
+  updateScores();
+  document.getElementById('ex2-submit').disabled = true;
+}
+
+// ══════════════════════════════════════════════════════════════
+// EXERCISE 3 — reveal + per-bullet tick boxes
+// ══════════════════════════════════════════════════════════════
+function submitEx3() {
+  const allFilled =
+    ['ex3-q10a','ex3-q10b','ex3-q10c'].every(id => document.getElementById(id).value.trim()) &&
+    ['ex3-q11a','ex3-q11b','ex3-q11c','ex3-q11d'].every(id => document.getElementById(id).value.trim());
+  if (!allFilled) { showNudge('ex3'); return; }
+
+  ['ex3-q10a','ex3-q10b','ex3-q10c','ex3-q11a','ex3-q11b','ex3-q11c','ex3-q11d'].forEach(id => {
+    document.getElementById(id).disabled = true;
+  });
+  ['ex3-q10a-check','ex3-q10b-check','ex3-q10c-check',
+   'ex3-q11a-check','ex3-q11b-check','ex3-q11c-check','ex3-q11d-check'].forEach(id => {
+    showInlineCheck(id);
+  });
+  document.getElementById('ex3-q10-reveal').style.display = 'block';
+  document.getElementById('ex3-q11-reveal').style.display = 'block';
+  updateScores();
+  document.getElementById('ex3-submit').disabled = true;
+}
+
+// ── RESET ──────────────────────────────────────────────────────
+function resetEx(ex) {
+  if (ex === 'ex1') {
+    scores.ex1 = {};
+    ['ex1-q1','ex1-q2','ex1-q3a','ex1-q3b','ex1-q4','ex1-q5','ex1-q6','ex1-q7','ex1-q8'].forEach(id => {
+      const el = document.getElementById(id); if(el) { el.value=''; el.disabled=false; }
+    });
+    ['q1','q2','q3','q4','q5','q6','q7','q8'].forEach(q => {
+      document.getElementById('ex1-' + q + '-item').classList.remove('revealed','sc-correct','sc-wrong','sc-half');
+      document.getElementById('ex1-' + q + '-reveal').classList.remove('show');
+      const sc = document.getElementById('ex1-' + q + '-sc');
+      sc.classList.remove('show');
+      sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); });
+    });
+    updateScores();
+  } else if (ex === 'ex2') {
+    ['qa','qb','qc','qd','qe','qf','qg','qh'].forEach(qKey => {
+      const qId = 'ex2-' + qKey;
+      const btns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+      btns.forEach(b => { b.disabled=false; b.classList.remove('selected','correct-answer','wrong-answer'); });
+      delete ex2Selections[qId];
+      const item = document.getElementById(qId + '-item');
+      if (item) item.classList.remove('correct','wrong');
+      const fb = document.getElementById(qId + '-fb');
+      if (fb) { fb.style.display='none'; fb.innerHTML=''; }
+      const row = document.getElementById(qId + '-check-row');
+      if (row) row.style.display = 'none';
+      setCheck(qId + '-check', false);
+    });
+    document.getElementById('ex2-submit').disabled = false;
+    updateScores();
+  } else {
+    ['ex3-q10a','ex3-q10b','ex3-q10c','ex3-q11a','ex3-q11b','ex3-q11c','ex3-q11d'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+      const chk = document.getElementById(id + '-check');
+      if (chk) { chk.style.display='none'; setCheck(id + '-check', false); }
+    });
+    document.getElementById('ex3-q10-reveal').style.display = 'none';
+    document.getElementById('ex3-q11-reveal').style.display = 'none';
+    document.getElementById('ex3-submit').disabled = false;
+    updateScores();
+  }
+}
+
+// ── PREVENT DRAG ──────────────────────────────────────────────
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+document.addEventListener('drop', e => { if(!e.target.closest('input,select,textarea')) e.preventDefault(); }, true);
+</script>
+</body>
+</html>
