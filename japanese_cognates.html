@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You Already Speak Japanese!</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Noto+Sans+JP:wght@300;400;500&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fdf6f0;
+    --card: #fffaf8;
+    --ink: #2d1a1a;
+    --muted: #a0808a;
+    --accent: #c0506a;
+    --pink: #e8a0b0;
+    --gold: #c07860;
+    --border: #f0d8de;
+    --shadow: rgba(192,80,106,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px 60px;
+    background-image:
+      radial-gradient(circle at 15% 15%, rgba(232,160,176,0.18) 0%, transparent 45%),
+      radial-gradient(circle at 85% 85%, rgba(192,80,106,0.08) 0%, transparent 45%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  header h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  header h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  header .jp-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 4px;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-top: 8px;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 22px 0 10px;
+    text-align: center;
+  }
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    max-width: 640px;
+  }
+
+  .pill {
+    padding: 7px 18px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .pill:hover { border-color: var(--accent); color: var(--accent); }
+  .pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .card-wrap {
+    width: 100%;
+    max-width: 560px;
+    margin: 26px 0 18px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    padding: 52px 40px 44px;
+    text-align: center;
+    position: relative;
+    height: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 40px rgba(192,80,106,0.10);
+    transition: box-shadow 0.2s;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--pink), #f8c8d0);
+    border-radius: 24px 24px 0 0;
+  }
+
+  .cat-badge {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 100px;
+    white-space: nowrap;
+    background: rgba(230,57,70,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(230,57,70,0.3);
+  }
+
+  .cat-badge.food { background: rgba(255,209,102,0.12); color: var(--gold); border-color: rgba(255,209,102,0.3); }
+  .cat-badge.places { background: rgba(255,107,157,0.12); color: var(--pink); border-color: rgba(255,107,157,0.3); }
+  .cat-badge.tech { background: rgba(100,140,200,0.10); color: #5878b0; border-color: rgba(100,140,200,0.3); }
+  .cat-badge.transport { background: rgba(80,160,120,0.10); color: #3a8060; border-color: rgba(80,160,120,0.3); }
+  .cat-badge.everyday { background: rgba(150,100,180,0.10); color: #7050a0; border-color: rgba(150,100,180,0.3); }
+
+  .card-counter {
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* Main display: romaji big */
+  .word-romaji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+
+  /* Katakana below in brackets */
+  .word-kana {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.5rem;
+    color: var(--muted);
+    letter-spacing: 3px;
+    line-height: 1.2;
+  }
+
+  .answer-block {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    width: 100%;
+    animation: rise 0.3s ease;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-english {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .answer-note {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 560px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 15px 18px;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    border: none;
+    min-width: 110px;
+  }
+
+  .btn-reveal {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 20px rgba(192,80,106,0.25);
+  }
+
+  .btn-reveal:hover { background: #cc2d3a; transform: translateY(-1px); }
+
+  .btn-next {
+    background: white;
+    color: var(--ink);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-next:hover { border-color: var(--ink); transform: translateY(-1px); }
+
+  .btn-shuffle {
+    background: white;
+    color: var(--gold);
+    border: 1.5px solid rgba(192,120,96,0.3);
+    flex: 0 0 auto;
+  }
+
+  .btn-shuffle:hover { background: rgba(192,120,96,0.06); }
+
+  .hidden { display: none !important; }
+
+  .scorebar {
+    display: flex;
+    gap: 20px;
+    margin: 18px 0 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .scorebar strong { color: var(--ink); font-size: 1rem; }
+
+  .prog-wrap {
+    width: 100%;
+    max-width: 560px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 4px;
+    margin: 14px 0 0;
+    overflow: hidden;
+  }
+
+  .prog-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--pink), #f8c8d0);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .ref-toggle {
+    margin-top: 26px;
+    font-size: 0.82rem;
+    color: var(--accent);
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-align: center;
+  }
+
+  .ref-table {
+    max-width: 560px;
+    width: 100%;
+    margin-top: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--card);
+    font-size: 0.85rem;
+  }
+
+  .ref-table table { width: 100%; border-collapse: collapse; }
+
+  .ref-table th {
+    background: var(--bg);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .ref-table td {
+    padding: 9px 14px;
+    border-top: 1px solid var(--border);
+    color: var(--ink);
+  }
+
+  .ref-table td:first-child {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .ref-table td:nth-child(2) {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .ref-table tr:hover td { background: rgba(192,80,106,0.04); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>You Already Speak <em>Japanese!</em></h1>
+  <div class="jp-title">日本語</div>
+  <p>These Japanese words came from English — can you guess them? · Spacebar to reveal</p>
+</header>
+
+<div class="section-label">Filter by category</div>
+<div class="filter-row" id="cat-filters">
+  <button class="pill active" onclick="setFilter('all', this)">All words</button>
+  <button class="pill" onclick="setFilter('food', this)">🍰 Food</button>
+  <button class="pill" onclick="setFilter('places', this)">🏨 Places</button>
+  <button class="pill" onclick="setFilter('tech', this)">💻 Tech</button>
+  <button class="pill" onclick="setFilter('transport', this)">🚌 Transport</button>
+  <button class="pill" onclick="setFilter('everyday', this)">🎮 Everyday</button>
+</div>
+
+<div class="card-wrap">
+  <div class="card" id="card">
+    <div class="cat-badge" id="cat-badge">FOOD</div>
+    <div class="card-counter" id="counter">1 / 20</div>
+    <div class="word-romaji" id="word-romaji">—</div>
+    <div class="word-kana" id="word-kana">—</div>
+    <div class="answer-block hidden" id="answer-block">
+      <div class="answer-english" id="ans-english">—</div>
+      <div class="answer-note" id="ans-note"></div>
+    </div>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button class="btn btn-reveal" id="revealBtn" onclick="reveal()">👁 Reveal</button>
+  <button class="btn btn-next hidden" id="nextBtn" onclick="next()">→ Next</button>
+  <button class="btn btn-shuffle" onclick="reshuffle()">⟳ Shuffle</button>
+</div>
+
+<div class="scorebar">
+  <div>Seen: <strong id="s-seen">0</strong></div>
+  <div>Remaining: <strong id="s-left">—</strong></div>
+</div>
+
+<div class="prog-wrap"><div class="prog-bar" id="prog" style="width:0%"></div></div>
+
+<div class="ref-toggle" onclick="toggleRef()">📋 Show / hide full word list</div>
+<div class="ref-table hidden" id="ref-table">
+  <table>
+    <thead><tr><th>Rōmaji</th><th>Katakana</th><th>English</th><th>Category</th></tr></thead>
+    <tbody id="ref-body"></tbody>
+  </table>
+</div>
+
+<script>
+const words = [
+  // Food
+  { romaji:"kōhī",       kana:"コーヒー",       en:"coffee",       cat:"food",      note:"ko-hi-i — the double vowels show a long sound" },
+  { romaji:"batā",        kana:"バター",          en:"butter",       cat:"food",      note:"ba-tā — the ā is a long 'a' sound" },
+  { romaji:"chīzu",       kana:"チーズ",          en:"cheese",       cat:"food",      note:"chī-zu — 'cheese' adapted to Japanese sounds" },
+  { romaji:"aisukurīmu",  kana:"アイスクリーム",   en:"ice cream",    cat:"food",      note:"a-i-su-ku-rī-mu — listen for 'ice cream' in there!" },
+  { romaji:"kēki",        kana:"ケーキ",          en:"cake",         cat:"food",      note:"kē-ki — simple and close to the English!" },
+
+  // Places
+  { romaji:"resutoran",   kana:"レストラン",      en:"restaurant",   cat:"places",    note:"re-su-to-ran — from French/English 'restaurant'" },
+  { romaji:"hoteru",      kana:"ホテル",          en:"hotel",        cat:"places",    note:"ho-te-ru — a final 'u' is often added to end consonants" },
+  { romaji:"sūpā",        kana:"スーパー",        en:"supermarket",  cat:"places",    note:"sū-pā — short for 'super(market)'" },
+
+  // Tech
+  { romaji:"konpyūtā",    kana:"コンピューター",   en:"computer",     cat:"tech",      note:"kon-pyū-tā — hard sounds become softer in Japanese" },
+  { romaji:"intānetto",   kana:"インターネット",   en:"internet",     cat:"tech",      note:"in-tā-net-to — very close! Just extra vowels" },
+  { romaji:"sumātofon",   kana:"スマートフォン",   en:"smartphone",   cat:"tech",      note:"su-mā-to-fon — 'smart phone' blended together" },
+  { romaji:"terebi",      kana:"テレビ",          en:"television",   cat:"tech",      note:"te-re-bi — short for 'tele-vi(sion)'" },
+  { romaji:"kamera",      kana:"カメラ",          en:"camera",       cat:"tech",      note:"ka-me-ra — almost identical!" },
+
+  // Transport
+  { romaji:"basu",        kana:"バス",            en:"bus",          cat:"transport", note:"ba-su — 'u' added because Japanese words don't end in consonants" },
+  { romaji:"takushī",     kana:"タクシー",        en:"taxi",         cat:"transport", note:"ta-ku-shī — the 'x' becomes 'ku-sh'" },
+
+  // Everyday
+  { romaji:"tēburu",      kana:"テーブル",        en:"table",        cat:"everyday",  note:"tē-bu-ru — vowels added between consonant clusters" },
+  { romaji:"naifu",       kana:"ナイフ",          en:"knife",        cat:"everyday",  note:"na-i-fu — the silent 'k' in English is gone here too!" },
+  { romaji:"gēmu",        kana:"ゲーム",          en:"game",         cat:"everyday",  note:"gē-mu — gē sounds like 'gay', mu = 'moo'" },
+  { romaji:"supōtsu",     kana:"スポーツ",        en:"sport",        cat:"everyday",  note:"su-pō-tsu — 'sports' adapted, the 'ts' comes from the final s" },
+];
+
+const catLabels = { food:"FOOD", places:"PLACES", tech:"TECH", transport:"TRANSPORT", everyday:"EVERYDAY" };
+
+let filterCat = "all";
+let deck = [];
+let idx = 0;
+let seen = 0;
+let revealed = false;
+
+function buildDeck() {
+  deck = filterCat === "all"
+    ? [...words]
+    : words.filter(w => w.cat === filterCat);
+  deck = deck.sort(() => Math.random() - 0.5);
+  idx = 0; seen = 0; revealed = false;
+  updateScore();
+  showCard();
+}
+
+function showCard() {
+  if (idx >= deck.length) { showDone(); return; }
+  const w = deck[idx];
+
+  const badge = document.getElementById('cat-badge');
+  badge.textContent = catLabels[w.cat];
+  badge.className = "cat-badge " + w.cat;
+
+  document.getElementById('word-romaji').textContent = w.romaji;
+  document.getElementById('word-kana').textContent = "（" + w.kana + "）";
+  document.getElementById('counter').textContent = `${idx+1} / ${deck.length}`;
+  document.getElementById('answer-block').classList.add('hidden');
+  document.getElementById('revealBtn').classList.remove('hidden');
+  document.getElementById('nextBtn').classList.add('hidden');
+  document.getElementById('prog').style.width = (idx / deck.length * 100) + '%';
+  revealed = false;
+}
+
+function reveal() {
+  const w = deck[idx];
+  document.getElementById('ans-english').textContent = w.en;
+  document.getElementById('ans-note').textContent = w.note;
+  document.getElementById('answer-block').classList.remove('hidden');
+  document.getElementById('revealBtn').classList.add('hidden');
+  document.getElementById('nextBtn').classList.remove('hidden');
+  if (!revealed) { seen++; updateScore(); revealed = true; }
+}
+
+function next() { idx++; showCard(); }
+function reshuffle() { buildDeck(); }
+
+function updateScore() {
+  document.getElementById('s-seen').textContent = seen;
+  document.getElementById('s-left').textContent = Math.max(0, deck.length - idx);
+}
+
+function setFilter(cat, btn) {
+  filterCat = cat;
+  document.querySelectorAll('#cat-filters .pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildDeck();
+}
+
+function showDone() {
+  document.getElementById('card').innerHTML = `
+    <div style="text-align:center;padding:20px">
+      <div style="font-size:2.6rem;margin-bottom:12px">🎉</div>
+      <div style="font-family:'Noto Serif JP',serif;font-size:1.9rem;font-weight:900;letter-spacing:2px;margin-bottom:10px;color:var(--accent)">すごい！</div>
+      <div style="color:var(--muted);font-size:0.95rem;">Amazing! (Sugoi!)<br>You knew it all along. Click Shuffle to go again.</div>
+    </div>`;
+  document.getElementById('revealBtn').classList.add('hidden');
+  document.getElementById('nextBtn').classList.add('hidden');
+  document.getElementById('prog').style.width = '100%';
+}
+
+function toggleRef() {
+  document.getElementById('ref-table').classList.toggle('hidden');
+}
+
+// Build reference table
+words.forEach(w => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${w.romaji}</td><td>${w.kana}</td><td>${w.en}</td><td style="color:var(--muted);font-size:0.78rem">${w.cat}</td>`;
+  document.getElementById('ref-body').appendChild(tr);
+});
+
+// Spacebar
+document.addEventListener('keydown', function(e) {
+  if (e.code === 'Space' || e.key === ' ') {
+    e.preventDefault();
+    if (!revealed) reveal();
+    else next();
+  }
+});
+
+buildDeck();
+</script>
+</body>
+</html>
