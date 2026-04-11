@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Think About It!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fdf8f0;
+  --card: #ffffff;
+  --accent: #f97316;
+  --accent2: #8b5cf6;
+  --accent3: #10b981;
+  --text: #1c1917;
+  --muted: #78716c;
+  --border: #e7e5e4;
+  --sidebar-bg: #ffffff;
+  --sidebar-hover: #fff7ed;
+  --sidebar-active-bg: #fff1e2;
+  --radius: 16px;
+  --shadow: 0 4px 20px rgba(249,115,22,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Nunito Sans", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 13px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.header-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+header h1 {
+  font-family: "Nunito", sans-serif;
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+header h1 span { color: var(--accent2); }
+header p {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 300;
+  margin-left: 4px;
+}
+.layout { display: flex; flex: 1; overflow: hidden; }
+.sidebar {
+  width: 250px;
+  min-width: 210px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  flex-shrink: 0;
+  padding-bottom: 20px;
+}
+.cat-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 13px 14px 4px;
+  border-top: 1px solid var(--border);
+  margin-top: 2px;
+}
+.cat-label:first-child { border-top: none; margin-top: 0; padding-top: 10px; }
+.topic-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 7px 14px 7px 18px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.84rem;
+  color: #44403c;
+  cursor: pointer;
+  line-height: 1.4;
+  transition: background 0.12s;
+  border-left: 3px solid transparent;
+}
+.topic-btn .t-icon { font-size: 1rem; flex-shrink: 0; }
+.topic-btn:hover { background: var(--sidebar-hover); color: var(--text); }
+.topic-btn.active {
+  background: var(--sidebar-active-bg);
+  color: var(--accent);
+  font-weight: 700;
+  border-left-color: var(--accent);
+}
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 36px 44px;
+  display: flex;
+  flex-direction: column;
+}
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  text-align: center;
+  gap: 14px;
+}
+.empty-icon { font-size: 3.2rem; opacity: 0.55; }
+.empty-state p {
+  font-size: 0.95rem;
+  max-width: 300px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+.empty-state .hint {
+  font-size: 0.8rem;
+  color: #a8a29e;
+  font-style: italic;
+}
+.q-area { display: none; flex-direction: column; gap: 22px; max-width: 600px; }
+.q-area.show { display: flex; }
+.topic-heading {
+  font-family: "Nunito", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topic-heading .th-icon { font-size: 1.8rem; }
+.get-btn {
+  padding: 13px 30px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  align-self: flex-start;
+  letter-spacing: 0.01em;
+}
+.get-btn:hover { background: #ea6c0a; }
+.get-btn:active { transform: scale(0.97); }
+.q-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 30px;
+  border-left: 5px solid var(--accent);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  display: none;
+  animation: popIn 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+.q-card.show { display: block; }
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.q-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: white;
+  background: var(--accent);
+  border-radius: 6px;
+  padding: 3px 10px;
+  margin-bottom: 14px;
+}
+.q-text {
+  font-family: "Nunito", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.55;
+  color: var(--text);
+}
+.q-hint {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-style: italic;
+}
+.again-btn {
+  margin-top: 20px;
+  background: none;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 20px;
+  border-radius: 9px;
+  font-family: "Nunito", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.again-btn:hover { background: var(--accent); color: white; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-icon">💭</div>
+  <h1>Think <span>About It!</span></h1>
+  <p>Choose a topic — get a fun question to think about.</p>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="main">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">👈</div>
+      <p>Pick any topic from the list to get a question!</p>
+      <p class="hint">There are no wrong answers here — just interesting ones.</p>
+    </div>
+    <div class="q-area" id="qArea">
+      <div class="topic-heading">
+        <span class="th-icon" id="topicIcon"></span>
+        <span id="topicHeading"></span>
+      </div>
+      <button class="get-btn" onclick="getQ()">Give me a question! ✨</button>
+      <div class="q-card" id="qCard">
+        <div class="q-tag">Think about it</div>
+        <div class="q-text" id="qText"></div>
+        <div class="q-hint">Talk with a partner, or think about your answer first.</div>
+        <button class="again-btn" onclick="getQ()">Another question →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+var CATS = [
+  {
+    label: "Animals & Nature",
+    topics: [
+      { name: "Pets", icon: "🐾" },
+      { name: "Wild animals", icon: "🦁" },
+      { name: "Zoos & wildlife parks", icon: "🦒" },
+      { name: "Nature & the outdoors", icon: "🌿" },
+      { name: "Space & the universe", icon: "🚀" }
+    ]
+  },
+  {
+    label: "Fun & Entertainment",
+    topics: [
+      { name: "Football", icon: "⚽" },
+      { name: "Video games & gaming", icon: "🎮" },
+      { name: "Movies & TV shows", icon: "🎬" },
+      { name: "K-pop & music", icon: "🎵" },
+      { name: "Racing & motorsport", icon: "🏎️" }
+    ]
+  },
+  {
+    label: "Tech & The Future",
+    topics: [
+      { name: "Robots & AI", icon: "🤖" },
+      { name: "Social media", icon: "📱" },
+      { name: "Screen time", icon: "💻" },
+      { name: "Dream jobs & careers", icon: "🌟" },
+      { name: "Travel & exploring the world", icon: "✈️" }
+    ]
+  },
+  {
+    label: "Everyday Life",
+    topics: [
+      { name: "School life", icon: "📚" },
+      { name: "Dormitory life", icon: "🏠" },
+      { name: "Sleep", icon: "😴" },
+      { name: "Fast food & snacks", icon: "🍕" },
+      { name: "Languages & culture", icon: "🗣️" }
+    ]
+  },
+  {
+    label: "Uzbek Life & Culture",
+    topics: [
+      { name: "Uzbek traditions", icon: "🇺🇿" },
+      { name: "Uzbek food", icon: "🍲" },
+      { name: "City vs village life", icon: "🏙️" }
+    ]
+  },
+  {
+    label: "Art & Creativity",
+    topics: [
+      { name: "Drawing & art", icon: "🎨" },
+      { name: "Superheroes", icon: "🦸" },
+      { name: "Pets vs wild animals", icon: "🐕" }
+    ]
+  },
+  {
+    label: "Big Feelings & Ideas",
+    topics: [
+      { name: "Happiness", icon: "😊" },
+      { name: "Dreams & ambition", icon: "💫" },
+      { name: "Money & things", icon: "💰" },
+      { name: "Fame & being famous", icon: "⭐" },
+      { name: "Family", icon: "👨‍👩‍👧" },
+      { name: "Friendship", icon: "🤝" },
+      { name: "Food from around the world", icon: "🌍" }
+    ]
+  }
+];
+
+var QUESTIONS = {
+  "Pets": [
+    "If you could have any animal as a pet — even a wild one — what would you choose and why?",
+    "Do you think pets make people happier? Why or why not?",
+    "Is it better to have a dog, a cat, or a completely different kind of pet?",
+    "Should people be allowed to keep very unusual animals, like snakes or foxes, as pets?",
+    "If your pet could talk for one minute, what do you think it would say to you?"
+  ],
+  "Wild animals": [
+    "Which wild animal do you think is the most amazing, and why?",
+    "If you could be any wild animal for a day, which would you choose?",
+    "Do humans do enough to protect wild animals, or not enough?",
+    "Is it ever OK to take a wild animal and keep it at home?",
+    "Which animal do you think is secretly more intelligent than people realise?"
+  ],
+  "Zoos & wildlife parks": [
+    "Are zoos good for animals, or is it cruel to keep them in cages?",
+    "Have you ever been to a zoo? What was the best or worst part?",
+    "If you could redesign a zoo to be perfectly fair for the animals, what would it look like?",
+    "Should zoos focus more on protecting endangered animals than on entertaining visitors?",
+    "Is it strange to feel sad for an animal in a zoo even if it has food and is safe?"
+  ],
+  "Nature & the outdoors": [
+    "Do you prefer spending time indoors or outdoors? What's your favourite thing to do outside?",
+    "If you could live anywhere in nature — a forest, a beach, a mountain, a desert — where would you pick?",
+    "Do people spend too much time inside these days? What are they missing?",
+    "Is it important to protect forests and rivers even if it costs money and jobs?",
+    "What is the most beautiful natural place you have ever seen or heard about?"
+  ],
+  "Space & the universe": [
+    "Would you ever want to travel to space? What would be exciting or scary about it?",
+    "Do you think there is life on other planets somewhere in the universe?",
+    "If humans could live on another planet one day, would that be a good thing or a bad thing?",
+    "Is it worth spending huge amounts of money exploring space when there are problems on Earth?",
+    "If you could visit any place in the solar system for one day, where would you go?"
+  ],
+  "Football": [
+    "Who is the greatest football player of all time — and why?",
+    "Is football the best sport in the world, or is there something better?",
+    "Should top football players earn as much money as they do?",
+    "Is it more fun to play football or to watch it?",
+    "If you could be a professional footballer for one year, which club would you play for?"
+  ],
+  "Video games & gaming": [
+    "What is your all-time favourite video game, and what makes it so good?",
+    "Can you learn real things from video games, or are they just for fun?",
+    "Is it possible to spend too much time playing video games? How much is too much?",
+    "Would you rather be a professional gamer or a game designer?",
+    "Is gaming alone as fun as gaming with friends?"
+  ],
+  "Movies & TV shows": [
+    "What is the best movie you have ever seen? What made it so good?",
+    "Is it better to watch a movie at the cinema or at home?",
+    "Do movies ever teach you something that school doesn't?",
+    "If your life were a movie, what kind of movie would it be — action, comedy, drama, or something else?",
+    "Is it OK to watch the same movie or show more than ten times if you love it?"
+  ],
+  "K-pop & music": [
+    "Who is your favourite K-pop group or solo artist, and why do you like them?",
+    "Why do you think K-pop became so popular all over the world?",
+    "Is it more impressive to be a great singer or a great dancer?",
+    "Could you ever become a K-pop idol? What would be the best and hardest parts?",
+    "Does music make you feel different emotions? Which song always changes your mood?"
+  ],
+  "Racing & motorsport": [
+    "Who is the best Formula 1 driver right now, and why?",
+    "Would you rather be a racing driver, an engineer who designs the car, or the team manager?",
+    "Is motorsport a real sport, or is it more about the machine than the driver?",
+    "If you could race any kind of vehicle — F1 car, motorbike, speedboat — what would you choose?",
+    "Is it dangerous to love a sport that involves so much risk?"
+  ],
+  "Robots & AI": [
+    "If you had a robot helper at school or in the dorm, what would you want it to do?",
+    "Could a robot ever be a real friend, or is that impossible?",
+    "Will robots make life better or worse in the future — or both?",
+    "If AI can already write essays and draw pictures, what is still special about human creativity?",
+    "Would you feel comfortable if a robot was your doctor or teacher one day?"
+  ],
+  "Social media": [
+    "If you could only keep one social media app, which one would you choose and why?",
+    "Does social media make friendships stronger or weaker?",
+    "Is it possible to be truly yourself on social media, or do you always show a different version?",
+    "Should there be a maximum age to use social media, not just a minimum age?",
+    "What is one thing about social media that you think is really good — and one thing that is really bad?"
+  ],
+  "Screen time": [
+    "How many hours of screen time do you think is OK for a 12-year-old per day?",
+    "Is watching YouTube educational, or is it mostly just entertainment?",
+    "If your phone was taken away for a week, what would you miss most?",
+    "Do you think screens are making our attention spans shorter?",
+    "Is there a difference between good screen time and bad screen time?"
+  ],
+  "Dream jobs & careers": [
+    "If money was not a problem, what job would you most want to do when you grow up?",
+    "Is it more important to love your job or to earn good money?",
+    "What do you think will be the coolest and most useful job in 20 years?",
+    "If you could shadow any famous person for a day to learn about their job, who would you pick?",
+    "Is it better to be really excellent at one thing, or pretty good at many things?"
+  ],
+  "Travel & exploring the world": [
+    "If you could visit any country in the world for free, where would you go first?",
+    "Does travelling to new places change the way you think about your own home?",
+    "Would you rather explore a huge busy city or a quiet, unknown village?",
+    "Is it possible to understand a country properly in just one week?",
+    "What food from another country do you most want to try?"
+  ],
+  "School life": [
+    "What is the best and the worst thing about school?",
+    "If you could change one rule at school, what would it be?",
+    "Is it better to have a strict teacher or a relaxed teacher?",
+    "Do you think homework is useful, or is it just extra stress?",
+    "What lesson or subject do you wish your school offered?"
+  ],
+  "Dormitory life": [
+    "What is the strangest thing about living at school five days a week?",
+    "Is dormitory life better or worse than you expected when you first arrived?",
+    "What do you miss most about home when you are at the dorm?",
+    "What is one good habit you have developed from living in the dorm?",
+    "If you could add one thing to the dormitory to make it better, what would it be?"
+  ],
+  "Sleep": [
+    "How much sleep do you think you actually need — and how much do you get?",
+    "Is it ever OK to stay up very late if you are doing something you really love?",
+    "Do you think your best ideas come in the morning or at night?",
+    "Should school start later so that students can sleep more?",
+    "Is it true that you can 'catch up' on missed sleep at the weekend?"
+  ],
+  "Fast food & snacks": [
+    "What is your all-time favourite snack or fast food?",
+    "Do you think fast food is unfairly blamed for being unhealthy?",
+    "If you could invent a new snack, what would it taste like?",
+    "Is it possible to eat junk food sometimes and still be healthy overall?",
+    "Would you give up your favourite snack for a month if someone paid you?"
+  ],
+  "Languages & culture": [
+    "Is it useful to learn a language even if you may never visit that country?",
+    "If you could instantly speak any language fluently, which would you choose?",
+    "Does speaking a language change the way you think and feel?",
+    "Is it sad when a language disappears because nobody speaks it anymore?",
+    "Which language do you think sounds the most beautiful, and why?"
+  ],
+  "Uzbek traditions": [
+    "Which Uzbek tradition or celebration do you enjoy most, and why?",
+    "Do you think old traditions are important to keep, or is it OK if they slowly disappear?",
+    "Is there a tradition in your family that is a little unusual compared to other families?",
+    "What is one thing about Uzbek culture that you think people from other countries don't know?",
+    "Should schools do more to teach students about their own culture and history?"
+  ],
+  "Uzbek food": [
+    "What is your absolute favourite Uzbek food, and what makes it so special?",
+    "Is plov the greatest food in the world — or is something else better?",
+    "How do you feel when you smell or eat a food that reminds you of home?",
+    "If a foreign friend visited Uzbekistan, which one dish would you make sure they tried?",
+    "Could you ever stop eating meat and still enjoy Uzbek food?"
+  ],
+  "City vs village life": [
+    "Did you grow up in a city or a village? What do you love or miss about it?",
+    "Is life in a city more exciting or more stressful than life in a village?",
+    "What is something a city has that a village doesn't — and do you think it's worth it?",
+    "If you had to choose to raise your own children in a city or a village, which would you pick?",
+    "Is the quiet of the countryside peaceful, or does it feel boring?"
+  ],
+  "Drawing & art": [
+    "Do you think everyone can learn to draw well, or is it a talent you are born with?",
+    "If you could draw or paint anything right now, what would it be?",
+    "Is digital art — made on a computer or tablet — as impressive as art made by hand?",
+    "What makes a drawing or painting truly beautiful in your opinion?",
+    "Should art be a more important subject at school? Why or why not?"
+  ],
+  "Superheroes": [
+    "If you could have one superpower, which would you choose and why?",
+    "Is it better to be a superhero who works alone or as part of a team?",
+    "Which superhero or villain do you think has the most interesting story?",
+    "Could a real superhero actually solve the world's problems, or would it be more complicated than it looks in movies?",
+    "If you became a superhero tomorrow, would you tell your friends and family — or keep it secret?"
+  ],
+  "Pets vs wild animals": [
+    "Is it better for an animal to live in the wild and be free, or to be a pet and be safe?",
+    "Can a wild animal ever truly become a pet, or is it always wild inside?",
+    "If a wild animal is injured, should humans help it — or let nature take its course?",
+    "Which animal do you think makes the biggest difference in the natural world?",
+    "Do people sometimes love their pets more than other people — and is that OK?"
+  ],
+  "Happiness": [
+    "What is the one thing that makes you happiest in life right now?",
+    "Can you choose to be happy, or does it depend on what happens to you?",
+    "Is it possible to be happy even when things are going badly?",
+    "What do you think is more important for happiness — good friends, good health, or enough money?",
+    "Does doing something kind for someone else make you feel happy too?"
+  ],
+  "Dreams & ambition": [
+    "What is your biggest dream for your future?",
+    "Is it better to dream big and sometimes fail, or to have smaller, safer goals?",
+    "Do you think your dreams have changed a lot since you were younger?",
+    "What is one thing you could start doing now to get closer to your dream?",
+    "Is it possible to be happy without having big ambitions or dreams?"
+  ],
+  "Money & things": [
+    "If you were given 1,000,000 som right now, what would you do with it?",
+    "Do you think money makes people happier — or does it just change their problems?",
+    "Is it more important to save money or to enjoy spending it?",
+    "Should children be given pocket money? Does it teach useful lessons?",
+    "Is it wrong to want expensive things, like the latest phone or trainers?"
+  ],
+  "Fame & being famous": [
+    "Would you like to be famous one day? What would be exciting or horrible about it?",
+    "Do famous people deserve to have less privacy than ordinary people?",
+    "Is it possible to stay a normal, kind person once you are very famous?",
+    "Which is better — to be famous for being talented, or to be famous just because people like you?",
+    "If you were famous for one year and then normal again, would you prefer that to being famous forever?"
+  ],
+  "Family": [
+    "What is the best thing about your family?",
+    "What is one tradition or habit in your family that you want to keep forever?",
+    "Do you think families today spend enough time together?",
+    "Is it harder to live with people you love, or easier?",
+    "What is one thing you want to tell your parents or family that you find hard to say?"
+  ],
+  "Friendship": [
+    "What is the most important quality in a best friend?",
+    "Is it better to have one really close friend or lots of good friends?",
+    "What is the nicest thing a friend has ever done for you?",
+    "Can a friend you only know online be a real friend?",
+    "What is the hardest thing about making new friends?"
+  ],
+  "Food from around the world": [
+    "What food from another country do you most want to try?",
+    "If you could eat dinner from any country tonight, which would you pick?",
+    "Do you think trying new food is exciting or scary — or both?",
+    "Is it important to learn how to cook traditional food from your own country?",
+    "What is the strangest food you have ever eaten — and did you like it?"
+  ]
+};
+
+var currentTopic = null;
+var currentIcon = "";
+var used = {};
+
+function buildSidebar() {
+  var sb = document.getElementById("sidebar");
+  CATS.forEach(function(cat) {
+    var lbl = document.createElement("div");
+    lbl.className = "cat-label";
+    lbl.textContent = cat.label;
+    sb.appendChild(lbl);
+    cat.topics.forEach(function(t) {
+      var btn = document.createElement("button");
+      btn.className = "topic-btn";
+      btn.innerHTML = '<span class="t-icon">' + t.icon + '</span>' + t.name;
+      btn.onclick = function() { selectTopic(t.name, t.icon, btn); };
+      sb.appendChild(btn);
+    });
+  });
+}
+
+function selectTopic(topic, icon, btn) {
+  document.querySelectorAll(".topic-btn").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  currentTopic = topic;
+  currentIcon = icon;
+  document.getElementById("topicHeading").textContent = topic;
+  document.getElementById("topicIcon").textContent = icon;
+  document.getElementById("emptyState").style.display = "none";
+  document.getElementById("qArea").classList.add("show");
+  document.getElementById("qCard").classList.remove("show");
+}
+
+function getQ() {
+  if (!currentTopic) return;
+  var pool = QUESTIONS[currentTopic];
+  if (!pool || !pool.length) return;
+  if (!used[currentTopic]) used[currentTopic] = [];
+  var avail = pool.map(function(_, i) { return i; }).filter(function(i) { return used[currentTopic].indexOf(i) === -1; });
+  if (!avail.length) { used[currentTopic] = []; avail = pool.map(function(_, i) { return i; }); }
+  var idx = avail[Math.floor(Math.random() * avail.length)];
+  used[currentTopic].push(idx);
+  document.getElementById("qText").textContent = pool[idx];
+  var card = document.getElementById("qCard");
+  card.classList.remove("show");
+  void card.offsetWidth;
+  card.classList.add("show");
+}
+
+buildSidebar();
+</script>
+</body>
+</html>
