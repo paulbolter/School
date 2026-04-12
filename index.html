@@ -133,15 +133,48 @@
   }
   .sort-select:focus { border-color: var(--gold); }
 
+  /* ── SECTION HEADINGS ── */
+  .section {
+    margin-bottom: 36px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .section-pip {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-count {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
   /* ── GRID ── */
-  #grid {
+  .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
   }
-  @media (max-width: 900px)  { #grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 900px)  { .grid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 640px)  {
-    #grid { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: repeat(2, 1fr); }
     header, main { padding-left: 20px; padding-right: 20px; }
   }
 
@@ -149,7 +182,7 @@
   .card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-left: 5px solid var(--gold);
+    border-left: 5px solid var(--cat-color, var(--gold));
     border-radius: 10px;
     padding: 22px 18px;
     text-decoration: none;
@@ -184,7 +217,6 @@
 
   /* ── STATES ── */
   .state-msg {
-    grid-column: 1 / -1;
     text-align: center;
     padding: 60px 20px;
     color: var(--muted);
@@ -240,7 +272,7 @@
     </select>
   </div>
 
-  <div id="grid">
+  <div id="sections">
     <div class="state-msg">
       <div class="big">⏳</div>
       <p>Fetching your tools from GitHub…</p>
@@ -255,7 +287,6 @@ const GITHUB_USER   = 'paulbolter';
 const GITHUB_REPO   = 'School';
 const GITHUB_BRANCH = 'main';
 
-// Pretty titles keyed by exact filename
 const PRETTY_NAMES = {
   'Compare-game-Grade8.html':               'Compare Game · Grade 8',
   'Compare-game-Staff.html':                'Compare Game · Staff',
@@ -286,11 +317,53 @@ const PRETTY_NAMES = {
 
 function prettyName(filename) {
   if (PRETTY_NAMES[filename]) return PRETTY_NAMES[filename];
-  // Fallback for any future files not yet in the list
   return filename
     .replace(/\.html$/i, '')
     .replace(/[-_]/g, ' ')
     .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// ── Categories: tested in order, first match wins
+const CATEGORIES = [
+  {
+    key: 'igcse',
+    label: 'IGCSE',
+    color: '#c0392b',
+    test: (f, p) => /igcse/i.test(f)
+  },
+  {
+    key: 'pickers',
+    label: 'Name Pickers',
+    color: '#6a1599',
+    test: (f, p) => /picker/i.test(f)
+  },
+  {
+    key: 'discussion',
+    label: 'Discussion',
+    color: '#0e7490',
+    test: (f, p) => /thinking|think/i.test(f)
+  },
+  {
+    key: 'grade6',
+    label: 'Grade 6',
+    color: '#2e7d32',
+    test: (f, p) => /grade.?6|grade-6/i.test(f) || /grade 6/i.test(p)
+  },
+  {
+    key: 'grade8',
+    label: 'Grade 8',
+    color: '#1565c0',
+    test: (f, p) => /grade.?8|grade-8/i.test(f) || /grade 8/i.test(p)
+  },
+];
+const FALLBACK = { key: 'general', label: 'General', color: '#7a6a5a' };
+
+function classify(filename) {
+  const p = prettyName(filename);
+  for (const cat of CATEGORIES) {
+    if (cat.test(filename, p)) return cat;
+  }
+  return FALLBACK;
 }
 
 let allFiles = [];
@@ -311,9 +384,9 @@ async function loadFiles() {
     document.getElementById('last-updated').textContent =
       new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
-    renderGrid(allFiles);
+    renderSections(allFiles);
   } catch (err) {
-    document.getElementById('grid').innerHTML = `
+    document.getElementById('sections').innerHTML = `
       <div class="state-msg">
         <div class="big">⚠️</div>
         <p>Couldn't load files from GitHub.<br>
@@ -324,31 +397,65 @@ async function loadFiles() {
   }
 }
 
-function renderGrid(files) {
-  const grid = document.getElementById('grid');
+function renderSections(files) {
+  const container = document.getElementById('sections');
+
   if (!files.length) {
-    grid.innerHTML = `<div class="state-msg"><div class="big">🔍</div><p>No tools match your search.</p></div>`;
+    container.innerHTML = `<div class="state-msg"><div class="big">🔍</div><p>No tools match your search.</p></div>`;
     return;
   }
-  grid.innerHTML = files.map((f, i) => `
-    <a class="card" href="${f.url}" target="_blank" rel="noopener" style="animation-delay:${i * 35}ms">
-      <div class="card-title">${prettyName(f.name)}</div>
-    </a>`).join('');
+
+  // Group files into categories
+  const groups = new Map();
+  CATEGORIES.forEach(c => groups.set(c.key, { cat: c, files: [] }));
+  groups.set(FALLBACK.key, { cat: FALLBACK, files: [] });
+
+  files.forEach(f => {
+    const cat = classify(f.name);
+    groups.get(cat.key).files.push(f);
+  });
+
+  // Sort within each group if A→Z selected
+  if (document.getElementById('sort').value === 'alpha') {
+    for (const g of groups.values()) {
+      g.files.sort((a, b) => prettyName(a.name).localeCompare(prettyName(b.name)));
+    }
+  }
+
+  let html = '';
+  let delay = 0;
+  for (const { cat, files: catFiles } of groups.values()) {
+    if (!catFiles.length) continue;
+    html += `
+      <div class="section">
+        <div class="section-header">
+          <div class="section-pip" style="background:${cat.color}"></div>
+          <div class="section-title">${cat.label}</div>
+          <div class="section-line"></div>
+          <div class="section-count">${catFiles.length}</div>
+        </div>
+        <div class="grid">
+          ${catFiles.map(f => `
+            <a class="card" href="${f.url}" target="_blank" rel="noopener"
+               style="--cat-color:${cat.color}; animation-delay:${delay++ * 35}ms">
+              <div class="card-title">${prettyName(f.name)}</div>
+            </a>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  container.innerHTML = html;
 }
 
 function filtered() {
   const q = document.getElementById('search').value.toLowerCase().trim();
-  let files = allFiles.filter(f =>
+  return allFiles.filter(f =>
     !q || f.name.toLowerCase().includes(q) || prettyName(f.name).toLowerCase().includes(q)
   );
-  if (document.getElementById('sort').value === 'alpha') {
-    files.sort((a, b) => prettyName(a.name).localeCompare(prettyName(b.name)));
-  }
-  return files;
 }
 
-document.getElementById('search').addEventListener('input', () => renderGrid(filtered()));
-document.getElementById('sort').addEventListener('change', () => renderGrid(filtered()));
+document.getElementById('search').addEventListener('input', () => renderSections(filtered()));
+document.getElementById('sort').addEventListener('change', () => renderSections(filtered()));
 
 loadFiles();
 </script>
