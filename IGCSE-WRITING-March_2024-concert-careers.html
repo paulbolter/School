@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE Writing – March 2024 – Exercises 5 & 6</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f0f0f0; padding: 2rem 1rem; font-family: Arial, sans-serif; }
+  .page { max-width: 720px; margin: 0 auto 2rem auto; padding: 2rem 2.5rem; color: #000; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .header-bar { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 1.5rem; }
+  .label { font-size: 13px; font-weight: bold; }
+  .ex-heading { font-size: 14px; font-weight: bold; margin-bottom: 0.75rem; }
+  .scenario { font-size: 13.5px; line-height: 1.6; margin-bottom: 0.75rem; }
+  .instruction-bold { font-size: 13.5px; font-weight: bold; margin-bottom: 0.5rem; }
+  .bullets { font-size: 13.5px; margin: 0.4rem 0 0.4rem 1.5rem; line-height: 1.9; }
+  .bullets li { list-style-type: disc; }
+  .word-req { font-size: 13.5px; font-weight: bold; margin: 0.75rem 0 0.3rem; }
+  .marks-note { font-size: 13px; margin-bottom: 1rem; }
+  .divider { border: none; border-top: 1px solid #000; margin: 0.5rem 0 0.75rem; }
+  .writing-area { width: 100%; min-height: 420px; border: none; resize: none; overflow: hidden; font-family: Arial, sans-serif; font-size: 14px; line-height: 2.15; padding: 4px 2px; color: #000; background: transparent; outline: none; caret-color: #000; border-bottom: 0.5px dotted #aaa; }
+  .writing-area::placeholder { color: #bbb; font-size: 13px; }
+  .counter-bar { display: flex; justify-content: flex-end; align-items: center; gap: 14px; margin-top: 10px; padding-top: 6px; border-top: 0.5px solid #ccc; }
+  .word-count { font-size: 13px; color: #444; }
+  .word-count span { font-weight: bold; }
+  .wc-ok { color: #1a7a1a; }
+  .wc-warn { color: #b86000; }
+  .wc-over { color: #c0000a; }
+  .marks-tag { font-size: 12px; color: #555; }
+  .copy-btn { font-size: 12px; padding: 4px 12px; border: 0.5px solid #888; background: #f8f8f8; cursor: pointer; border-radius: 3px; color: #333; font-family: Arial, sans-serif; }
+  .copy-btn:hover { background: #eee; }
+  .copy-confirm { font-size: 12px; color: #1a7a1a; display: none; }
+
+  /* Speech bubbles for Ex 6 */
+  .bubbles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0.9rem 0 1rem; }
+  .bubble { position: relative; border: 1.5px solid #000; border-radius: 18px; padding: 10px 14px; font-size: 13px; font-style: italic; line-height: 1.5; text-align: center; background: #fff; }
+  .bubble::after { content: ''; position: absolute; bottom: -10px; left: 22px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 4px solid transparent; border-top: 10px solid #000; }
+  .bubble.right::after { left: auto; right: 22px; }
+</style>
+</head>
+<body>
+
+<!-- ===== EXERCISE 5 ===== -->
+<div class="page">
+
+  <div class="header-bar">
+    <span class="label">Exercise 5</span>
+    <span class="label">0510/12/F/M/24</span>
+  </div>
+
+  <div class="ex-heading">Question 16</div>
+
+  <p class="scenario">You recently took part in an important concert at your school. Something surprising happened during the concert.</p>
+
+  <p class="instruction-bold">Write an email to a friend about your experience.</p>
+
+  <p class="scenario">In your email you should:</p>
+  <ul class="bullets">
+    <li>describe how you prepared for the concert</li>
+    <li>explain what happened that was surprising</li>
+    <li>say what you did after the concert finished.</li>
+  </ul>
+
+  <p class="word-req">Write about 120 to 160 words.</p>
+  <p class="marks-note">You will receive up to 6 marks for the content of your email, and up to 9 marks for the language used.</p>
+
+  <hr class="divider">
+
+  <textarea id="answer1" class="writing-area" spellcheck="false" autocorrect="off" autocomplete="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" placeholder="Write your email here..."></textarea>
+
+  <div class="counter-bar">
+    <span class="copy-confirm" id="copy-confirm1">Copied!</span>
+    <button class="copy-btn" onclick="copyText('answer1','copy-confirm1')">Copy answer</button>
+    <div class="word-count">Words: <span id="wc1" class="wc-warn">0</span> / 120–160</div>
+    <span class="marks-tag">[15]</span>
+  </div>
+
+</div>
+
+<!-- ===== EXERCISE 6 ===== -->
+<div class="page">
+
+  <div class="header-bar">
+    <span class="label">Exercise 6</span>
+    <span class="label">0510/12/F/M/24</span>
+  </div>
+
+  <div class="ex-heading">Question 17</div>
+
+  <p class="scenario">Your class recently went to a careers day to get information about different types of jobs. Now your teacher wants you to write a report about the careers day.</p>
+
+  <p class="instruction-bold">In your report, say what you found useful about the careers day, AND how you think it could be improved next year.</p>
+
+  <p class="scenario">Here are some comments from students in your class:</p>
+
+  <div class="bubbles">
+    <div class="bubble">The people were very friendly.</div>
+    <div class="bubble right">All the jobs were quite similar.</div>
+    <div class="bubble">I managed to ask a lot of questions.</div>
+    <div class="bubble right">One day wasn't long enough.</div>
+  </div>
+
+  <p class="instruction-bold">Now write a report for your teacher about the careers day.</p>
+  <p class="scenario">The comments above may give you some ideas, and you should also use some ideas of your own.</p>
+
+  <p class="word-req">Write about 120 to 160 words.</p>
+  <p class="marks-note">You will receive up to 6 marks for the content of your report, and up to 9 marks for the language used.</p>
+
+  <hr class="divider">
+
+  <textarea id="answer2" class="writing-area" spellcheck="false" autocorrect="off" autocomplete="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" placeholder="Write your report here..."></textarea>
+
+  <div class="counter-bar">
+    <span class="copy-confirm" id="copy-confirm2">Copied!</span>
+    <button class="copy-btn" onclick="copyText('answer2','copy-confirm2')">Copy answer</button>
+    <div class="word-count">Words: <span id="wc2" class="wc-warn">0</span> / 120–160</div>
+    <span class="marks-tag">[15]</span>
+  </div>
+
+</div>
+
+<script>
+  function countWords(id, wcId) {
+    const ta = document.getElementById(id);
+    const wc = document.getElementById(wcId);
+    ta.addEventListener('input', () => {
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+      const words = ta.value.trim() === '' ? 0 : ta.value.trim().split(/\s+/).length;
+      wc.textContent = words;
+      wc.className = words >= 120 && words <= 160 ? 'wc-ok' : words > 160 ? 'wc-over' : 'wc-warn';
+    });
+  }
+  countWords('answer1', 'wc1');
+  countWords('answer2', 'wc2');
+
+  function copyText(taId, confirmId) {
+    const ta = document.getElementById(taId);
+    if (!ta.value.trim()) return;
+    navigator.clipboard.writeText(ta.value).then(() => {
+      const c = document.getElementById(confirmId);
+      c.style.display = 'inline';
+      setTimeout(() => c.style.display = 'none', 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
