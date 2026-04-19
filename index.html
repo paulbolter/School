@@ -293,12 +293,12 @@ const PRETTY_NAMES = {
   'Compare_game-Grade-6.html':              'Compare Game · Grade 6',
   'Passive-Builder.html':                   'Passive Voice Builder',
   'Past-perfect-builder.html':              'Past Perfect Builder',
-  'Picker-6-GREEN-Frog.html':               'Name Picker · Frog',
-  'Picker-6-GREEN.html':                    'Name Picker · Grade 6',
-  'Picker-6-GREEN_MECH.html':               'Name Picker · Grade 6 Mech',
-  'Picker-Grade-8-HORROR.html':             'Name Picker · Grade 8B Horror',
-  'Picker-Grade-8-MECH.html':               'Name Picker · Grade 8 Mech',
-  'Picker-unicorn.html':                    'Name Picker · Unicorn',
+  'Picker-Frog-Grd6.html':                  'Name Picker · Frog',
+  'Picker-Grd6-Mech.html':                  'Name Picker · Grade 6 Mech',
+  'Picker-Grd6.html':                       'Name Picker · Grade 6',
+  'Picker-Grd8Blue-Horror.html':            'Name Picker · Grade 8 Horror',
+  'Picker-Grd8Green.html':                  'Name Picker · Grade 8 Green',
+  'Picker-Unicorn.html':                    'Name Picker · Unicorn',
   'Sentence-machine(2).html':               'Sentence Machine',
   'Speaking_Scenario_Grade8BLUE.html':      'Speaking Scenarios · Grade 8 Blue',
   'Speaking_Scenario_Grade8GREEN.html':     'Speaking Scenarios · Grade 8 Green',
@@ -342,6 +342,12 @@ const CATEGORIES = [
     test: (f, p) => ['WRITING-tool.html', 'ArticleChecker.html'].includes(f)
   },
   {
+    key: 'pickers',
+    label: 'Name Pickers',
+    color: '#6a1599',
+    test: (f, p) => /picker/i.test(f)
+  },
+  {
     key: 'discussion',
     label: 'Discussion',
     color: '#0e7490',
@@ -358,12 +364,6 @@ const CATEGORIES = [
     label: 'Grade 8',
     color: '#1565c0',
     test: (f, p) => /grade.?8|grade-8/i.test(f) || /grade 8/i.test(p)
-  },
-  {
-    key: 'pickers',
-    label: 'Name Pickers',
-    color: '#6a1599',
-    test: (f, p) => /picker/i.test(f)
   },
 ];
 const FALLBACK = { key: 'general', label: 'General', color: '#7a6a5a' };
@@ -415,13 +415,13 @@ function renderSections(files) {
     return;
   }
 
-  // Group files into categories — General appears before Name Pickers
+  // Group files into categories — General appears before Name Pickers in render order
+  const RENDER_ORDER = ['igcse', 'writing', 'discussion', 'grade6', 'grade8', FALLBACK.key, 'pickers'];
   const groups = new Map();
-  CATEGORIES.forEach(c => {
-    if (c.key === 'pickers') groups.set(FALLBACK.key, { cat: FALLBACK, files: [] });
-    groups.set(c.key, { cat: c, files: [] });
+  RENDER_ORDER.forEach(key => {
+    const cat = CATEGORIES.find(c => c.key === key) || FALLBACK;
+    groups.set(key, { cat, files: [] });
   });
-  if (!groups.has(FALLBACK.key)) groups.set(FALLBACK.key, { cat: FALLBACK, files: [] });
 
   files.forEach(f => {
     const cat = classify(f.name);
