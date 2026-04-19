@@ -382,12 +382,17 @@
       ? "Grade 8 students (age 14, B2 English level). The language should be more sophisticated and use a richer vocabulary suitable for B2 learners. Questions should push students to think more abstractly and critically, and can explore more mature or complex ideas where appropriate."
       : "Grade 6 students (age 12, B1 English level). The language must be simple, clear, and concrete, appropriate for 12-year-old EFL learners.";
 
+    // Grade 8 gets a tighter length constraint to avoid wordy questions
+    const lengthRule = (currentGrade === "G8")
+      ? "\n\nIMPORTANT — keep each question SHORT, ideally under 15 words. Cut filler, extra examples, and hedging phrases. The question should be punchy and easy to read aloud in class. The critical thinking challenge must still be clear, but the wording must be tight."
+      : "";
+
     const prompt = `You are an EFL teacher creating discussion questions for ${gradeDescriptor}
 
 Topic: "${topic}"
 
 Generate exactly one question for each of the 6 levels of Bloom's Taxonomy.
-Each question should clearly reflect its Bloom's level.
+Each question should clearly reflect its Bloom's level.${lengthRule}
 
 Respond ONLY in this exact JSON format with no extra text or markdown:
 
