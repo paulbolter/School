@@ -342,12 +342,6 @@ const CATEGORIES = [
     test: (f, p) => ['WRITING-tool.html', 'ArticleChecker.html'].includes(f)
   },
   {
-    key: 'pickers',
-    label: 'Name Pickers',
-    color: '#6a1599',
-    test: (f, p) => /picker/i.test(f)
-  },
-  {
     key: 'discussion',
     label: 'Discussion',
     color: '#0e7490',
@@ -364,6 +358,12 @@ const CATEGORIES = [
     label: 'Grade 8',
     color: '#1565c0',
     test: (f, p) => /grade.?8|grade-8/i.test(f) || /grade 8/i.test(p)
+  },
+  {
+    key: 'pickers',
+    label: 'Name Pickers',
+    color: '#6a1599',
+    test: (f, p) => /picker/i.test(f)
   },
 ];
 const FALLBACK = { key: 'general', label: 'General', color: '#7a6a5a' };
@@ -415,10 +415,13 @@ function renderSections(files) {
     return;
   }
 
-  // Group files into categories
+  // Group files into categories — General appears before Name Pickers
   const groups = new Map();
-  CATEGORIES.forEach(c => groups.set(c.key, { cat: c, files: [] }));
-  groups.set(FALLBACK.key, { cat: FALLBACK, files: [] });
+  CATEGORIES.forEach(c => {
+    if (c.key === 'pickers') groups.set(FALLBACK.key, { cat: FALLBACK, files: [] });
+    groups.set(c.key, { cat: c, files: [] });
+  });
+  if (!groups.has(FALLBACK.key)) groups.set(FALLBACK.key, { cat: FALLBACK, files: [] });
 
   files.forEach(f => {
     const cat = classify(f.name);
