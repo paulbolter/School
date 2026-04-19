@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic Spinner</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fdf8f0;
+    --card: #ffffff;
+    --border: #e7e5e4;
+    --accent: #f97316;
+    --accent2: #8b5cf6;
+    --text: #1c1917;
+    --muted: #78716c;
+    --shadow: 0 4px 20px rgba(249,115,22,0.10);
+    --shadow-lg: 0 10px 40px rgba(249,115,22,0.18);
+    --radius: 16px;
+    --font-head: 'Nunito', sans-serif;
+    --font-body: 'Nunito Sans', sans-serif;
+  }
+
+  body.g8 {
+    --bg: #f5f3ef;
+    --border: #e5e7eb;
+    --accent: #2563b0;
+    --accent2: #1a3a6e;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --shadow: 0 4px 20px rgba(37,99,176,0.10);
+    --shadow-lg: 0 10px 40px rgba(37,99,176,0.18);
+    --font-head: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 20px 60px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  header { text-align: center; margin-bottom: 24px; }
+
+  header h1 {
+    font-family: var(--font-head);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  body.g8 header h1 { font-weight: 400; letter-spacing: -0.3px; }
+  header h1 span { color: var(--accent2); }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 300;
+    margin-top: 6px;
+  }
+
+  .grade-toggle {
+    display: inline-flex;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .grade-btn {
+    padding: 8px 22px;
+    border: none;
+    background: transparent;
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 100px;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  body.g8 .grade-btn { font-family: var(--font-body); }
+  .grade-btn:hover { color: var(--text); }
+  .grade-btn.active { background: var(--accent); color: white; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 32px;
+    width: 100%;
+    max-width: 560px;
+    text-align: center;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .slot-window {
+    position: relative;
+    width: 100%;
+    height: 110px;
+    background: linear-gradient(180deg, rgba(249,115,22,0.06) 0%, #fff 50%, rgba(249,115,22,0.06) 100%);
+    border: 3px solid var(--accent);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 26px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  body.g8 .slot-window {
+    background: linear-gradient(180deg, rgba(37,99,176,0.06) 0%, #fff 50%, rgba(37,99,176,0.06) 100%);
+  }
+
+  .reel {
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 3.2s cubic-bezier(0.15, 0.7, 0.2, 1);
+  }
+
+  .reel-item {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 20px;
+    width: 100%;
+  }
+
+  .reel-icon { font-size: 2.4rem; line-height: 1; }
+
+  .reel-name {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  body.g8 .reel-name { font-weight: 400; font-size: 1.55rem; }
+
+  .slot-window::before, .slot-window::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 28px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .slot-window::before { top: 0; background: linear-gradient(180deg, rgba(255,247,237,1), rgba(255,247,237,0)); }
+  .slot-window::after  { bottom: 0; background: linear-gradient(0deg, rgba(255,247,237,1), rgba(255,247,237,0)); }
+  body.g8 .slot-window::before { background: linear-gradient(180deg, rgba(245,243,239,1), rgba(245,243,239,0)); }
+  body.g8 .slot-window::after  { background: linear-gradient(0deg, rgba(245,243,239,1), rgba(245,243,239,0)); }
+
+  .slot-window .line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.25;
+    z-index: 1;
+  }
+  .slot-window .line.top { top: calc(50% - 55px); }
+  .slot-window .line.bot { top: calc(50% + 53px); }
+
+  .btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, opacity 0.2s, border-color 0.2s, color 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  body.g8 .btn { font-family: var(--font-body); font-weight: 600; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    font-size: 1.15rem;
+    padding: 16px 40px;
+    box-shadow: var(--shadow-lg);
+  }
+  .btn-primary:hover { filter: brightness(0.92); }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-secondary { background: var(--accent2); color: white; }
+  .btn-secondary:hover { filter: brightness(0.92); }
+  .btn-secondary:active { transform: scale(0.97); }
+
+  .btn-ghost {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--muted);
+    padding: 12px 22px;
+    font-size: 0.9rem;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .actions {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+    animation: fadeUp 0.4s ease;
+  }
+  .actions.visible { display: flex; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .actions-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .topic-count {
+    margin-top: 18px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎰 Topic <span>Spinner</span></h1>
+  <p>Spin the wheel to get a discussion topic — then send it to your Question Maker</p>
+</header>
+
+<div class="grade-toggle" role="tablist">
+  <button class="grade-btn active" id="btnG6" onclick="setGrade('G6')">Grade 6</button>
+  <button class="grade-btn" id="btnG8" onclick="setGrade('G8')">Grade 8</button>
+</div>
+
+<div class="card">
+
+  <div class="slot-window">
+    <div class="line top"></div>
+    <div class="line bot"></div>
+    <div class="reel" id="reel"></div>
+  </div>
+
+  <button class="btn btn-primary" id="spinBtn" onclick="spin()">🎲 SPIN!</button>
+
+  <div class="actions" id="actions">
+    <div class="actions-row">
+      <button class="btn btn-secondary" onclick="sendToQuestionMaker()">✦ Send to Question Maker →</button>
+      <button class="btn btn-ghost" onclick="copyTopic()" id="copyBtn">📋 Copy topic</button>
+    </div>
+    <button class="btn btn-ghost" onclick="spin()">↺ Spin again</button>
+  </div>
+
+  <div class="topic-count" id="topicCount"></div>
+
+</div>
+
+<script>
+  // ─── GRADE 6 TOPICS — concrete, playful, age 12 / B1 ────────────────
+  var TOPICS_G6 = [
+    { name: "Pets", icon: "🐾" },
+    { name: "Wild animals", icon: "🦁" },
+    { name: "Zoos & wildlife parks", icon: "🦒" },
+    { name: "Nature & the outdoors", icon: "🌿" },
+    { name: "Space & the universe", icon: "🚀" },
+    { name: "The ocean", icon: "🌊" },
+    { name: "Weather", icon: "⛅" },
+    { name: "Seasons", icon: "🍂" },
+    { name: "Football", icon: "⚽" },
+    { name: "Video games & gaming", icon: "🎮" },
+    { name: "Movies & TV shows", icon: "🎬" },
+    { name: "K-pop & music", icon: "🎵" },
+    { name: "Racing & motorsport", icon: "🏎️" },
+    { name: "Books & reading", icon: "📖" },
+    { name: "Board games", icon: "🎲" },
+    { name: "Birthdays", icon: "🎂" },
+    { name: "Holidays & festivals", icon: "🎉" },
+    { name: "Robots & AI", icon: "🤖" },
+    { name: "Social media", icon: "📱" },
+    { name: "Screen time", icon: "💻" },
+    { name: "Dream jobs & careers", icon: "🌟" },
+    { name: "Travel & exploring the world", icon: "✈️" },
+    { name: "Inventions", icon: "💡" },
+    { name: "The future", icon: "🔮" },
+    { name: "Cars & transport", icon: "🚗" },
+    { name: "School life", icon: "📚" },
+    { name: "Dormitory life", icon: "🏠" },
+    { name: "Sleep", icon: "😴" },
+    { name: "Fast food & snacks", icon: "🍕" },
+    { name: "Languages & culture", icon: "🗣️" },
+    { name: "Mornings", icon: "🌅" },
+    { name: "Weekends", icon: "🛋️" },
+    { name: "Rules", icon: "📏" },
+    { name: "Homework", icon: "✏️" },
+    { name: "Exams & tests", icon: "📝" },
+    { name: "Uzbek traditions", icon: "🇺🇿" },
+    { name: "Uzbek food", icon: "🍲" },
+    { name: "City vs village life", icon: "🏙️" },
+    { name: "Neighbours", icon: "🏘️" },
+    { name: "Drawing & art", icon: "🎨" },
+    { name: "Superheroes", icon: "🦸" },
+    { name: "Pets vs wild animals", icon: "🐕" },
+    { name: "Storytelling", icon: "📜" },
+    { name: "Photography", icon: "📸" },
+    { name: "Happiness", icon: "😊" },
+    { name: "Dreams & ambition", icon: "💫" },
+    { name: "Money & things", icon: "💰" },
+    { name: "Fame & being famous", icon: "⭐" },
+    { name: "Family", icon: "👨‍👩‍👧" },
+    { name: "Friendship", icon: "🤝" },
+    { name: "Food from around the world", icon: "🌍" },
+    { name: "Bravery", icon: "🦁" },
+    { name: "Kindness", icon: "💝" },
+    { name: "Honesty & lies", icon: "🤥" },
+    { name: "Secrets", icon: "🤫" },
+    { name: "Embarrassing moments", icon: "😳" },
+    { name: "Fears", icon: "😰" },
+    { name: "Growing up", icon: "🌱" },
+    { name: "Heroes & role models", icon: "🦸‍♀️" },
+    { name: "Success & failure", icon: "🏆" },
+    { name: "Luck", icon: "🍀" },
+    { name: "Change", icon: "🔄" },
+    { name: "Memories", icon: "💭" }
+  ];
+
+  // ─── GRADE 8 TOPICS — abstract, mature, age 14 / B2 ─────────────────
+  // Pulled from your Think Deeper app + a few bridging additions.
+  var TOPICS_G8 = [
+    { name: "The environment", icon: "🌍" },
+    { name: "Natural disasters", icon: "🌪️" },
+    { name: "Cities vs countryside", icon: "🏙️" },
+    { name: "The ocean", icon: "🌊" },
+    { name: "Space exploration", icon: "🚀" },
+    { name: "Animals and wildlife", icon: "🦌" },
+    { name: "Global fairness", icon: "⚖️" },
+    { name: "Poverty and inequality", icon: "💸" },
+    { name: "War and peace", icon: "🕊️" },
+    { name: "Climate change", icon: "🌡️" },
+    { name: "Artificial intelligence", icon: "🤖" },
+    { name: "Robots", icon: "🦾" },
+    { name: "Future technology", icon: "🔮" },
+    { name: "Social media", icon: "📱" },
+    { name: "Smartphones", icon: "📲" },
+    { name: "Online privacy", icon: "🔒" },
+    { name: "Virtual reality", icon: "🥽" },
+    { name: "Esports and gaming", icon: "🎮" },
+    { name: "Video games", icon: "🕹️" },
+    { name: "Self-driving cars", icon: "🚘" },
+    { name: "Leadership", icon: "👑" },
+    { name: "Justice and fairness", icon: "⚖️" },
+    { name: "Freedom", icon: "🗽" },
+    { name: "Power", icon: "💪" },
+    { name: "Money", icon: "💰" },
+    { name: "Fame", icon: "⭐" },
+    { name: "Kindness", icon: "💝" },
+    { name: "Bullying", icon: "🚫" },
+    { name: "Gender equality", icon: "♀️" },
+    { name: "Immigration", icon: "🧳" },
+    { name: "The meaning of success", icon: "🏆" },
+    { name: "Happiness", icon: "😊" },
+    { name: "Fear", icon: "😨" },
+    { name: "Dreams and ambition", icon: "💫" },
+    { name: "Change", icon: "🔄" },
+    { name: "The future", icon: "🔮" },
+    { name: "What makes a good life", icon: "🌟" },
+    { name: "Is competition good or bad", icon: "⚔️" },
+    { name: "The purpose of school", icon: "📚" },
+    { name: "University and tertiary study", icon: "🎓" },
+    { name: "Future careers", icon: "💼" },
+    { name: "Learning languages", icon: "🗣️" },
+    { name: "AI and jobs", icon: "🤖" },
+    { name: "Working from home", icon: "🏡" },
+    { name: "Music", icon: "🎵" },
+    { name: "Movies and cinema", icon: "🎬" },
+    { name: "Anime", icon: "🎌" },
+    { name: "Art", icon: "🎨" },
+    { name: "Fashion", icon: "👗" },
+    { name: "Travel", icon: "✈️" },
+    { name: "Food and eating habits", icon: "🍽️" },
+    { name: "Languages and culture", icon: "🌐" },
+    { name: "Football", icon: "⚽" },
+    { name: "Chess", icon: "♟️" },
+    { name: "Competition and winning", icon: "🥇" },
+    { name: "Extreme sports", icon: "🏂" },
+    { name: "The Olympics", icon: "🏅" },
+    { name: "Sport and health", icon: "💪" },
+    { name: "Mental health", icon: "🧠" },
+    { name: "Sleep", icon: "😴" },
+    { name: "Fast food", icon: "🍔" },
+    { name: "Exercise and fresh air", icon: "🏃" },
+    { name: "Screen time", icon: "💻" },
+    { name: "Friendship", icon: "🤝" },
+    { name: "Family", icon: "👨‍👩‍👧" },
+    { name: "Growing up", icon: "🌱" },
+    { name: "Identity", icon: "🪞" },
+    { name: "Peer pressure", icon: "👥" }
+  ];
+
+  // ─── STATE ──────────────────────────────────────────────────────────
+  var currentGrade = "G6";
+  var currentTopics = TOPICS_G6;
+  var currentTopic = null;
+  var isSpinning = false;
+  var recentlyUsed = { G6: [], G8: [] };
+
+  var reel = document.getElementById("reel");
+  var spinBtn = document.getElementById("spinBtn");
+  var actions = document.getElementById("actions");
+  var topicCount = document.getElementById("topicCount");
+  var btnG6 = document.getElementById("btnG6");
+  var btnG8 = document.getElementById("btnG8");
+
+  function setGrade(grade) {
+    if (isSpinning) return;
+    currentGrade = grade;
+    currentTopics = (grade === "G8") ? TOPICS_G8 : TOPICS_G6;
+
+    btnG6.classList.toggle("active", grade === "G6");
+    btnG8.classList.toggle("active", grade === "G8");
+    document.body.classList.toggle("g8", grade === "G8");
+
+    currentTopic = null;
+    actions.classList.remove("visible");
+    spinBtn.textContent = "🎲 SPIN!";
+
+    updateTopicCount();
+    showPlaceholder();
+  }
+
+  function updateTopicCount() {
+    topicCount.textContent = currentTopics.length + " topics in the " + (currentGrade === "G8" ? "Grade 8" : "Grade 6") + " spinner";
+  }
+
+  function buildReel(finalTopic) {
+    reel.innerHTML = "";
+    reel.style.transition = "none";
+    reel.style.transform = "translateY(0)";
+
+    var strip = [];
+    for (var i = 0; i < 40; i++) {
+      strip.push(currentTopics[Math.floor(Math.random() * currentTopics.length)]);
+    }
+    strip.push(finalTopic);
+
+    strip.forEach(function(t) {
+      var item = document.createElement("div");
+      item.className = "reel-item";
+      item.innerHTML = '<span class="reel-icon">' + t.icon + '</span><span class="reel-name">' + t.name + '</span>';
+      reel.appendChild(item);
+    });
+  }
+
+  function pickTopic() {
+    var buffer = recentlyUsed[currentGrade];
+    var avail = currentTopics.filter(function(t) {
+      return buffer.indexOf(t.name) === -1;
+    });
+    if (avail.length === 0) {
+      buffer.length = 0;
+      avail = currentTopics.slice();
+    }
+    var chosen = avail[Math.floor(Math.random() * avail.length)];
+    buffer.push(chosen.name);
+    if (buffer.length > Math.floor(currentTopics.length / 3)) {
+      buffer.shift();
+    }
+    return chosen;
+  }
+
+  function spin() {
+    if (isSpinning) return;
+    isSpinning = true;
+    spinBtn.disabled = true;
+    actions.classList.remove("visible");
+
+    var finalTopic = pickTopic();
+    currentTopic = finalTopic;
+
+    buildReel(finalTopic);
+    void reel.offsetWidth;
+
+    reel.style.transition = "transform 3.2s cubic-bezier(0.15, 0.7, 0.2, 1)";
+    reel.style.transform = "translateY(-" + (40 * 110) + "px)";
+
+    setTimeout(function() {
+      actions.classList.add("visible");
+      spinBtn.textContent = "🎲 SPIN AGAIN!";
+      spinBtn.disabled = false;
+      isSpinning = false;
+    }, 3300);
+  }
+
+  function sendToQuestionMaker() {
+    if (!currentTopic) return;
+    var url = "Think-Blooms-Question_maker.html?topic=" + encodeURIComponent(currentTopic.name) + "&grade=" + currentGrade;
+    window.open(url, "_blank");
+  }
+
+  function copyTopic() {
+    if (!currentTopic) return;
+    var btn = document.getElementById("copyBtn");
+    navigator.clipboard.writeText(currentTopic.name).then(function() {
+      var original = btn.textContent;
+      btn.textContent = "✓ Copied!";
+      setTimeout(function() { btn.textContent = original; }, 1500);
+    }).catch(function() {
+      btn.textContent = "Copy failed";
+    });
+  }
+
+  function showPlaceholder() {
+    reel.innerHTML = "";
+    reel.style.transition = "none";
+    reel.style.transform = "translateY(0)";
+    var t = currentTopics[Math.floor(Math.random() * currentTopics.length)];
+    var item = document.createElement("div");
+    item.className = "reel-item";
+    item.innerHTML = '<span class="reel-icon" style="opacity:0.4">' + t.icon + '</span><span class="reel-name" style="color:var(--muted)">Press SPIN to begin…</span>';
+    reel.appendChild(item);
+  }
+
+  updateTopicCount();
+  showPlaceholder();
+</script>
+
+</body>
+</html>
