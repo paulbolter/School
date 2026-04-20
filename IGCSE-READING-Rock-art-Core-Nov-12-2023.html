@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE 0510 – Exercises 1, 2 & 3 | October/November 2023 (Core)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1a2e; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: #13132a; border-bottom: 2px solid var(--gold); }
+  .tab-btn {
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #8888aa; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #ccccee; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 18px; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.sc-correct { border-color: var(--self-yes); background: #e8f5e9; }
+  .question-item.sc-wrong { border-color: var(--self-no); background: #fdecea; }
+  .question-item.sc-half { border-color: var(--self-partial); background: #fffde7; }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+  .inputs-row { display: flex; flex-direction: column; gap: 7px; }
+
+  .abcd-row { display: flex; gap: 8px; margin-top: 2px; }
+  .abcd-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .abcd-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .abcd-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abcd-btn:disabled { cursor: default; }
+  .abcd-btn.correct-answer { background: #4caf50; color: white; border-color: #4caf50; }
+  .abcd-btn.wrong-answer { background: #e53935; color: white; border-color: #e53935; }
+
+  input[type="text"] {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 4px;
+    padding: 8px 11px; font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+    color: var(--ink); background: white; transition: border-color 0.2s; outline: none;
+  }
+  input[type="text"]:focus { border-color: var(--ink); }
+  input[type="text"]:disabled { background: #f0ece6; cursor: default; color: var(--muted); }
+
+  .answer-reveal-box {
+    display: none; margin-top: 10px; padding: 10px 13px; border-radius: 5px;
+    background: #fffbea; border: 1.5px solid #e8c84a; font-size: 13px; line-height: 1.6;
+  }
+  .answer-reveal-box.show { display: block; }
+  .answer-label { font-weight: 700; color: #7a5c00; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .answer-text { font-weight: 600; color: #1a6e2a; font-size: 14px; }
+  .answer-also { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .self-check-row { display: none; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .self-check-row.show { display: flex; }
+  .self-check-label { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .sc-btn {
+    padding: 5px 14px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
+    border: 2px solid; cursor: pointer; transition: all 0.15s; background: white;
+  }
+  .sc-btn:disabled { cursor: default; opacity: 0.6; }
+  .sc-yes { border-color: var(--self-yes); color: var(--self-yes); }
+  .sc-yes:hover:not(:disabled), .sc-yes.active { background: var(--self-yes); color: white; }
+  .sc-no { border-color: var(--self-no); color: var(--self-no); }
+  .sc-no:hover:not(:disabled), .sc-no.active { background: var(--self-no); color: white; }
+  .sc-partial { border-color: var(--self-partial); color: var(--self-partial); }
+  .sc-partial:hover:not(:disabled), .sc-partial.active { background: var(--self-partial); color: white; }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: #1a1a2e; }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .input-with-check { display: flex; align-items: center; gap: 8px; }
+  .inline-check { display: none; width: 18px; height: 18px; background: #4caf50; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0; }
+  .inline-check.show { display: flex; }
+
+  .btn-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  .notes-heading { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--ink); margin: 18px 0 8px; border-bottom: 1.5px solid var(--border); padding-bottom: 6px; }
+  .notes-heading:first-of-type { margin-top: 0; }
+  .example-note { font-size: 12px; color: var(--muted); font-style: italic; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IGCSE 0510/12 · Core · Oct/Nov 2023</span>
+    <h1>Rock Art, Science Projects &amp; Parakeets</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 24</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('ex1')">Exercise 1</button>
+  <button class="tab-btn" onclick="showTab('ex2')">Exercise 2</button>
+  <button class="tab-btn" onclick="showTab('ex3')">Exercise 3</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 1 — Ancient rock art in Colombia
+═══════════════════════════════════════════════════════ -->
+<div id="ex1" class="exercise active">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">Ancient rock art in Colombia</div>
+      <div class="article-body">
+        <p>'There are thousands of these prehistoric paintings,' the researcher said, pointing to a high rock wall covered with pictures of humans, animals and abstract patterns, all in the same reddish colour. I had joined some archaeologists studying ancient rock art in the Serranía la Lindosa mountains in Colombia. It's thought that humans first settled in the region about 13 000 years ago. Some of the paintings may have been created no more than 400 years ago, but it seems likely that others date back to 12 500 years ago. 'We have different ways of finding out how old the images are,' one archaeologist told me. 'We've found tools made of animal bone which we think were used by the people who did the paintings, and we know how to estimate the age of these tools. Also, there are some paintings that show animal species which died out about 12 000 years ago – so they must've been painted before that.' The archaeologist also described how her team had done tests on ancient fruit seeds found at the site. 'People responsible for some of the paintings probably ate that fruit and the tests give us accurate information about the age of the seeds – which tells us how old the paintings are.'</p>
+        <p>Some of the extinct animals painted on the rocks were huge; they include prehistoric relatives of elephants. This indicates that the region around the art-covered cliffs has changed considerably. Thousands of years ago, there were open grasslands – the best environment for large animals – rather than the thick jungle it has since become.</p>
+        <p>Serranía la Lindosa is not very accessible; arriving by plane is not an option. Our journey there from the town of San José del Guaviare was supposed to be a two-hour drive, followed by a four-hour trek through the jungle. A flat tyre delayed us initially, however. Then, we were held up by flooding on the route through the jungle. But despite this, it was fascinating. The jungle was full of wildlife – including monkeys, birds and plants that we would later see illustrated in the rock art. There was one thing that I never felt very comfortable about, however. The crocodiles in the rivers were easy to avoid, but the jungle is home to very poisonous snakes, which I certainly didn't want to meet.</p>
+        <p>You could spend days staring at the rock paintings, but certain features stood out for me. I loved the pictures of prehistoric horses. They seemed very natural. What struck me more than anything, though, was how detailed they were. However, because these animals are now extinct, we can't be sure how realistic the images are.</p>
+        <p>Many of the paintings are high up on the cliffs. I asked a researcher how the painters got up there. 'We've looked for the remains of ropes but haven't found any,' she said. 'We've discovered fish bones, and analysis of them tells us a little about the painters' diet and when they lived. But we now believe they climbed wooden towers to work. There are clues in a few paintings.' She then pointed out pictures on the rock wall of large man-made structures.</p>
+        <p>Some of the art shows human activity. As far as I'm aware, images of people actually involved in painting are yet to be found. There are some where human figures are clearly dancing, however. I don't know if there are any scenes of everyday routines like toolmaking or cooking, although burnt wood has been found, showing they were able to make fires at the time. I also saw some paintings with individuals hunting. It's a fascinating view into an ancient world.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 1–7 &nbsp;[Total: 9 marks]</div>
+
+    <div class="nudge-banner" id="ex1-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please answer all questions before revealing answers.</span>
+    </div>
+
+    <div class="result-bar" id="ex1-result">Exercise 1: <span id="ex1-score-display">0</span> / 9</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex1-submit" onclick="submitEx1()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex1')">Reset</button>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-item" id="ex1-q1-item">
+      <div class="q-header">
+        <div class="q-num">1</div>
+        <div class="q-text">When do experts think the oldest rock art at Serranía la Lindosa was made?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q1" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q1-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">12 500 years ago</div>
+      </div>
+      <div class="self-check-row" id="ex1-q1-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q1','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q1','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-item" id="ex1-q2-item">
+      <div class="q-header">
+        <div class="q-num">2</div>
+        <div class="q-text">What was the surrounding area like when the early rock art was made?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q2" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q2-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Open grasslands / best environment for large animals</div>
+      </div>
+      <div class="self-check-row" id="ex1-q2-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q2','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q2','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-item" id="ex1-q3-item">
+      <div class="q-header">
+        <div class="q-num">3</div>
+        <div class="q-text">What caused the writer to take longer than expected to reach Serranía la Lindosa? Give <strong>two</strong> details.</div>
+        <div class="q-marks">[2]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q3a" placeholder="Detail 1…">
+        <input type="text" id="ex1-q3b" placeholder="Detail 2…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q3-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">1. Flat tyre</div>
+        <div class="answer-text">2. Flooding (on the route through the jungle)</div>
+      </div>
+      <div class="self-check-row" id="ex1-q3-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q3','yes',2)">✓ Both correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheck('ex1','q3','partial',1)">½ One correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q3','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-item" id="ex1-q4-item">
+      <div class="q-header">
+        <div class="q-num">4</div>
+        <div class="q-text">What did the writer feel anxious about during the journey to Serranía la Lindosa?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q4" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q4-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Poisonous snakes</div>
+      </div>
+      <div class="self-check-row" id="ex1-q4-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q4','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q4','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-item" id="ex1-q5-item">
+      <div class="q-header">
+        <div class="q-num">5</div>
+        <div class="q-text">What impressed the writer most about the paintings of horses?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q5" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q5-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Detailed / detail(s)</div>
+      </div>
+      <div class="self-check-row" id="ex1-q5-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q5','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q5','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-item" id="ex1-q6-item">
+      <div class="q-header">
+        <div class="q-num">6</div>
+        <div class="q-text">How do experts think the artists were able to paint high up on the rocks?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q6" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q6-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Climbed (wooden) towers / climbed large (man-made) structures</div>
+      </div>
+      <div class="self-check-row" id="ex1-q6-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q6','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q6','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-item" id="ex1-q7-item">
+      <div class="q-header">
+        <div class="q-num">7</div>
+        <div class="q-text">What does the rock art show people doing? Give <strong>two</strong> details.</div>
+        <div class="q-marks">[2]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q7a" placeholder="Detail 1…">
+        <input type="text" id="ex1-q7b" placeholder="Detail 2…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q7-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">1. Dancing</div>
+        <div class="answer-text">2. Hunting</div>
+      </div>
+      <div class="self-check-row" id="ex1-q7-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q7','yes',2)">✓ Both correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheck('ex1','q7','partial',1)">½ One correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q7','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex1 -->
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 2 — Science projects (A, B, C only)
+═══════════════════════════════════════════════════════ -->
+<div id="ex2" class="exercise">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">Science projects</div>
+      <div class="article-body">
+        <p><strong>A &nbsp; Pedro</strong></p>
+        <p>My science class is helping with the development of an app. The scientist behind the app explained the idea to us. Apparently, food production causes massive environmental damage and contributes to climate change. At the same time, about 30% of all food gets thrown away, which creates even more pollution. When he said that, I couldn't believe it. Why would people waste so much food? But it's true. The scientist has got thousands of students around the world to gather data for the app, which is amazing. Whenever we have a meal, we upload photos of it and other information. The software then calculates the environmental effect of producing that meal, and what impact there would be if it was thrown away. When it's fully developed, the app will educate users and, hopefully, they'll waste less food. The research is fun and not particularly complex, but whether we should be working hard for ten weeks on it is something I have doubts about.</p>
+        <p><strong>B &nbsp; Miriam</strong></p>
+        <p>When our biology teacher announced the butterfly project, I can't say I was very enthusiastic at first. I couldn't understand why all through September and October we had to record all the butterflies we saw and where we saw them. So, when a butterfly expert gave a talk to prepare us for it, I didn't really concentrate, which I should've done. When the project was starting, I found myself annoying others in my group by having to check with them what I should be doing. Twice a week, we search for butterflies in the school grounds. We take photos and record location details. Then we upload everything to a website for scientists to analyse. I already know much more about butterflies than before, including the key role they have in nature. Now I understand that in order to protect them, information from an extended period is required. And giving the scientists all that valuable data makes me feel really good about myself.</p>
+        <p><strong>C &nbsp; Wei</strong></p>
+        <p>I live in a region that's famous for winter sports. In recent years, however, we haven't had much snow, which is a major concern, and not something you'd expect in a place like this. Scientists are trying to get a detailed picture of how conditions are changing, but it's a huge task and they depend on volunteers to collect data. I'm in a group at school that takes various measurements, such as snow depth, in the local area. The scientists always tell us what a good job we're doing, which is nice of them – I'm sure they're very busy. Collecting the data isn't very complicated, but it takes time and you have to do it regularly. Some members of my group complain that what we're doing won't bring snow to the area, so it seems pointless. I get what they're saying, but their attitude gets on my nerves. It's just not helpful.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Question 8(a)–(h) &nbsp;[Total: 8 marks]</div>
+
+    <div class="nudge-banner" id="ex2-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please answer all questions before submitting.</span>
+    </div>
+
+    <div class="result-bar" id="ex2-result">Exercise 2: <span id="ex2-score-display">0</span> / 8</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex2-submit" onclick="submitEx2()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex2')">Reset</button>
+    </div>
+
+    <div class="ex-intro">For each question write the correct letter <strong>A, B or C</strong> on the line. Which person…</div>
+
+    <!-- 8a -->
+    <div class="question-item" id="ex2-qa-item">
+      <div class="q-header">
+        <div class="q-num">a</div>
+        <div class="q-text">mentions becoming irritated with people during the project?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qa-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qa-fb"></div>
+    </div>
+
+    <!-- 8b -->
+    <div class="question-item" id="ex2-qb-item">
+      <div class="q-header">
+        <div class="q-num">b</div>
+        <div class="q-text">is impressed by the size of the project?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qb-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qb-fb"></div>
+    </div>
+
+    <!-- 8c -->
+    <div class="question-item" id="ex2-qc-item">
+      <div class="q-header">
+        <div class="q-num">c</div>
+        <div class="q-text">regrets paying too little attention during some training?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qc-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qc-fb"></div>
+    </div>
+
+    <!-- 8d -->
+    <div class="question-item" id="ex2-qd-item">
+      <div class="q-header">
+        <div class="q-num">d</div>
+        <div class="q-text">suggests that the project requires too much commitment?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qd-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qd-fb"></div>
+    </div>
+
+    <!-- 8e -->
+    <div class="question-item" id="ex2-qe-item">
+      <div class="q-header">
+        <div class="q-num">e</div>
+        <div class="q-text">is proud of contributing to some important research?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qe-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qe-fb"></div>
+    </div>
+
+    <!-- 8f -->
+    <div class="question-item" id="ex2-qf-item">
+      <div class="q-header">
+        <div class="q-num">f</div>
+        <div class="q-text">appreciates feedback they receive?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qf-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qf-fb"></div>
+    </div>
+
+    <!-- 8g -->
+    <div class="question-item" id="ex2-qg-item">
+      <div class="q-header">
+        <div class="q-num">g</div>
+        <div class="q-text">admits to changing their opinion about the aims of the project?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qg-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qg-fb"></div>
+    </div>
+
+    <!-- 8h -->
+    <div class="question-item" id="ex2-qh-item">
+      <div class="q-header">
+        <div class="q-num">h</div>
+        <div class="q-text">says that they learned something that surprised them?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qh-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qh-fb"></div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex2 -->
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 3 — The parakeets of London
+═══════════════════════════════════════════════════════ -->
+<div id="ex3" class="exercise">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">The parakeets of London</div>
+      <div class="article-body">
+        <p>I'd arranged to meet bird expert Adam Shaw in Hyde Park in central London. When I got there, two green-coloured birds were greedily taking seeds from his hands while some excited children watched on. 'It's hardly surprising that the population of parakeets in London is growing,' Shaw said. 'After all, 50% of the city consists of green spaces, which is really good for them. And there's plenty of food available, which encourages them to stay here.'</p>
+        <p>London's parakeet population has grown significantly in the last 20 years to well over 30 000. They are the only type of parrot living wild in the UK and their exotic appearance makes them stand out from other birds. They are the kind of bird you would only expect to see in a zoo in the UK. In fact, according to one theory, some originally escaped from a zoo and then went on to establish themselves around the city.</p>
+        <p>Nowadays, large numbers of parakeets are very visible in London and, while many Londoners like their bright colours, some point out that they compete with other birds for food. 'One factor that partly explains why there are so many parakeets is that London has lots of trees,' Shaw continued. 'That's where they like to live. Having said that, there are reports that they scare away other smaller birds which also depend on these trees. I haven't seen any evidence of this being a serious problem, although some people are concerned about this and want to get rid of them. In fact, there are strict laws that protect wildlife – and these regulations are partly why the birds are doing well here.'</p>
+        <p>I think of Africa and India, where these parakeets originally come from, as places with hot climates, and very different from the UK. So, the idea that the parakeet population in London is expanding puzzled me. Aren't the long, cold winters a problem for them? 'The climate here suits them, actually,' Shaw told me. 'They come from northern India near the Himalayas, where temperatures can be very low. You can also find groups of them in other northern European cities, and the idea that the first ones here flew over from France has even been suggested.'</p>
+        <p>Shaw then told me that in India and in other countries with parakeet populations, not everyone welcomes them. 'They're hungry birds and can cause considerable damage to crops,' Shaw explained. 'UK farmers are afraid this might happen here, though the birds have so far kept to London and other cities. Also, like many birds, they carry disease, which scientists have expressed concern about.'</p>
+        <p>Most people in London, however, love seeing these beautiful creatures. With so much wildlife under threat, it's encouraging to see one species doing well. And there are lots of interesting parakeet stories. One is that in 1968, the rock star Jimi Hendrix released a pair of parakeets from a cage, and that's how the local population began. No-one knows whether this really happened or not, though. Another story goes back to 1951, when some birds were brought to London to appear in a film, and then established themselves. While we can't prove that these stories are true, they reflect the interest many Londoners take in their city's parakeets.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 9–11 &nbsp;[Total: 7 marks]</div>
+
+    <div class="nudge-banner" id="ex3-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please fill in all boxes before revealing answers.</span>
+    </div>
+
+    <div class="result-bar" id="ex3-result">Exercise 3: <span id="ex3-score-display">0</span> / 7</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex3-submit" onclick="submitEx3()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex3')">Reset</button>
+    </div>
+
+    <div class="ex-intro">You are going to give a talk about the parakeets of London to your class at school. Make short notes under each heading.</div>
+
+    <!-- Q9 -->
+    <div class="question-item" id="ex3-q9-item">
+      <div class="notes-heading">Question 9 — Reasons for the increasing number of parakeets in London [3 marks]</div>
+      <div class="example-note">Example given: <em>50% of the city consists of green spaces</em></div>
+      <div class="inputs-row">
+        <div class="input-with-check">
+          <input type="text" id="ex3-q9a" placeholder="Reason 1…">
+          <div class="inline-check" id="ex3-q9a-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q9b" placeholder="Reason 2…">
+          <div class="inline-check" id="ex3-q9b-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q9c" placeholder="Reason 3…">
+          <div class="inline-check" id="ex3-q9c-check">✓</div>
+        </div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q9-reveal">
+        <div class="answer-label">Mark Scheme — any 3 of these</div>
+        <div class="answer-text">1. Plenty of food (available)</div>
+        <div class="answer-text">2. (London has) lots of trees</div>
+        <div class="answer-text">3. (Strict) laws that protect wildlife / them</div>
+        <div class="answer-text">4. The climate (suits them)</div>
+      </div>
+      <div class="self-check-row" id="ex3-q9-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q9','yes',3)">✓ 3 correct (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q9','partial2',2)">2 correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q9','partial1',1)">1 correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q9','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question-item" id="ex3-q10-item">
+      <div class="notes-heading">Question 10 — Possible explanations for how parakeets came to be in London [2 marks]</div>
+      <div class="inputs-row">
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10a" placeholder="Explanation 1…">
+          <div class="inline-check" id="ex3-q10a-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10b" placeholder="Explanation 2…">
+          <div class="inline-check" id="ex3-q10b-check">✓</div>
+        </div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q10-reveal">
+        <div class="answer-label">Mark Scheme — any 2 of these</div>
+        <div class="answer-text">1. Escaped from a zoo</div>
+        <div class="answer-text">2. Flew (over) from France</div>
+        <div class="answer-text">3. Jimi Hendrix released (a pair of) parakeets / rock star released parakeets</div>
+        <div class="answer-text">4. Brought in to appear in a film</div>
+      </div>
+      <div class="self-check-row" id="ex3-q10-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q10','yes',2)">✓ Both correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q10','partial',1)">½ One correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q10','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="question-item" id="ex3-q11-item">
+      <div class="notes-heading">Question 11 — Worries some people have about the parakeets [2 marks]</div>
+      <div class="inputs-row">
+        <div class="input-with-check">
+          <input type="text" id="ex3-q11a" placeholder="Worry 1…">
+          <div class="inline-check" id="ex3-q11a-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q11b" placeholder="Worry 2…">
+          <div class="inline-check" id="ex3-q11b-check">✓</div>
+        </div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q11-reveal">
+        <div class="answer-label">Mark Scheme — any 2 of these</div>
+        <div class="answer-text">1. Compete with other birds for food</div>
+        <div class="answer-text">2. They scare away other (smaller) birds</div>
+        <div class="answer-text">3. (Can cause considerable) damage to crops</div>
+        <div class="answer-text">4. (Carry) disease</div>
+      </div>
+      <div class="self-check-row" id="ex3-q11-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q11','yes',2)">✓ Both correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q11','partial',1)">½ One correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q11','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex3 -->
+
+<script>
+// ── SCORE STATE ──────────────────────────────────────────
+const scores = { ex1: {}, ex2: {}, ex3: {} };
+
+function updateScores() {
+  const ex1Total = Object.values(scores.ex1).reduce((a,b)=>a+b,0);
+  const ex2Total = Object.values(scores.ex2).reduce((a,b)=>a+b,0);
+  const ex3Total = Object.values(scores.ex3).reduce((a,b)=>a+b,0);
+  document.getElementById('total-score').textContent = ex1Total + ex2Total + ex3Total;
+  document.getElementById('ex1-score-display').textContent = ex1Total;
+  document.getElementById('ex2-score-display').textContent = ex2Total;
+  document.getElementById('ex3-score-display').textContent = ex3Total;
+}
+
+// ── TAB SWITCHING ────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['ex1','ex2','ex3'].indexOf(id);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+}
+
+// ── EXERCISE 1 — reveal + self-check ────────────────────
+function submitEx1() {
+  const ids1 = ['ex1-q1','ex1-q2','ex1-q3a','ex1-q3b','ex1-q4','ex1-q5','ex1-q6','ex1-q7a','ex1-q7b'];
+  const allFilled = ids1.every(id => document.getElementById(id).value.trim());
+  if (!allFilled) {
+    const nb = document.getElementById('ex1-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ids1.forEach(id => { document.getElementById(id).disabled = true; });
+  ['q1','q2','q3','q4','q5','q6','q7'].forEach(q => {
+    document.getElementById('ex1-'+q+'-reveal').classList.add('show');
+    document.getElementById('ex1-'+q+'-sc').classList.add('show');
+  });
+  document.getElementById('ex1-result').classList.add('show');
+  document.getElementById('ex1-submit').disabled = true;
+}
+
+function selfCheck(ex, q, result, marks) {
+  const pts = marks !== undefined ? marks : (result === 'yes' ? 1 : 0);
+  scores[ex][q] = pts;
+  const item = document.getElementById(ex+'-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  if (result === 'yes') item.classList.add('sc-correct');
+  else if (result === 'no') item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById(ex+'-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ── EXERCISE 2 — A/B/C multiple choice ──────────────────
+const ex2Selections = {};
+const ex2Correct = {
+  'ex2-qa': 'C',
+  'ex2-qb': 'A',
+  'ex2-qc': 'B',
+  'ex2-qd': 'A',
+  'ex2-qe': 'B',
+  'ex2-qf': 'C',
+  'ex2-qg': 'B',
+  'ex2-qh': 'A'
+};
+const ex2Explanations = {
+  'ex2-qa': 'C (Wei) — "their attitude gets on my nerves" shows irritation with group members.',
+  'ex2-qb': 'A (Pedro) — "thousands of students around the world… which is amazing."',
+  'ex2-qc': 'B (Miriam) — "I didn\'t really concentrate, which I should\'ve done."',
+  'ex2-qd': 'A (Pedro) — "whether we should be working hard for ten weeks on it is something I have doubts about."',
+  'ex2-qe': 'B (Miriam) — "giving the scientists all that valuable data makes me feel really good about myself."',
+  'ex2-qf': 'C (Wei) — "The scientists always tell us what a good job we\'re doing, which is nice of them."',
+  'ex2-qg': 'B (Miriam) — she didn\'t understand the need for long-term data collection; now she does.',
+  'ex2-qh': 'A (Pedro) — "I couldn\'t believe it. Why would people waste so much food?" — surprised by food waste statistics.'
+};
+
+function selectAbcd(qId, letter, btn) {
+  const allBtns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+  allBtns.forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  ex2Selections[qId] = letter;
+}
+
+function submitEx2() {
+  const keys = ['ex2-qa','ex2-qb','ex2-qc','ex2-qd','ex2-qe','ex2-qf','ex2-qg','ex2-qh'];
+  if (!keys.every(k => ex2Selections[k])) {
+    const nb = document.getElementById('ex2-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  keys.forEach(qId => {
+    const correct = ex2Correct[qId];
+    const selected = ex2Selections[qId];
+    const btns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+    btns.forEach(b => b.disabled = true);
+    btns.forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + ex2Explanations[qId];
+      fb.style.display = 'block';
+      scores.ex2[qId] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + ex2Explanations[qId];
+      fb.style.display = 'block';
+      scores.ex2[qId] = 0;
+    }
+  });
+  updateScores();
+  document.getElementById('ex2-result').classList.add('show');
+  document.getElementById('ex2-submit').disabled = true;
+}
+
+// ── EXERCISE 3 — reveal + self-check ────────────────────
+function submitEx3() {
+  const allIds = ['ex3-q9a','ex3-q9b','ex3-q9c','ex3-q10a','ex3-q10b','ex3-q11a','ex3-q11b'];
+  const allFilled = allIds.every(id => document.getElementById(id).value.trim());
+  if (!allFilled) {
+    const nb = document.getElementById('ex3-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  allIds.forEach(id => {
+    document.getElementById(id).disabled = true;
+    const chk = document.getElementById(id + '-check');
+    if (chk) chk.classList.add('show');
+  });
+  ['ex3-q9-reveal','ex3-q10-reveal','ex3-q11-reveal'].forEach(id => {
+    document.getElementById(id).classList.add('show');
+  });
+  ['ex3-q9-sc','ex3-q10-sc','ex3-q11-sc'].forEach(id => {
+    document.getElementById(id).classList.add('show');
+  });
+  document.getElementById('ex3-result').classList.add('show');
+  document.getElementById('ex3-submit').disabled = true;
+}
+
+function selfCheckEx3(q, result, pts) {
+  scores.ex3[q] = pts;
+  const item = document.getElementById('ex3-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  if (pts > 0 && result === 'yes') item.classList.add('sc-correct');
+  else if (pts === 0) item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById('ex3-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ── RESET ────────────────────────────────────────────────
+function resetEx(ex) {
+  if (ex === 'ex1') {
+    scores.ex1 = {};
+    ['ex1-q1','ex1-q2','ex1-q3a','ex1-q3b','ex1-q4','ex1-q5','ex1-q6','ex1-q7a','ex1-q7b'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+    });
+    ['q1','q2','q3','q4','q5','q6','q7'].forEach(q => {
+      const item = document.getElementById('ex1-'+q+'-item');
+      if (item) item.classList.remove('sc-correct','sc-wrong','sc-half');
+      const rev = document.getElementById('ex1-'+q+'-reveal');
+      if (rev) rev.classList.remove('show');
+      const sc = document.getElementById('ex1-'+q+'-sc');
+      if (sc) { sc.classList.remove('show'); sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); }); }
+    });
+    document.getElementById('ex1-result').classList.remove('show');
+    document.getElementById('ex1-submit').disabled = false;
+  } else if (ex === 'ex2') {
+    scores.ex2 = {};
+    ['qa','qb','qc','qd','qe','qf','qg','qh'].forEach(qKey => {
+      const qId = 'ex2-' + qKey;
+      document.querySelectorAll('#'+qId+'-btns .abcd-btn').forEach(b => {
+        b.disabled=false; b.classList.remove('selected','correct-answer','wrong-answer');
+      });
+      delete ex2Selections[qId];
+      const item = document.getElementById(qId+'-item');
+      if (item) item.classList.remove('correct','wrong');
+      const fb = document.getElementById(qId+'-fb');
+      if (fb) { fb.style.display='none'; fb.innerHTML=''; }
+    });
+    document.getElementById('ex2-result').classList.remove('show');
+    document.getElementById('ex2-submit').disabled = false;
+  } else {
+    scores.ex3 = {};
+    ['ex3-q9a','ex3-q9b','ex3-q9c','ex3-q10a','ex3-q10b','ex3-q11a','ex3-q11b'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+      const chk = document.getElementById(id+'-check');
+      if (chk) chk.classList.remove('show');
+    });
+    ['ex3-q9-reveal','ex3-q10-reveal','ex3-q11-reveal'].forEach(id => {
+      document.getElementById(id).classList.remove('show');
+    });
+    ['ex3-q9-sc','ex3-q10-sc','ex3-q11-sc'].forEach(id => {
+      const sc = document.getElementById(id);
+      sc.classList.remove('show');
+      sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); });
+    });
+    ['ex3-q9-item','ex3-q10-item','ex3-q11-item'].forEach(id => {
+      document.getElementById(id).classList.remove('sc-correct','sc-wrong','sc-half');
+    });
+    document.getElementById('ex3-result').classList.remove('show');
+    document.getElementById('ex3-submit').disabled = false;
+  }
+  updateScores();
+}
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
