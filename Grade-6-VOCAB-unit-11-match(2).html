@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match it! — Grade 6 Unit 11 Vocabulary</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #E8F7EF;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 16px 48px;
+  }
+  .wrap { width: 100%; max-width: 720px; }
+  .vm-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.6rem;
+    color: #2E8B6F;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    text-shadow: 3px 3px 0 #7CC7E8;
+  }
+  .vm-sub { text-align: center; color: #5AAE93; font-weight: 700; font-size: 0.9rem; margin-bottom: 18px; }
+  .vm-round-label { text-align: center; font-size: 0.82rem; font-weight: 700; color: #aaa; margin-bottom: 10px; letter-spacing: 0.5px; }
+  .vm-progress-wrap { max-width: 420px; margin: 0 auto 20px; height: 10px; background: #C4EAD6; border-radius: 10px; overflow: hidden; }
+  .vm-progress-fill { height: 100%; background: #2E8B6F; border-radius: 10px; transition: width 0.4s cubic-bezier(.34,1.56,.64,1); }
+  .vm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .vm-col-label { font-family: 'Fredoka One', cursive; font-size: 1.05rem; text-align: center; margin-bottom: 10px; letter-spacing: 0.5px; }
+  .vm-col-label.word { color: #1F6B52; }
+  .vm-col-label.def { color: #2B7A9E; }
+  .vm-btn {
+    display: block; width: 100%; padding: 12px 14px; margin-bottom: 9px;
+    font-family: 'Nunito', sans-serif; font-size: 0.92rem; font-weight: 700;
+    border-radius: 14px; cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s;
+    border: none; text-align: center; line-height: 1.3;
+  }
+  .vm-btn.word-btn { background: #D4F0E2; color: #1F6B52; box-shadow: 0 4px 0 #8FD4B3; }
+  .vm-btn.def-btn { background: #D6ECF8; color: #1E5A7A; box-shadow: 0 4px 0 #7CC7E8; font-size: 0.82rem; font-weight: 700; }
+  .vm-btn.word-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #8FD4B3; }
+  .vm-btn.def-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #7CC7E8; }
+  .vm-btn.selected { background: #FFE066; color: #7a5200; box-shadow: 0 4px 0 #E6B800; transform: translateY(-2px) scale(1.03); }
+  .vm-btn.wrong { background: #ffe0e6; color: #b5002c; box-shadow: 0 4px 0 #ffb3c1; animation: wobble 0.35s ease; }
+  .vm-btn.matched { visibility: hidden; pointer-events: none; }
+  .vm-btn.pop { animation: popaway 0.35s ease forwards; }
+  @keyframes wobble {
+    0%   { transform: translateX(0); }
+    25%  { transform: translateX(-7px); }
+    50%  { transform: translateX(7px); }
+    75%  { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes popaway {
+    0%   { transform: scale(1); opacity: 1; }
+    50%  { transform: scale(1.2); opacity: 0.6; }
+    100% { transform: scale(0); opacity: 0; }
+  }
+  .vm-done { text-align: center; padding: 40px 16px; }
+  .vm-star { font-size: 3rem; display: inline-block; animation: starspin 0.6s ease; }
+  @keyframes starspin {
+    0%   { transform: rotate(-20deg) scale(0); }
+    60%  { transform: rotate(10deg) scale(1.4); }
+    100% { transform: rotate(0deg) scale(1); }
+  }
+  .vm-done-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.6rem;
+    color: #2E8B6F;
+    text-shadow: 3px 3px 0 #7CC7E8;
+    margin: 10px 0 8px;
+  }
+  .vm-done-msg { font-size: 1rem; color: #666; font-weight: 700; margin-bottom: 28px; }
+  .vm-again-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.25rem;
+    background: #2E8B6F;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 14px 40px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #1F6B52;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .vm-again-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #1F6B52; }
+  .vm-again-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #1F6B52; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="vm-title">Match it!</div>
+  <div class="vm-sub">Grade 6 · Unit 11 Vocabulary</div>
+  <div id="vm-game"></div>
+</div>
+
+<script>
+const allWords = [
+  ["hilarious", "Extremely funny, making people laugh a lot"],
+  ["make fun of", "To laugh at someone in an unkind way"],
+  ["hailstorm", "A storm where small balls of ice fall from the sky"],
+  ["blizzard", "A very strong snowstorm with powerful winds"],
+  ["journalist", "A person whose job is to write news stories for newspapers, TV, or websites"],
+  ["persuade", "To make someone agree to do something by giving them good reasons"],
+  ["encourage", "To give someone confidence or support to do something"],
+  ["warn", "To tell someone about a danger or problem so they can avoid it"],
+  ["remind", "To help someone remember something"],
+  ["allow", "To let someone do something"],
+  ["expect", "To think that something will happen"],
+  ["expert", "A person who knows a lot about a particular subject"],
+  ["crop", "A plant that farmers grow in large amounts for food"],
+  ["candidate", "A person who is trying to get a job or be chosen for a position"]
+];
+
+function shuffle(a) {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+
+let chunks = [], roundIdx = 0, matched = 0, selectedWord = null, wordOrder = [], defOrder = [];
+
+function init() {
+  const w = shuffle(allWords);
+  chunks = [];
+  for (let i = 0; i < w.length; i += 7) {
+    chunks.push(w.slice(i, i + 7));
+  }
+  roundIdx = 0;
+  startRound();
+}
+
+function startRound() {
+  selectedWord = null; matched = 0;
+  const pair = chunks[roundIdx];
+  wordOrder = shuffle(pair.map((_, i) => i));
+  defOrder = shuffle(pair.map((_, i) => i));
+  renderRound();
+}
+
+function renderRound() {
+  const pair = chunks[roundIdx];
+  const total = chunks.reduce((s, c) => s + c.length, 0);
+  const done = chunks.slice(0, roundIdx).reduce((s, c) => s + c.length, 0) + matched;
+  const pct = Math.round(done / total * 100);
+  let h = `
+    <div class="vm-round-label">Round ${roundIdx + 1} of ${chunks.length} &nbsp;·&nbsp; ${matched} / ${pair.length} matched</div>
+    <div class="vm-progress-wrap"><div class="vm-progress-fill" id="vpbar" style="width:${pct}%"></div></div>
+    <div class="vm-cols">
+      <div>
+        <div class="vm-col-label word">Word</div>`;
+  wordOrder.forEach(i => {
+    h += `<button class="vm-btn word-btn" id="word${i}" onclick="pickWord(${i})">${pair[i][0]}</button>`;
+  });
+  h += `</div><div><div class="vm-col-label def">Definition</div>`;
+  defOrder.forEach(i => {
+    h += `<button class="vm-btn def-btn" id="def${i}" onclick="pickDef(${i})">${pair[i][1]}</button>`;
+  });
+  h += `</div></div>`;
+  document.getElementById('vm-game').innerHTML = h;
+}
+
+function pickWord(i) {
+  const btn = document.getElementById('word' + i);
+  if (btn.classList.contains('matched') || btn.classList.contains('pop')) return;
+  if (selectedWord !== null) {
+    const prev = document.getElementById('word' + selectedWord);
+    if (prev) prev.classList.remove('selected');
+  }
+  selectedWord = i;
+  btn.classList.add('selected');
+}
+
+function pickDef(i) {
+  if (selectedWord === null) return;
+  const defBtn = document.getElementById('def' + i);
+  if (defBtn.classList.contains('matched') || defBtn.classList.contains('pop')) return;
+  if (selectedWord === i) {
+    const wordBtn = document.getElementById('word' + selectedWord);
+    wordBtn.classList.remove('selected');
+    wordBtn.classList.add('pop');
+    defBtn.classList.add('pop');
+    setTimeout(() => {
+      wordBtn.classList.add('matched');
+      defBtn.classList.add('matched');
+    }, 340);
+    selectedWord = null;
+    matched++;
+    setTimeout(() => {
+      const pair = chunks[roundIdx];
+      const total = chunks.reduce((s, c) => s + c.length, 0);
+      const done = chunks.slice(0, roundIdx).reduce((s, c) => s + c.length, 0) + matched;
+      const pb = document.getElementById('vpbar');
+      const rl = document.querySelector('.vm-round-label');
+      if (pb) pb.style.width = Math.round(done / total * 100) + '%';
+      if (rl) rl.textContent = `Round ${roundIdx + 1} of ${chunks.length} · ${matched} / ${pair.length} matched`;
+      if (matched === pair.length) {
+        setTimeout(() => {
+          roundIdx++;
+          if (roundIdx < chunks.length) startRound();
+          else showDone();
+        }, 500);
+      }
+    }, 360);
+  } else {
+    defBtn.classList.add('wrong');
+    setTimeout(() => defBtn.classList.remove('wrong'), 380);
+  }
+}
+
+function showDone() {
+  document.getElementById('vm-game').innerHTML = `
+    <div class="vm-done">
+      <div class="vm-star">⭐</div>
+      <div class="vm-done-title">Well done!</div>
+      <div class="vm-done-msg">You matched all ${allWords.length} words. Excellent work!</div>
+      <button class="vm-again-btn" onclick="init()">Play again!</button>
+    </div>`;
+}
+
+init();
+</script>
+</body>
+</html>
