@@ -312,6 +312,7 @@ const PRETTY_NAMES = {
   'igcse-READING-June-11-2022fixed.html':   'IGCSE Reading · June 2022',
   'igcse-READING-June-12-2021fixed.html':   'IGCSE Reading · June 2021',
   'igcse-READING-June-12-2023fixed.html':   'IGCSE Reading · June 2023',
+  'MLR-Reading-AirConditioning-Part1.html': 'MLR Reading · Air Conditioning Part 1',
   'jobs-showdown.html':                     'Jobs Showdown',
   'WRITING-tool.html':                      'Writing Tool',
   'ArticleChecker.html':                    'Article Checker',
@@ -329,7 +330,7 @@ function prettyName(filename) {
 const CATEGORIES = [
   {
     key: 'igcse',
-    label: 'IGCSE',
+    label: 'IGCSE & CEFR',
     color: '#c0392b',
     test: (f, p) => /igcse/i.test(f) && !/writing/i.test(f)
   },
