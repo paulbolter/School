@@ -332,7 +332,7 @@ const CATEGORIES = [
     key: 'igcse',
     label: 'IGCSE & CEFR',
     color: '#c0392b',
-    test: (f, p) => /igcse/i.test(f) && !/writing/i.test(f)
+    test: (f, p) => (/igcse/i.test(f) && !/writing/i.test(f)) || /^MLR-/i.test(f)
   },
   {
     key: 'writing',
