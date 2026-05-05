@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match it! — Unit 11 Vocabulary</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 16px 48px;
+  }
+  .wrap { width: 100%; max-width: 740px; }
+  .vm-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.6rem;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+  }
+  .vm-sub { text-align: center; color: #7a8bb5; font-weight: 700; font-size: 0.95rem; margin-bottom: 18px; }
+
+  /* Tabs */
+  .vm-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .vm-tab {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: 2px solid #3a3a5c;
+    background: #252545;
+    color: #7a8bb5;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.5px;
+  }
+  .vm-tab:hover {
+    background: #2e2e55;
+    color: #a8bfff;
+  }
+  .vm-tab.active {
+    background: #3a6ce8;
+    color: #fff;
+    border-color: #5b9aff;
+    box-shadow: 0 0 14px rgba(59,108,232,0.3);
+  }
+
+  .vm-round-label { text-align: center; font-size: 0.82rem; font-weight: 700; color: #7a8bb5; margin-bottom: 10px; letter-spacing: 0.5px; }
+  .vm-progress-wrap { max-width: 420px; margin: 0 auto 22px; height: 8px; background: #2a2a4a; border-radius: 10px; overflow: hidden; }
+  .vm-progress-fill { height: 100%; background: linear-gradient(90deg, #3a6ce8, #5b9aff); border-radius: 10px; transition: width 0.4s cubic-bezier(.34,1.56,.64,1); }
+  .vm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .vm-col-label { font-family: 'Fredoka One', cursive; font-size: 1.05rem; text-align: center; margin-bottom: 10px; letter-spacing: 0.5px; }
+  .vm-col-label.word { color: #5b9aff; }
+  .vm-col-label.def { color: #8a94a8; }
+  .vm-btn {
+    display: block; width: 100%; padding: 13px 14px; margin-bottom: 8px;
+    font-family: 'Nunito', sans-serif; font-size: 0.92rem; font-weight: 700;
+    border-radius: 12px; cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s, background 0.15s;
+    border: 2px solid transparent; text-align: center; line-height: 1.3;
+  }
+  .vm-btn.word-btn {
+    background: #252545;
+    color: #a8bfff;
+    border-color: #3a3a5c;
+    box-shadow: 0 3px 0 #16162e;
+  }
+  .vm-btn.def-btn {
+    background: #2a2a3e;
+    color: #b0b8c8;
+    border-color: #3a3a50;
+    box-shadow: 0 3px 0 #16162e;
+    font-size: 0.82rem; font-weight: 700;
+  }
+  .vm-btn.word-btn:hover { background: #2e2e55; transform: translateY(-2px); box-shadow: 0 5px 0 #16162e; }
+  .vm-btn.def-btn:hover { background: #32324a; transform: translateY(-2px); box-shadow: 0 5px 0 #16162e; }
+  .vm-btn.selected {
+    background: #3a6ce8;
+    color: #fff;
+    border-color: #5b9aff;
+    box-shadow: 0 3px 0 #1e3a8a, 0 0 16px rgba(59,108,232,0.3);
+    transform: translateY(-2px) scale(1.03);
+  }
+  .vm-btn.wrong {
+    background: #4a2030;
+    color: #ff6b8a;
+    border-color: #6b2040;
+    box-shadow: 0 3px 0 #2a1020;
+    animation: wobble 0.35s ease;
+  }
+  .vm-btn.matched { visibility: hidden; pointer-events: none; }
+  .vm-btn.pop { animation: popaway 0.35s ease forwards; }
+  @keyframes wobble {
+    0%   { transform: translateX(0); }
+    25%  { transform: translateX(-7px); }
+    50%  { transform: translateX(7px); }
+    75%  { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes popaway {
+    0%   { transform: scale(1); opacity: 1; }
+    50%  { transform: scale(1.15); opacity: 0.5; }
+    100% { transform: scale(0); opacity: 0; }
+  }
+  .vm-done { text-align: center; padding: 40px 16px; }
+  .vm-star { font-size: 3rem; display: inline-block; animation: starspin 0.6s ease; }
+  @keyframes starspin {
+    0%   { transform: rotate(-20deg) scale(0); }
+    60%  { transform: rotate(10deg) scale(1.4); }
+    100% { transform: rotate(0deg) scale(1); }
+  }
+  .vm-done-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.6rem;
+    color: #fff;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    margin: 10px 0 8px;
+  }
+  .vm-done-msg { font-size: 1rem; color: #7a8bb5; font-weight: 700; margin-bottom: 28px; }
+  .vm-again-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.25rem;
+    background: #3a6ce8;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 40px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #1e3a8a;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .vm-again-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #1e3a8a; }
+  .vm-again-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #1e3a8a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="vm-title">Match it!</div>
+  <div class="vm-sub">Unit 11 Vocabulary</div>
+  <div class="vm-tabs">
+    <button class="vm-tab active" onclick="switchTab('idioms')">Idioms</button>
+    <button class="vm-tab" onclick="switchTab('adjectives')">Adjectives</button>
+    <button class="vm-tab" onclick="switchTab('words')">Just Words</button>
+  </div>
+  <div id="vm-game"></div>
+</div>
+
+<script>
+const wordSets = {
+  idioms: {
+    leftLabel: "Expression",
+    rightLabel: "Meaning",
+    words: [
+      ["over the moon", "extremely happy and excited about something"],
+      ["down to earth", "practical and sensible; not pretending"],
+      ["once in a blue moon", "very rarely; almost never"],
+      ["starry-eyed", "full of unrealistic hopes or dreams; too optimistic"],
+      ["meteoric rise", "a very fast increase in success or popularity"],
+      ["not rocket science", "not difficult to do or understand"],
+      ["shoot for the stars", "to try to achieve something very ambitious"]
+    ]
+  },
+  adjectives: {
+    leftLabel: "Word",
+    rightLabel: "Definition",
+    words: [
+      ["thrilling", "extremely exciting and slightly scary"],
+      ["sentimental", "connected with gentle feelings like love or sadness, sometimes too much"],
+      ["delightful", "very pleasant and enjoyable"],
+      ["far-fetched", "very unlikely to be true or to happen; hard to believe"],
+      ["breathtaking", "very impressive, so much it surprises you"],
+      ["stunning", "extremely beautiful or attractive"],
+      ["predictable", "easy to guess what will happen; not surprising"]
+    ]
+  },
+  words: {
+    leftLabel: "Word",
+    rightLabel: "Definition",
+    words: [
+      ["quest", "a long search for something that is difficult to find or achieve"],
+      ["embark", "to start something new, especially something important or exciting"],
+      ["portray", "to show or describe a character or situation in a film, book, or series"],
+      ["squeeze", "to press something firmly together or into a smaller space"],
+      ["reputation", "the opinion that people have about someone or something"],
+      ["drift off", "to gradually fall asleep"],
+      ["bonus", "something extra and good that you did not expect"]
+    ]
+  }
+};
+
+let currentTab = 'idioms';
+let allWords = [];
+let matched = 0, selectedWord = null, wordOrder = [], defOrder = [];
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.vm-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.vm-tab').forEach(t => {
+    if (t.textContent.toLowerCase().replace(/\s/g,'') === tab ||
+        (tab === 'words' && t.textContent === 'Just Words') ||
+        (tab === 'idioms' && t.textContent === 'Idioms') ||
+        (tab === 'adjectives' && t.textContent === 'Adjectives')) {
+      t.classList.add('active');
+    }
+  });
+  init();
+}
+
+function shuffle(a) {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+
+function init() {
+  allWords = wordSets[currentTab].words;
+  selectedWord = null;
+  matched = 0;
+  wordOrder = shuffle(allWords.map((_, i) => i));
+  defOrder = shuffle(allWords.map((_, i) => i));
+  render();
+}
+
+function render() {
+  const set = wordSets[currentTab];
+  const total = allWords.length;
+  const pct = Math.round(matched / total * 100);
+  let h = `
+    <div class="vm-round-label">${matched} / ${total} matched</div>
+    <div class="vm-progress-wrap"><div class="vm-progress-fill" id="vpbar" style="width:${pct}%"></div></div>
+    <div class="vm-cols">
+      <div>
+        <div class="vm-col-label word">${set.leftLabel}</div>`;
+  wordOrder.forEach(i => {
+    h += `<button class="vm-btn word-btn" id="word${i}" onclick="pickWord(${i})">${allWords[i][0]}</button>`;
+  });
+  h += `</div><div><div class="vm-col-label def">${set.rightLabel}</div>`;
+  defOrder.forEach(i => {
+    h += `<button class="vm-btn def-btn" id="def${i}" onclick="pickDef(${i})">${allWords[i][1]}</button>`;
+  });
+  h += `</div></div>`;
+  document.getElementById('vm-game').innerHTML = h;
+}
+
+function pickWord(i) {
+  const btn = document.getElementById('word' + i);
+  if (btn.classList.contains('matched') || btn.classList.contains('pop')) return;
+  if (selectedWord !== null) {
+    const prev = document.getElementById('word' + selectedWord);
+    if (prev) prev.classList.remove('selected');
+  }
+  selectedWord = i;
+  btn.classList.add('selected');
+}
+
+function pickDef(i) {
+  if (selectedWord === null) return;
+  const defBtn = document.getElementById('def' + i);
+  if (defBtn.classList.contains('matched') || defBtn.classList.contains('pop')) return;
+  if (selectedWord === i) {
+    const wordBtn = document.getElementById('word' + selectedWord);
+    wordBtn.classList.remove('selected');
+    wordBtn.classList.add('pop');
+    defBtn.classList.add('pop');
+    setTimeout(() => {
+      wordBtn.classList.add('matched');
+      defBtn.classList.add('matched');
+    }, 340);
+    selectedWord = null;
+    matched++;
+    setTimeout(() => {
+      const total = allWords.length;
+      const pb = document.getElementById('vpbar');
+      const rl = document.querySelector('.vm-round-label');
+      if (pb) pb.style.width = Math.round(matched / total * 100) + '%';
+      if (rl) rl.textContent = `${matched} / ${total} matched`;
+      if (matched === total) {
+        setTimeout(() => showDone(), 500);
+      }
+    }, 360);
+  } else {
+    defBtn.classList.add('wrong');
+    setTimeout(() => defBtn.classList.remove('wrong'), 380);
+  }
+}
+
+function showDone() {
+  document.getElementById('vm-game').innerHTML = `
+    <div class="vm-done">
+      <div class="vm-star">&#11088;</div>
+      <div class="vm-done-title">Well done!</div>
+      <div class="vm-done-msg">You matched all ${allWords.length} items. Excellent work!</div>
+      <button class="vm-again-btn" onclick="init()">Play again!</button>
+    </div>`;
+}
+
+init();
+</script>
+</body>
+</html>
