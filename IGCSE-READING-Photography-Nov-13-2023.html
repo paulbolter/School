@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE 0510 – Exercises 1, 2 & 3 | October/November 2023 (Paper 13)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1a2e; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: #13132a; border-bottom: 2px solid var(--gold); }
+  .tab-btn {
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #8888aa; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #ccccee; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .article-subtitle { font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 18px; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.sc-correct { border-color: var(--self-yes); background: #e8f5e9; }
+  .question-item.sc-wrong { border-color: var(--self-no); background: #fdecea; }
+  .question-item.sc-half { border-color: var(--self-partial); background: #fffde7; }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+  .inputs-row { display: flex; flex-direction: column; gap: 7px; }
+
+  .abcd-row { display: flex; gap: 8px; margin-top: 2px; }
+  .abcd-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .abcd-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .abcd-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abcd-btn:disabled { cursor: default; }
+  .abcd-btn.correct-answer { background: #4caf50; color: white; border-color: #4caf50; }
+  .abcd-btn.wrong-answer { background: #e53935; color: white; border-color: #e53935; }
+
+  input[type="text"] {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 4px;
+    padding: 8px 11px; font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+    color: var(--ink); background: white; transition: border-color 0.2s; outline: none;
+  }
+  input[type="text"]:focus { border-color: var(--ink); }
+  input[type="text"]:disabled { background: #f0ece6; cursor: default; color: var(--muted); }
+
+  .answer-reveal-box {
+    display: none; margin-top: 10px; padding: 10px 13px; border-radius: 5px;
+    background: #fffbea; border: 1.5px solid #e8c84a; font-size: 13px; line-height: 1.6;
+  }
+  .answer-reveal-box.show { display: block; }
+  .answer-label { font-weight: 700; color: #7a5c00; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .answer-text { font-weight: 600; color: #1a6e2a; font-size: 14px; }
+  .answer-also { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .self-check-row { display: none; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .self-check-row.show { display: flex; }
+  .self-check-label { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .sc-btn {
+    padding: 5px 14px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
+    border: 2px solid; cursor: pointer; transition: all 0.15s; background: white;
+  }
+  .sc-btn:disabled { cursor: default; opacity: 0.6; }
+  .sc-yes { border-color: var(--self-yes); color: var(--self-yes); }
+  .sc-yes:hover:not(:disabled), .sc-yes.active { background: var(--self-yes); color: white; }
+  .sc-no { border-color: var(--self-no); color: var(--self-no); }
+  .sc-no:hover:not(:disabled), .sc-no.active { background: var(--self-no); color: white; }
+  .sc-partial { border-color: var(--self-partial); color: var(--self-partial); }
+  .sc-partial:hover:not(:disabled), .sc-partial.active { background: var(--self-partial); color: white; }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: #1a1a2e; }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .input-with-check { display: flex; align-items: center; gap: 8px; }
+  .inline-check { display: none; width: 18px; height: 18px; background: #4caf50; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0; }
+  .inline-check.show { display: flex; }
+
+  .btn-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  .notes-heading { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--ink); margin: 18px 0 8px; border-bottom: 1.5px solid var(--border); padding-bottom: 6px; }
+  .notes-heading:first-of-type { margin-top: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IGCSE 0510/13 · Core · Oct/Nov 2023</span>
+    <h1>Photography, Dreams &amp; Knitting</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 24</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('ex1')">Exercise 1</button>
+  <button class="tab-btn" onclick="showTab('ex2')">Exercise 2</button>
+  <button class="tab-btn" onclick="showTab('ex3')">Exercise 3</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 1 — Photography for Teens
+═══════════════════════════════════════════════════════ -->
+<div id="ex1" class="exercise active">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">Photography for Teens</div>
+      <div class="article-subtitle">A week-long course at Dean College</div>
+      <div class="article-body">
+        <p>Are you interested in photography? Have you got time to fill in the holidays? If so, Photography for Teens is for you! We began running a range of short courses an incredible twenty-five years ago, and added this particular course to the programme seventeen years ago, so we have plenty of experience to offer you! Read on if you would like to find out more.</p>
+        <p>On a Photography for Teens course, you will explore how to take different kinds of photographs each day. What tends to appeal to students above all is portrait photography, but everyone loves street photography and action shots too. Underwater photography will be introduced this year, which we hope will also be a hit.</p>
+        <p>Each morning, your tutor will show you various pictures, and you will find out how to take similar ones yourself. But before that, you will learn something about the equipment photographers use. That's all provided – even cameras – but we strongly recommend that you come with comfortable shoes, as there's lots of walking involved. You won't be spending all day in a classroom! Each afternoon, we leave the college and go out to practise the techniques and skills you've learned. For example, on the first day, we walk around the market, where there's always plenty to photograph; the following day, we head to the nature reserve. On another day, there's a trip to the local zoo, which we haven't been to before. But wherever we go, the final session of the day is back in the studio at college. After you've had a chance to download the photos you've taken, you take part in a group discussion. That's when most people feel they learn a lot, so we allow a full hour for this.</p>
+        <p>Who will be on a Photography for Teens course? Until this year, it has been open to anyone between the ages of 13 and 15. However, 16-year-olds can also sign up now. We can take up to 30 students each week, but don't worry, you will work in smaller groups for the majority of the sessions. Rather than splitting you up by age, you will be organised according to your photography experience. You will be in your groups for the practical sessions but will all come together for a few events each week. For example, there will be a talk on careers in photography for the first time!</p>
+        <p>We ask all our students to give us feedback after their course, and we use this to try to make improvements. For example, this year lunch will be included in the course fee. One of the questions on the feedback form is about what students feel they have got from doing this course – and naturally, the majority mention improving their photography skills. Others often comment on gaining confidence, which they were surprised about. Almost everyone lists making new friends too, which you would expect. But who would have thought that improving their presentation skills would be such a common response?</p>
+        <p>We hope that you will be able to join us on the next Photography for Teens course. Go to our website for lots more information and to download a registration form. Don't delay – places book up quickly!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 1–8 &nbsp;[Total: 9 marks]</div>
+
+    <div class="nudge-banner" id="ex1-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please answer all questions before revealing answers.</span>
+    </div>
+
+    <div class="result-bar" id="ex1-result">Exercise 1: <span id="ex1-score-display">0</span> / 9</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex1-submit" onclick="submitEx1()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex1')">Reset</button>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-item" id="ex1-q1-item">
+      <div class="q-header">
+        <div class="q-num">1</div>
+        <div class="q-text">When did the first Photography for Teens course take place?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q1" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q1-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Seventeen years ago</div>
+      </div>
+      <div class="self-check-row" id="ex1-q1-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q1','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q1','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-item" id="ex1-q2-item">
+      <div class="q-header">
+        <div class="q-num">2</div>
+        <div class="q-text">Which type of photography is usually the most popular?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q2" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q2-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Portrait (photography)</div>
+      </div>
+      <div class="self-check-row" id="ex1-q2-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q2','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q2','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-item" id="ex1-q3-item">
+      <div class="q-header">
+        <div class="q-num">3</div>
+        <div class="q-text">What happens at the start of the first class each day?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q3" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q3-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Learn (something) about (the) equipment (photographers use) / learn (something) about (the) cameras</div>
+      </div>
+      <div class="self-check-row" id="ex1-q3-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q3','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q3','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-item" id="ex1-q4-item">
+      <div class="q-header">
+        <div class="q-num">4</div>
+        <div class="q-text">What do students need to bring with them?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q4" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q4-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Comfortable shoes</div>
+      </div>
+      <div class="self-check-row" id="ex1-q4-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q4','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q4','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-item" id="ex1-q5-item">
+      <div class="q-header">
+        <div class="q-num">5</div>
+        <div class="q-text">Where will students go on the second afternoon?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q5" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q5-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Nature reserve</div>
+      </div>
+      <div class="self-check-row" id="ex1-q5-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q5','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q5','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-item" id="ex1-q6-item">
+      <div class="q-header">
+        <div class="q-num">6</div>
+        <div class="q-text">What is the last activity that students do each day?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q6" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q6-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">(Group) discussion</div>
+      </div>
+      <div class="self-check-row" id="ex1-q6-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q6','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q6','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-item" id="ex1-q7-item">
+      <div class="q-header">
+        <div class="q-num">7</div>
+        <div class="q-text">How are the students divided into groups?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q7" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q7-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">(According to your photography) experience</div>
+      </div>
+      <div class="self-check-row" id="ex1-q7-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q7','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q7','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-item" id="ex1-q8-item">
+      <div class="q-header">
+        <div class="q-num">8</div>
+        <div class="q-text">What unexpected benefits of doing this course are mentioned by many students? Give <strong>two</strong> details.</div>
+        <div class="q-marks">[2]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q8a" placeholder="Detail 1…">
+        <input type="text" id="ex1-q8b" placeholder="Detail 2…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q8-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">1. (Gaining) confidence</div>
+        <div class="answer-text">2. Improving (their) presentation skills</div>
+      </div>
+      <div class="self-check-row" id="ex1-q8-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q8','yes',2)">✓ Both correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheck('ex1','q8','partial',1)">½ One correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q8','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex1 -->
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 2 — Why we dream
+═══════════════════════════════════════════════════════ -->
+<div id="ex2" class="exercise">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">Why we dream</div>
+      <div class="article-body">
+        <p><strong>A</strong></p>
+        <p>Imagine the following scene. You go to your local supermarket to buy some milk, but when you put it into your shopping basket, it becomes a talking fish. You then realise that school starts in five minutes, but you are still wearing your pyjamas and you left your books at your grandmother's house. Then you suddenly wake up, and wonder what it was all about. How can a dream like that be explained? Some people might argue that a dream consists of a series of routine past events that your brain mixes up and replays, as if it is testing the connections between them. So could it be a way of ensuring that you recall these events in the future? Another explanation is that a dream is connected to inner feelings that the person may not even be aware of. The objects in the dream and the order of events all have a particular meaning and need to be explained by an expert.</p>
+        <p><strong>B</strong></p>
+        <p>One thing we do know is that the question of why we dream tends to divide scientists. All sorts of theories have been proposed, although it is almost impossible to prove any of them. And that's because there's no way of recording dreams accurately, and their content is often heavily influenced by our feelings. It could even be the case that dreaming is simply brain activity that lacks any function, and can't be explained in any other way. But there is a new theory about why we dream. For many of us, our daily lives consist of a series of fixed routines – we do the same things at the same times each day, and we don't often experience unusual situations. Therefore our brains deliberately introduce something weird into our dreams so that we are able to cope better when something unexpected actually occurs later in real life.</p>
+        <p><strong>C</strong></p>
+        <p>An assistant professor called Erik Hoel came up with this idea about dreams after spending some time looking into artificial intelligence, which is the way that computers or robots are programmed to learn. He noted that a computer quickly becomes familiar with the data being used to train it. As a result, the computer expects that everything it encounters in the future will follow the same pattern – which is unlikely to be the case. Therefore, at this stage of programming, a new set of very different data has to be entered. The computer then has to work out a way to deal with the new data. In doing so, it is almost as if the computer is learning to think for itself. It occurred to Hoel that the human brain works in a very similar way, and this led him to propose his recent theory about dreams.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Question 9(a)–(h) &nbsp;[Total: 8 marks]</div>
+
+    <div class="nudge-banner" id="ex2-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please answer all questions before submitting.</span>
+    </div>
+
+    <div class="result-bar" id="ex2-result">Exercise 2: <span id="ex2-score-display">0</span> / 8</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex2-submit" onclick="submitEx2()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex2')">Reset</button>
+    </div>
+
+    <div class="ex-intro">For each question, write the correct letter <strong>A, B or C</strong> on the line. Which section includes the following information?</div>
+
+    <!-- 9a -->
+    <div class="question-item" id="ex2-qa-item">
+      <div class="q-header">
+        <div class="q-num">a</div>
+        <div class="q-text">the suggestion that dreams do not have a purpose</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qa-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qa-fb"></div>
+    </div>
+
+    <!-- 9b -->
+    <div class="question-item" id="ex2-qb-item">
+      <div class="q-header">
+        <div class="q-num">b</div>
+        <div class="q-text">the suggestion that dreams are connected to memory</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qb-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qb-fb"></div>
+    </div>
+
+    <!-- 9c -->
+    <div class="question-item" id="ex2-qc-item">
+      <div class="q-header">
+        <div class="q-num">c</div>
+        <div class="q-text">how scientists deal with a potential issue</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qc-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qc-fb"></div>
+    </div>
+
+    <!-- 9d -->
+    <div class="question-item" id="ex2-qd-item">
+      <div class="q-header">
+        <div class="q-num">d</div>
+        <div class="q-text">the idea that dreams represent hidden emotions</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qd-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qd-fb"></div>
+    </div>
+
+    <!-- 9e -->
+    <div class="question-item" id="ex2-qe-item">
+      <div class="q-header">
+        <div class="q-num">e</div>
+        <div class="q-text">reasons why scientists disagree about why we dream</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qe-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qe-fb"></div>
+    </div>
+
+    <!-- 9f -->
+    <div class="question-item" id="ex2-qf-item">
+      <div class="q-header">
+        <div class="q-num">f</div>
+        <div class="q-text">an example of a strange dream</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qf-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qf-fb"></div>
+    </div>
+
+    <!-- 9g -->
+    <div class="question-item" id="ex2-qg-item">
+      <div class="q-header">
+        <div class="q-num">g</div>
+        <div class="q-text">how strange dreams might help people to manage future challenges</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qg-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qg-fb"></div>
+    </div>
+
+    <!-- 9h -->
+    <div class="question-item" id="ex2-qh-item">
+      <div class="q-header">
+        <div class="q-num">h</div>
+        <div class="q-text">some research which inspired a scientist to suggest a theory</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qh-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qh-fb"></div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex2 -->
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 3 — A new generation of knitters
+═══════════════════════════════════════════════════════ -->
+<div id="ex3" class="exercise">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">A new generation of knitters</div>
+      <div class="article-body">
+        <p>Rose Williams was sitting at home with her teenage son, Harry, one evening. A keen football fan, he was nervously watching his favourite team play on television, while she was calmly knitting. 'Suddenly, he said he wanted to try knitting,' she says. 'I was so surprised that I didn't answer at first. I just thought he was joking!' He was serious, however. He had realised that while he was nervously watching his team play, knitting could help him to stay calm. So, over the next few weeks, Rose taught him the basics. Soon, he even started taking his knitting into school, where reactions were mixed. Some of his classmates wondered whether it is boring to do. But others admitted that they also enjoy knitting, and had taken it up as it allowed them to be creative. Soon they were exchanging ideas with each other during breaks between lessons.</p>
+        <p>You might be surprised to discover how many teenagers are into knitting. Look online, and you'll soon see photos of girls, and increasingly boys too, busily working with a pair of needles and some wool. Bella Green, who is 14, realised a year ago that she wanted to have a go at knitting, mainly to continue a family tradition. Her mum and both her grandmothers are all enthusiastic knitters, and Bella had often been given gloves, scarves and hats that they had made, not all of which were to her taste. She realised that if she could learn, she'd be able to make things in a particular style. Friends are often curious about how long it takes to make something. 'That depends how much homework I have to do!' she says.</p>
+        <p>Jon Kelso, 17, says his two main hobbies are swimming and knitting. He's a competitive swimmer and often travels the length of the country to take part in tournaments. Rather than just listening to music or playing games on his phone, Jon decided he wanted to do something practical on long journeys. And knitting was the answer. One or two of his teammates were interested, though they wanted to know how expensive it is to do. Jon pointed out that you can borrow needles, and people often have spare wool that they don't want any more, so it doesn't need to cost much at all.</p>
+        <p>Maki Tanaka took up knitting at the age of 13. She read an article in the local newspaper about a woman who wanted people to help with an art project, and she decided to get involved. Everyone had to knit small squares in a range of different colours, which the woman would sew together and use to cover an ugly concrete wall in the town centre. Maki enjoyed the experience so much that she encouraged some of her friends to take up knitting too so that together they would be able to form an after-school club. Classmates often want to find out what the best way to learn is. Maki says she learned by watching other people, and often looks at online videos to get new ideas. 'Everyone should try it,' she says. 'You'll soon discover how much fun it is!'</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 10–11 &nbsp;[Total: 7 marks]</div>
+
+    <div class="nudge-banner" id="ex3-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please fill in all boxes before revealing answers.</span>
+    </div>
+
+    <div class="result-bar" id="ex3-result">Exercise 3: <span id="ex3-score-display">0</span> / 7</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex3-submit" onclick="submitEx3()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex3')">Reset</button>
+    </div>
+
+    <div class="ex-intro">You are going to give a talk to your class about teenagers who knit. Prepare some notes to use as the basis for your talk. Make short notes under each heading.</div>
+
+    <!-- Q10 -->
+    <div class="question-item" id="ex3-q10-item">
+      <div class="notes-heading">Question 10 — Reasons why the teenagers started knitting [5 marks]</div>
+      <div class="inputs-row">
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10a" placeholder="Reason 1…">
+          <div class="inline-check" id="ex3-q10a-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10b" placeholder="Reason 2…">
+          <div class="inline-check" id="ex3-q10b-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10c" placeholder="Reason 3…">
+          <div class="inline-check" id="ex3-q10c-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10d" placeholder="Reason 4…">
+          <div class="inline-check" id="ex3-q10d-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10e" placeholder="Reason 5…">
+          <div class="inline-check" id="ex3-q10e-check">✓</div>
+        </div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q10-reveal">
+        <div class="answer-label">Mark Scheme — any 5 of these</div>
+        <div class="answer-text">1. To stay calm</div>
+        <div class="answer-text">2. To be creative</div>
+        <div class="answer-text">3. (To continue a) family tradition</div>
+        <div class="answer-text">4. To make things in a particular style</div>
+        <div class="answer-text">5. To do something practical on (long) journeys</div>
+        <div class="answer-text">6. To help/get involved with an art project / cover a(n) (ugly concrete) wall</div>
+        <div class="answer-text">7. Encouraged by friend</div>
+        <div class="answer-text">8. To form an after-school club</div>
+      </div>
+      <div class="self-check-row" id="ex3-q10-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q10','yes',5)">✓ 5 correct (5)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q10','partial4',4)">4 correct (4)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q10','partial3',3)">3 correct (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q10','partial2',2)">2 correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q10','partial1',1)">1 correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q10','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="question-item" id="ex3-q11-item">
+      <div class="notes-heading">Question 11 — What the teenagers have been asked about knitting [2 marks]</div>
+      <div class="inputs-row">
+        <div class="input-with-check">
+          <input type="text" id="ex3-q11a" placeholder="Question 1…">
+          <div class="inline-check" id="ex3-q11a-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q11b" placeholder="Question 2…">
+          <div class="inline-check" id="ex3-q11b-check">✓</div>
+        </div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q11-reveal">
+        <div class="answer-label">Mark Scheme — any 2 of these</div>
+        <div class="answer-text">1. Whether it is boring (to do)</div>
+        <div class="answer-text">2. How long it takes to make something</div>
+        <div class="answer-text">3. How expensive it is (to do)</div>
+        <div class="answer-text">4. What the best way to learn is</div>
+      </div>
+      <div class="self-check-row" id="ex3-q11-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q11','yes',2)">✓ Both correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q11','partial',1)">½ One correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q11','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex3 -->
+
+<script>
+// ── SCORE STATE ──────────────────────────────────────────
+const scores = { ex1: {}, ex2: {}, ex3: {} };
+
+function updateScores() {
+  const ex1Total = Object.values(scores.ex1).reduce((a,b)=>a+b,0);
+  const ex2Total = Object.values(scores.ex2).reduce((a,b)=>a+b,0);
+  const ex3Total = Object.values(scores.ex3).reduce((a,b)=>a+b,0);
+  document.getElementById('total-score').textContent = ex1Total + ex2Total + ex3Total;
+  document.getElementById('ex1-score-display').textContent = ex1Total;
+  document.getElementById('ex2-score-display').textContent = ex2Total;
+  document.getElementById('ex3-score-display').textContent = ex3Total;
+}
+
+// ── TAB SWITCHING ────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['ex1','ex2','ex3'].indexOf(id);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+}
+
+// ── EXERCISE 1 — reveal + self-check ────────────────────
+function submitEx1() {
+  const ids1 = ['ex1-q1','ex1-q2','ex1-q3','ex1-q4','ex1-q5','ex1-q6','ex1-q7','ex1-q8a','ex1-q8b'];
+  const allFilled = ids1.every(id => document.getElementById(id).value.trim());
+  if (!allFilled) {
+    const nb = document.getElementById('ex1-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ids1.forEach(id => { document.getElementById(id).disabled = true; });
+  ['q1','q2','q3','q4','q5','q6','q7','q8'].forEach(q => {
+    document.getElementById('ex1-'+q+'-reveal').classList.add('show');
+    document.getElementById('ex1-'+q+'-sc').classList.add('show');
+  });
+  document.getElementById('ex1-result').classList.add('show');
+  document.getElementById('ex1-submit').disabled = true;
+}
+
+function selfCheck(ex, q, result, marks) {
+  const pts = marks !== undefined ? marks : (result === 'yes' ? 1 : 0);
+  scores[ex][q] = pts;
+  const item = document.getElementById(ex+'-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  if (result === 'yes') item.classList.add('sc-correct');
+  else if (result === 'no') item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById(ex+'-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ── EXERCISE 2 — A/B/C multiple choice ──────────────────
+const ex2Selections = {};
+const ex2Correct = {
+  'ex2-qa': 'B',
+  'ex2-qb': 'A',
+  'ex2-qc': 'C',
+  'ex2-qd': 'A',
+  'ex2-qe': 'B',
+  'ex2-qf': 'A',
+  'ex2-qg': 'B',
+  'ex2-qh': 'C'
+};
+const ex2Explanations = {
+  'ex2-qa': 'B — "dreaming is simply brain activity that lacks any function" suggests dreams have no purpose.',
+  'ex2-qb': 'A — "a way of ensuring that you recall these events in the future" connects dreams to memory.',
+  'ex2-qc': 'C — When a computer over-learns its training data, programmers enter "a new set of very different data" to fix the issue.',
+  'ex2-qd': 'A — "a dream is connected to inner feelings that the person may not even be aware of" describes hidden emotions.',
+  'ex2-qe': 'B — "the question of why we dream tends to divide scientists" and theories are "almost impossible to prove."',
+  'ex2-qf': 'A — The milk turning into a talking fish, wearing pyjamas to school, etc. is an example of a strange dream.',
+  'ex2-qg': 'B — "our brains deliberately introduce something weird into our dreams so that we are able to cope better when something unexpected actually occurs."',
+  'ex2-qh': 'C — Hoel\'s research into artificial intelligence inspired him to propose his theory about dreams.'
+};
+
+function selectAbcd(qId, letter, btn) {
+  const allBtns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+  allBtns.forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  ex2Selections[qId] = letter;
+}
+
+function submitEx2() {
+  const keys = ['ex2-qa','ex2-qb','ex2-qc','ex2-qd','ex2-qe','ex2-qf','ex2-qg','ex2-qh'];
+  if (!keys.every(k => ex2Selections[k])) {
+    const nb = document.getElementById('ex2-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  keys.forEach(qId => {
+    const correct = ex2Correct[qId];
+    const selected = ex2Selections[qId];
+    const btns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+    btns.forEach(b => b.disabled = true);
+    btns.forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + ex2Explanations[qId];
+      fb.style.display = 'block';
+      scores.ex2[qId] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + ex2Explanations[qId];
+      fb.style.display = 'block';
+      scores.ex2[qId] = 0;
+    }
+  });
+  updateScores();
+  document.getElementById('ex2-result').classList.add('show');
+  document.getElementById('ex2-submit').disabled = true;
+}
+
+// ── EXERCISE 3 — reveal + self-check ────────────────────
+function submitEx3() {
+  const allIds = ['ex3-q10a','ex3-q10b','ex3-q10c','ex3-q10d','ex3-q10e','ex3-q11a','ex3-q11b'];
+  const allFilled = allIds.every(id => document.getElementById(id).value.trim());
+  if (!allFilled) {
+    const nb = document.getElementById('ex3-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  allIds.forEach(id => {
+    document.getElementById(id).disabled = true;
+    const chk = document.getElementById(id + '-check');
+    if (chk) chk.classList.add('show');
+  });
+  ['ex3-q10-reveal','ex3-q11-reveal'].forEach(id => {
+    document.getElementById(id).classList.add('show');
+  });
+  ['ex3-q10-sc','ex3-q11-sc'].forEach(id => {
+    document.getElementById(id).classList.add('show');
+  });
+  document.getElementById('ex3-result').classList.add('show');
+  document.getElementById('ex3-submit').disabled = true;
+}
+
+function selfCheckEx3(q, result, pts) {
+  scores.ex3[q] = pts;
+  const item = document.getElementById('ex3-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  if (pts > 0 && result === 'yes') item.classList.add('sc-correct');
+  else if (pts === 0) item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById('ex3-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ── RESET ────────────────────────────────────────────────
+function resetEx(ex) {
+  if (ex === 'ex1') {
+    scores.ex1 = {};
+    ['ex1-q1','ex1-q2','ex1-q3','ex1-q4','ex1-q5','ex1-q6','ex1-q7','ex1-q8a','ex1-q8b'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+    });
+    ['q1','q2','q3','q4','q5','q6','q7','q8'].forEach(q => {
+      const item = document.getElementById('ex1-'+q+'-item');
+      if (item) item.classList.remove('sc-correct','sc-wrong','sc-half');
+      const rev = document.getElementById('ex1-'+q+'-reveal');
+      if (rev) rev.classList.remove('show');
+      const sc = document.getElementById('ex1-'+q+'-sc');
+      if (sc) { sc.classList.remove('show'); sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); }); }
+    });
+    document.getElementById('ex1-result').classList.remove('show');
+    document.getElementById('ex1-submit').disabled = false;
+  } else if (ex === 'ex2') {
+    scores.ex2 = {};
+    ['qa','qb','qc','qd','qe','qf','qg','qh'].forEach(qKey => {
+      const qId = 'ex2-' + qKey;
+      document.querySelectorAll('#'+qId+'-btns .abcd-btn').forEach(b => {
+        b.disabled=false; b.classList.remove('selected','correct-answer','wrong-answer');
+      });
+      delete ex2Selections[qId];
+      const item = document.getElementById(qId+'-item');
+      if (item) item.classList.remove('correct','wrong');
+      const fb = document.getElementById(qId+'-fb');
+      if (fb) { fb.style.display='none'; fb.innerHTML=''; }
+    });
+    document.getElementById('ex2-result').classList.remove('show');
+    document.getElementById('ex2-submit').disabled = false;
+  } else {
+    scores.ex3 = {};
+    ['ex3-q10a','ex3-q10b','ex3-q10c','ex3-q10d','ex3-q10e','ex3-q11a','ex3-q11b'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+      const chk = document.getElementById(id+'-check');
+      if (chk) chk.classList.remove('show');
+    });
+    ['ex3-q10-reveal','ex3-q11-reveal'].forEach(id => {
+      document.getElementById(id).classList.remove('show');
+    });
+    ['ex3-q10-sc','ex3-q11-sc'].forEach(id => {
+      const sc = document.getElementById(id);
+      sc.classList.remove('show');
+      sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); });
+    });
+    ['ex3-q10-item','ex3-q11-item'].forEach(id => {
+      document.getElementById(id).classList.remove('sc-correct','sc-wrong','sc-half');
+    });
+    document.getElementById('ex3-result').classList.remove('show');
+    document.getElementById('ex3-submit').disabled = false;
+  }
+  updateScores();
+}
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
