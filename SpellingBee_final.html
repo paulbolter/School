@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐝 Spelling Bee</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  :root {
+    --honey:#e8920a; --honey-light:#ffc94d; --bg:#fff8e7; --panel:#ffffff;
+    --card:#fff3cc; --card-border:#ffd966; --correct:#27ae60; --wrong:#e74c3c;
+    --text:#3d2b00; --subtext:#8a6a2a; --dim:#b89a55;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpath d='M30 68L2 52V20L30 4l28 16v32z' fill='none' stroke='%23e8920a22' stroke-width='1.5'/%3E%3Cpath d='M30 104L2 88V56l28-16 28 16v32z' fill='none' stroke='%23e8920a22' stroke-width='1.5'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+  .deco-bee{position:fixed;font-size:2rem;opacity:.13;pointer-events:none;z-index:0;animation:floatBee 8s ease-in-out infinite;}
+  .deco-bee:nth-child(1){top:8%;left:5%;animation-delay:0s;}
+  .deco-bee:nth-child(2){top:18%;right:6%;animation-delay:2s;font-size:1.5rem;}
+  .deco-bee:nth-child(3){bottom:14%;left:7%;animation-delay:4s;font-size:1.8rem;}
+  .deco-bee:nth-child(4){bottom:22%;right:5%;animation-delay:1.5s;font-size:1.3rem;}
+  @keyframes floatBee{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-18px) rotate(5deg);}}
+  #app{position:relative;z-index:1;width:100%;max-width:900px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;}
+  h1{font-family:'Fredoka One',cursive;font-size:2.6rem;color:var(--honey);letter-spacing:2px;text-shadow:0 2px 0 rgba(232,146,10,.15),0 4px 12px rgba(232,146,10,.2);}
+
+  /* ── SETUP ── */
+  #setup-panel{background:var(--panel);border:2px solid var(--card-border);border-radius:20px;padding:36px 32px 32px;width:100%;box-shadow:0 4px 20px rgba(232,146,10,.12);display:flex;flex-direction:column;align-items:center;gap:24px;}
+  .setup-label{font-family:'Fredoka One',cursive;color:var(--honey);font-size:1.2rem;text-align:center;}
+  .event-btn-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+  .event-btn{font-family:'Fredoka One',cursive;font-size:1.15rem;border:2.5px solid var(--card-border);border-radius:16px;background:var(--card);color:var(--text);padding:16px 36px;cursor:pointer;transition:all .15s;box-shadow:0 3px 0 rgba(232,146,10,.2);}
+  .event-btn:hover{border-color:var(--honey);transform:translateY(-2px);}
+  .event-btn.active{background:var(--honey);color:#fff;border-color:var(--honey);box-shadow:0 4px 0 #b36c00,0 6px 16px rgba(232,146,10,.3);}
+  #start-btn{background:var(--honey);color:#fff;border:none;border-radius:14px;font-family:'Fredoka One',cursive;font-size:1.25rem;padding:15px 50px;cursor:pointer;transition:transform .13s,box-shadow .13s;box-shadow:0 4px 0 #b36c00,0 6px 16px rgba(232,146,10,.3);}
+  #start-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #b36c00,0 8px 20px rgba(232,146,10,.4);}
+  #start-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+  .word-count-note{font-size:.85rem;color:var(--dim);}
+
+  /* ── GAME ── */
+  #game-area{display:none;width:100%;flex-direction:column;align-items:center;gap:18px;}
+  #game-top{width:100%;display:flex;align-items:center;gap:12px;}
+  #game-badge{font-family:'Fredoka One',cursive;font-size:.95rem;background:var(--card);border:1.5px solid var(--card-border);border-radius:99px;padding:6px 18px;color:var(--honey);white-space:nowrap;}
+  #tb-badge{font-family:'Fredoka One',cursive;font-size:.85rem;background:#fde8e6;border:1.5px solid #f1948a;border-radius:99px;padding:5px 14px;color:var(--wrong);display:none;white-space:nowrap;}
+  #progress-wrap{flex:1;display:flex;align-items:center;gap:10px;}
+  #progress-track{flex:1;background:rgba(232,146,10,.15);border-radius:99px;height:10px;overflow:hidden;}
+  #progress-bar{height:100%;background:linear-gradient(90deg,var(--honey-light),var(--honey));border-radius:99px;transition:width .5s cubic-bezier(.34,1.56,.64,1);}
+  #progress-label{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--honey);white-space:nowrap;}
+
+  /* WORD CARD */
+  #word-card{background:var(--panel);border:2px solid var(--card-border);border-radius:24px;padding:36px 40px 30px;width:100%;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;box-shadow:0 6px 30px rgba(232,146,10,.1);position:relative;overflow:hidden;}
+  #word-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--honey-light),var(--honey),var(--honey-light));border-radius:24px 24px 0 0;}
+  #status-badge{font-family:'Fredoka One',cursive;font-size:1.1rem;padding:6px 24px;border-radius:99px;display:inline-block;min-width:120px;text-align:center;}
+  #status-badge.spelling{background:#fff3cc;color:var(--honey);border:1.5px solid var(--card-border);}
+  #status-badge.done-correct{background:#d4f5e2;color:var(--correct);border:1.5px solid #7dcea0;animation:badgePop .3s ease;}
+  #status-badge.done-wrong{background:#fde8e6;color:var(--wrong);border:1.5px solid #f1948a;}
+  @keyframes badgePop{0%{transform:scale(1);}55%{transform:scale(1.18);}100%{transform:scale(1);}}
+  #letter-row{display:flex;gap:10px;flex-wrap:nowrap;justify-content:center;width:100%;}
+  .letter{border-radius:14px;background:var(--card);border:2.5px solid var(--card-border);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;color:var(--text);text-transform:uppercase;box-shadow:0 4px 0 rgba(232,146,10,.25);transition:background .22s,border-color .22s,color .22s;flex-shrink:0;}
+  .letter.correct{background:#d4f5e2;border-color:var(--correct);color:var(--correct);box-shadow:0 4px 0 #1e8449;animation:letterPop .3s cubic-bezier(.34,1.56,.64,1);}
+  .letter.wrong{background:#fde8e6;border-color:var(--wrong);color:var(--wrong);box-shadow:0 4px 0 #c0392b;animation:letterShake .35s ease;}
+  .letter.current{border-color:var(--honey);box-shadow:0 0 0 3px rgba(232,146,10,.3),0 4px 0 var(--honey);background:#fffae8;}
+  @keyframes letterPop{0%{transform:scale(1) translateY(0);}60%{transform:scale(1.22) translateY(-5px);}100%{transform:scale(1) translateY(0);}}
+  @keyframes letterShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px) rotate(-2deg);}75%{transform:translateX(7px) rotate(2deg);}}
+  #word-def{font-size:1.05rem;color:var(--subtext);text-align:center;max-width:640px;line-height:1.65;min-height:1.65em;}
+  #word-def strong{color:var(--honey);font-weight:800;}
+
+  /* GAME BUTTONS */
+  #btn-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  .btn{border:none;border-radius:12px;font-family:'Fredoka One',cursive;font-size:1.05rem;padding:11px 26px;cursor:pointer;transition:transform .13s,box-shadow .13s;}
+  .btn:hover{transform:translateY(-2px);}
+  #btn-next{background:var(--honey);color:#fff;box-shadow:0 4px 0 #b36c00,0 6px 14px rgba(232,146,10,.3);}
+  #btn-reset-word{background:var(--card);color:var(--text);border:1.5px solid var(--card-border);box-shadow:0 3px 0 rgba(232,146,10,.2);}
+  #btn-restart{background:transparent;color:var(--dim);border:1.5px solid rgba(184,154,85,.4);font-size:.9rem;}
+
+  /* KEYBOARD HINT */
+  #kb-hint{font-size:.78rem;color:var(--dim);text-align:center;line-height:1.8;}
+  #kb-hint span{background:var(--card);border:1px solid var(--card-border);border-radius:6px;padding:1px 7px;font-family:monospace;font-size:.82rem;color:var(--subtext);}
+
+  /* WORD LIST TAB */
+  #wordlist-btn{background:transparent;color:var(--dim);border:1.5px solid rgba(184,154,85,.4);border-radius:10px;font-family:'Fredoka One',cursive;font-size:.9rem;padding:7px 18px;cursor:pointer;transition:all .15s;}
+  #wordlist-btn:hover{color:var(--honey);border-color:var(--honey);}
+  #wordlist-panel{display:none;width:100%;background:var(--panel);border:2px solid var(--card-border);border-radius:16px;padding:24px 28px;box-shadow:0 4px 20px rgba(232,146,10,.1);}
+  #wordlist-panel h3{font-family:'Fredoka One',cursive;color:var(--honey);font-size:1.1rem;margin-bottom:14px;}
+  #wordlist-tabs{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+  .wl-tab{font-family:'Fredoka One',cursive;font-size:.9rem;border:1.5px solid var(--card-border);border-radius:10px;background:var(--card);color:var(--text);padding:6px 18px;cursor:pointer;transition:all .15s;}
+  .wl-tab.active{background:var(--honey);color:#fff;border-color:var(--honey);}
+  #wordlist-grid{columns:3;column-gap:16px;font-size:.88rem;color:var(--text);line-height:2;}
+  @media(max-width:600px){#wordlist-grid{columns:2;}}
+
+
+  #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:100;}
+
+  /* END OVERLAY */
+  #result-overlay{display:none;position:fixed;inset:0;background:rgba(255,248,231,.88);z-index:50;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+  #result-overlay.show{display:flex;}
+  #result-box{background:var(--panel);border:2.5px solid var(--card-border);border-radius:24px;padding:48px 64px;text-align:center;max-width:480px;width:90%;box-shadow:0 8px 40px rgba(232,146,10,.2);}
+  #result-title{font-family:'Fredoka One',cursive;font-size:2.8rem;color:var(--honey);margin-bottom:8px;}
+  #result-detail{color:var(--subtext);font-size:1.05rem;margin-bottom:28px;}
+  #btn-play-again{background:var(--honey);color:#fff;border:none;border-radius:12px;font-family:'Fredoka One',cursive;font-size:1.2rem;padding:13px 40px;cursor:pointer;box-shadow:0 4px 0 #b36c00;transition:transform .13s;}
+  #btn-play-again:hover{transform:scale(1.05);}
+</style>
+</head>
+<body>
+<div class="deco-bee">🐝</div>
+<div class="deco-bee">🐝</div>
+<div class="deco-bee">🍯</div>
+<div class="deco-bee">🌸</div>
+<canvas id="confetti-canvas"></canvas>
+
+<div id="app">
+  <h1>🐝 Spelling Bee</h1>
+
+  <!-- SETUP -->
+  <div id="setup-panel">
+    <div class="setup-label">Select an event to begin</div>
+    <div class="event-btn-row">
+      <button class="event-btn" data-list="0">Grade 5–6</button>
+      <button class="event-btn" data-list="1">Grade 7–8</button>
+      <button class="event-btn" data-list="2">Staff</button>
+    </div>
+    <div class="word-count-note" id="word-count-note">Choose an event above</div>
+    <button id="start-btn" disabled>Start Spelling Bee 🍯</button>
+    <button id="wordlist-btn">📋 View Word Lists</button>
+  </div>
+
+  <!-- WORD LIST PANEL -->
+  <div id="wordlist-panel">
+    <h3>📋 Word Lists</h3>
+    <div id="wordlist-tabs">
+      <button class="wl-tab active" data-wl="0">Grade 5&#x2013;6</button>
+      <button class="wl-tab" data-wl="1">Grade 7&#x2013;8</button>
+      <button class="wl-tab" data-wl="2">Staff</button>
+    </div>
+    <div id="wordlist-grid"></div>
+  </div>
+  <div id="game-area">
+    <div id="game-top">
+      <div id="game-badge">Grade 5–6</div>
+      <div id="tb-badge">⭐ Tiebreaker</div>
+      <div id="progress-wrap">
+        <div id="progress-track"><div id="progress-bar"></div></div>
+        <div id="progress-label">1 / 86</div>
+      </div>
+    </div>
+    <div id="word-card">
+      <div id="status-badge" class="spelling">Spelling...</div>
+      <div id="letter-row"></div>
+      <div id="word-def"></div>
+    </div>
+    <div id="btn-row">
+      <button class="btn" id="btn-prev">← Prev Word</button>
+      <button class="btn" id="btn-reset-word">↺ Reset Word</button>
+      <button class="btn" id="btn-next">Next Word →</button>
+      <button class="btn" id="btn-restart">⌂ Change Event</button>
+    </div>
+    <div id="kb-hint">
+      <span>Space</span> Correct &nbsp;·&nbsp; <span>↓</span> Wrong &nbsp;·&nbsp; <span>Backspace</span> Undo &nbsp;·&nbsp; <span>Enter</span> Next Word &nbsp;·&nbsp; <span>↑</span> Prev Word
+    </div>
+  </div>
+</div>
+
+<div id="result-overlay">
+  <div id="result-box">
+    <div id="result-title">🎉 All Done!</div>
+    <div id="result-detail">The spelling bee is complete!</div>
+    <button id="btn-play-again">Back to Events 🍯</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  WORD LISTS
+//  Format: { w: "Word", d: "Definition", tb: true/false }
+//  tb = tiebreaker (Grade 7-8 only)
+// ═══════════════════════════════════════════════════
+
+const LISTS = [
+
+  // ── GRADE 5–6 ────────────────────────────────────
+  {
+    label: "Grade 5–6",
+    words: [
+      {w:"Partner",d:"A person who works or acts together with another"},
+      {w:"Journey",d:"A trip from one place to another"},
+      {w:"Balance",d:"The ability to stay steady without falling"},
+      {w:"Surface",d:"The outside or top layer of something"},
+      {w:"Serious",d:"Important, or needing careful attention"},
+      {w:"Imagine",d:"To form a picture or idea in your mind"},
+      {w:"Ordinary",d:"Normal, not special or unusual"},
+      {w:"Creature",d:"A living animal or being"},
+      {w:"Library",d:"A place where books are kept for people to read or borrow"},
+      {w:"Familiar",d:"Something you know well or have come across before"},
+      {w:"Calendar",d:"A chart showing all the days, weeks, and months of the year"},
+      {w:"Headache",d:"A pain felt inside the head"},
+      {w:"Airport",d:"A place where aeroplanes take off and land"},
+      {w:"Snowfall",d:"Snow that has fallen or is falling from the sky"},
+      {w:"Garbage",d:"Waste material or rubbish to be thrown away"},
+      {w:"Scarce",d:"In short supply, not enough available"},
+      {w:"Collection",d:"A group of similar things gathered together"},
+      {w:"Challenge",d:"A difficult task that tests your ability"},
+      {w:"Audience",d:"A group of people watching or listening to a performance"},
+      {w:"Precious",d:"Of great value or importance"},
+      {w:"Disappear",d:"To go out of sight or stop existing"},
+      {w:"Discovery",d:"Finding or learning something new for the first time"},
+      {w:"Wednesday",d:"The day of the week between Tuesday and Thursday"},
+      {w:"February",d:"The second month of the year"},
+      {w:"Necessary",d:"Something that must happen or that you cannot do without"},
+      {w:"Ingredient",d:"One item used in making a food or mixture"},
+      {w:"Paradise",d:"A place or situation of great happiness and beauty"},
+      {w:"Sandstorm",d:"A strong wind that carries large clouds of sand through the air"},
+      {w:"Rainforest",d:"A thick tropical forest that receives very heavy rainfall"},
+      {w:"Emergency",d:"A sudden dangerous situation needing immediate action"},
+      {w:"Courageous",d:"Brave, willing to face danger or difficulty"},
+      {w:"Enthusiasm",d:"Strong excitement or interest in something"},
+      {w:"Mysterious",d:"Difficult to explain or understand"},
+      {w:"Civilian",d:"A person who is not in the military"},
+      {w:"Chemical",d:"A substance produced by or used in chemistry"},
+      {w:"Reflection",d:"An image seen in a mirror or water, or careful thought about something"},
+      {w:"Reputation",d:"The opinion that others have of a person or thing"},
+      {w:"Population",d:"The total number of people living in a place"},
+      {w:"Inspiration",d:"Something that gives you the urge to be creative or take action"},
+      {w:"Achieve",d:"To succeed in reaching a goal"},
+      {w:"Rehearse",d:"To practise a performance before doing it in front of an audience"},
+      {w:"Rhythm",d:"A regular pattern of beats in music or movement"},
+      {w:"Performance",d:"An act of entertaining an audience, such as a play or concert"},
+      {w:"Atmosphere",d:"The layer of gases surrounding the earth, or the general feeling of a place"},
+      {w:"Pressure",d:"A force pushing against something, or a feeling of stress"},
+      {w:"Technician",d:"A person trained to work with technical equipment"},
+      {w:"Architecture",d:"The design and style of buildings"},
+      {w:"Characteristic",d:"A feature or quality that makes something recognisable"},
+      {w:"Lightning",d:"A bright flash of electricity in the sky during a storm"},
+      {w:"Sufficient",d:"Enough for what is needed"},
+      {w:"Foreign",d:"Belonging to or coming from another country"},
+      {w:"Exaggerate",d:"To make something seem bigger or worse than it really is"},
+      {w:"Independent",d:"Free to make your own decisions, not relying on others"},
+      {w:"Independence",d:"The freedom to make your own choices or govern yourself"},
+      {w:"Separately",d:"Apart from others, not together"},
+      {w:"Acquire",d:"To get or obtain something"},
+      {w:"Service",d:"Help or work done for others"},
+      {w:"Project",d:"A planned piece of work with a specific goal"},
+      {w:"Partial",d:"Not complete, only part of something"},
+      {w:"Personality",d:"The qualities and traits that make a person who they are"},
+      {w:"Responsibility",d:"A duty or task you are expected to carry out"},
+      {w:"Environment",d:"The natural world around us, including land, air, and water"},
+      {w:"Investigation",d:"A careful search to find out the facts about something"},
+      {w:"Experience",d:"Something you have done or lived through"},
+      {w:"Disaster",d:"A sudden event that causes great damage or suffering"},
+      {w:"Unmistakable",d:"So clear it cannot be confused with anything else"},
+      {w:"Pyramid",d:"A large structure with a square base and triangular sides meeting at a point"},
+      {w:"Comfortable",d:"Feeling at ease and free from pain or worry"},
+      {w:"Grateful",d:"Feeling thankful for something kind someone has done"},
+      {w:"Excellent",d:"Extremely good, of very high quality"},
+      {w:"Guarantee",d:"A firm promise that something will definitely happen",tb:true},
+      {w:"Embarrass",d:"To make someone feel awkward or ashamed in front of others",tb:true},
+      {w:"Mischievous",d:"Playfully causing trouble or minor harm",tb:true},
+      {w:"Catastrophe",d:"A sudden disaster causing great suffering or destruction",tb:true},
+      {w:"Occurrence",d:"Something that happens or takes place",tb:true},
+      {w:"Appreciate",d:"To recognise the value of something or feel grateful for it",tb:true},
+      {w:"Miscellaneous",d:"Made up of many different kinds that don't belong to one category",tb:true},
+      {w:"Conscience",d:"Your inner sense of what is right and wrong",tb:true},
+      {w:"Contagious",d:"Able to spread from one person to another by contact",tb:true},
+      {w:"Exquisite",d:"Extremely beautiful or delicate, of the finest quality",tb:true}
+    ]
+  },
+
+  // ── GRADE 7–8 ────────────────────────────────────
+  {
+    label: "Grade 7–8",
+    words: [
+      {w:"Shoulder",d:"The part of the body between the neck and the arm"},
+      {w:"Vehicle",d:"A machine used to transport people or goods"},
+      {w:"League",d:"A group of teams that compete together, or an alliance of people"},
+      {w:"Vacuum",d:"A space completely empty of matter, or a machine used to clean floors"},
+      {w:"Scissors",d:"A cutting tool with two blades joined in the middle"},
+      {w:"Separate",d:"To divide or move things apart from each other"},
+      {w:"Permanent",d:"Lasting forever, or for a very long time"},
+      {w:"Foreign",d:"Belonging to or coming from another country"},
+      {w:"Pressure",d:"A force pushing against something, or a feeling of stress"},
+      {w:"Especially",d:"More than usual, or above all others"},
+      {w:"Necessary",d:"Something that must happen or that you cannot do without"},
+      {w:"Appearance",d:"The way someone or something looks"},
+      {w:"Variety",d:"A range of different things of the same general type"},
+      {w:"Immediately",d:"Without any delay, right away"},
+      {w:"Discipline",d:"Training or rules that teach correct behaviour or self-control"},
+      {w:"Curiosity",d:"A strong desire to know or learn about something"},
+      {w:"Consequence",d:"A result or effect of an action or event"},
+      {w:"Appreciate",d:"To recognise the value of something or feel grateful for it"},
+      {w:"Miserable",d:"Feeling very unhappy or uncomfortable"},
+      {w:"Reluctant",d:"Unwilling to do something and slow to agree"},
+      {w:"Dilemma",d:"A situation where you must choose between two difficult options"},
+      {w:"Parliament",d:"The group of elected people responsible for making a country's laws"},
+      {w:"Approximately",d:"Close to a number or amount but not exact"},
+      {w:"Trajectory",d:"The curved path followed by something moving through space"},
+      {w:"Melancholy",d:"A deep feeling of sadness or gloom"},
+      {w:"Disappear",d:"To go out of sight or stop existing"},
+      {w:"Rehearse",d:"To practise a performance before doing it in front of an audience"},
+      {w:"Sufficient",d:"Enough for what is needed"},
+      {w:"Technician",d:"A person trained to work with technical equipment"},
+      {w:"Desperately",d:"With great urgency, or showing extreme need"},
+      {w:"Accidentally",d:"Done by mistake, not on purpose"},
+      {w:"Disastrous",d:"Causing great damage or failure, extremely bad"},
+      {w:"Simultaneous",d:"Happening at exactly the same time"},
+      {w:"Deteriorate",d:"To become progressively worse over time"},
+      {w:"Superstitious",d:"Believing that certain actions bring good or bad luck"},
+      {w:"Exaggerate",d:"To make something seem bigger or worse than it really is"},
+      {w:"Perseverance",d:"Continued effort and determination despite difficulty"},
+      {w:"Contagious",d:"Able to spread from one person to another by contact"},
+      {w:"Ambiguous",d:"Having more than one possible meaning, not clear"},
+      {w:"Acknowledge",d:"To admit or accept that something is true"},
+      {w:"Unanimous",d:"Agreed by everyone without exception"},
+      {w:"Phenomenon",d:"A remarkable or unusual fact or event in nature or society"},
+      {w:"Controversial",d:"Causing strong disagreement among people"},
+      {w:"Sophisticated",d:"Having refined knowledge or experience of complex matters"},
+      {w:"Insignificant",d:"Too small or unimportant to be worth noticing"},
+      {w:"Hypocrisy",d:"Claiming to believe something while acting in the opposite way"},
+      {w:"Formidable",d:"Inspiring awe or respect due to great size, power, or ability"},
+      {w:"Distinguish",d:"To notice or recognise the difference between two things"},
+      {w:"Controversy",d:"A long public argument or disagreement about something important"},
+      {w:"Apparatus",d:"A set of equipment or tools used for a particular purpose"},
+      {w:"Deficiency",d:"A lack of something that is needed"},
+      {w:"Articulate",d:"Able to express ideas clearly and effectively in words"},
+      {w:"Confidential",d:"Meant to be kept secret and not shared with others"},
+      {w:"Essentially",d:"In the most important or basic way"},
+      {w:"Beneficiary",d:"A person who receives money, property, or an advantage from something"},
+      {w:"Deterioration",d:"The process of becoming progressively worse"},
+      {w:"Deliberate",d:"Done on purpose, or carefully thought through"},
+      {w:"Apprehensive",d:"Worried or nervous about something that might happen"},
+      {w:"Compassionate",d:"Feeling or showing concern for the suffering of others"},
+      {w:"Contribution",d:"Something given or done to help achieve a result"},
+      {w:"Adversity",d:"A difficult or unpleasant situation that must be overcome"},
+      {w:"Miscellaneous",d:"Made up of many different kinds that do not belong to one category"},
+      {w:"Entrepreneur",d:"A person who starts and runs their own business, taking on financial risk"},
+      {w:"Bureaucratic",d:"Relating to a system with many complicated rules and processes"},
+      {w:"Surveillance",d:"Close observation of a person or place, especially by authorities"},
+      {w:"Questionnaire",d:"A set of written questions used to gather information from people"},
+      {w:"Mediterranean",d:"Relating to the sea and countries between Europe and Africa"},
+      {w:"Fluorescent",d:"Giving off very bright light, or a vivid glowing colour"},
+      {w:"Camouflage",d:"A way of hiding by blending in with the surroundings"},
+      {w:"Mischievous",d:"Playfully causing trouble or minor harm"},
+      {w:"Pronunciation",d:"The way a word is spoken or sounded out"},
+      {w:"Irresistible",d:"Too attractive or powerful to be resisted"},
+      {w:"Knowledgeable",d:"Having a lot of information or understanding about a subject"},
+      {w:"Guarantee",d:"A firm promise that something will definitely happen"},
+      {w:"Inevitable",d:"Certain to happen and impossible to prevent"},
+      {w:"Courageous",d:"Brave, willing to face danger or difficulty"},
+      {w:"Eloquence",d:"The ability to speak or write clearly and persuasively"},
+      {w:"Unbelievable",d:"So surprising or extreme that it is hard to accept as true"},
+      {w:"Acquaintance",d:"A person you know slightly but not as a close friend"},
+      {w:"Paraphernalia",d:"A large collection of objects or equipment connected with a particular activity"},
+      {w:"Autobiography",d:"The story of a person's life written by that person"},
+      {w:"Ecclesiastical",d:"Relating to the Christian church or its clergy"},
+      {w:"Psychological",d:"Relating to the mind and how it affects behaviour and feelings"},
+      {w:"Subconscious",d:"The part of your mind that influences your feelings without you being fully aware of it"},
+      {w:"Metamorphosis",d:"A complete change of form or character, as when a caterpillar becomes a butterfly"},
+      {w:"Miscommunication",d:"A failure to communicate clearly, leading to misunderstanding"},
+      {w:"Reminiscence",d:"A story or memory about past events or experiences"},
+      {w:"Catastrophic",d:"Involving or causing sudden great damage or suffering",tb:true},
+      {w:"Exquisite",d:"Extremely beautiful or delicate, of the finest quality",tb:true},
+      {w:"Phenomenon",d:"A remarkable or unusual fact or event in nature or society",tb:true}
+    ]
+  },
+
+  // ── STAFF ─────────────────────────────────────────
+  {
+    label: "Staff",
+    words: [
+      {w:"Fantastic",d:"Extremely good or impressive"},
+      {w:"Imagination",d:"The ability to form pictures and ideas in your mind"},
+      {w:"Relative",d:"A member of your family"},
+      {w:"Chemical",d:"A substance produced by or used in chemistry"},
+      {w:"Garbage",d:"Waste material or rubbish to be thrown away"},
+      {w:"Enthusiasm",d:"Strong excitement or interest in something"},
+      {w:"Historical",d:"Relating to history or events of the past"},
+      {w:"Serious",d:"Important, requiring careful attention"},
+      {w:"Weekend",d:"Saturday and Sunday"},
+      {w:"Temperature",d:"A measure of how hot or cold something is"},
+      {w:"Rainbow",d:"An arch of colours in the sky caused by sunlight passing through rain"},
+      {w:"Mechanic",d:"A person trained to repair engines and machinery"},
+      {w:"Responsibility",d:"A duty or task you are expected to carry out"},
+      {w:"Entrance",d:"The way into a building or place"},
+      {w:"Technician",d:"A person trained to work with technical equipment"},
+      {w:"Discovery",d:"Finding or learning something new for the first time"},
+      {w:"Characteristic",d:"A feature that makes something or someone recognisable"},
+      {w:"Paragraph",d:"A section of writing covering one main idea, starting on a new line"},
+      {w:"Precious",d:"Of great value or importance"},
+      {w:"Festival",d:"A celebration or event, often with music, food, and activities"},
+      {w:"Paradise",d:"A place or situation of great happiness and beauty"},
+      {w:"Architecture",d:"The design and style of buildings"},
+      {w:"Director",d:"A person who manages a film, play, or organisation"},
+      {w:"Mysterious",d:"Hard to explain or understand"},
+      {w:"Personality",d:"The qualities and traits that make a person who they are"},
+      {w:"Pressure",d:"A force pushing against something, or a feeling of stress"},
+      {w:"Champion",d:"The winner of a competition"},
+      {w:"Reputation",d:"The opinion that others have of a person or thing"},
+      {w:"Notebook",d:"A small book with blank or lined pages for writing"},
+      {w:"Collect",d:"To gather or bring things together"},
+      {w:"Calendar",d:"A chart showing all the days, weeks, and months of the year"},
+      {w:"Independent",d:"Free to make your own decisions, not relying on others"},
+      {w:"Sandstorm",d:"A strong wind carrying large clouds of sand through the air"},
+      {w:"Challenge",d:"A difficult task that tests your ability"},
+      {w:"Resolution",d:"A firm decision to do or not do something"},
+      {w:"Disaster",d:"A sudden event that causes great damage or suffering"},
+      {w:"Schedule",d:"A plan showing when things will happen"},
+      {w:"Convenient",d:"Easy to use or fitting well with your needs"},
+      {w:"Service",d:"Help or work done for others"},
+      {w:"Reflection",d:"An image seen in a mirror or on water"},
+      {w:"Pyramid",d:"A large structure with a square base and triangular sides meeting at a point"},
+      {w:"Surprise",d:"Something unexpected, or the feeling it causes"},
+      {w:"Amazing",d:"Very impressive or surprising"},
+      {w:"Experience",d:"Something you have done or lived through"},
+      {w:"Atmosphere",d:"The layer of gases around the earth, or the general feeling of a place"},
+      {w:"Dangerous",d:"Likely to cause harm or injury"},
+      {w:"Emergency",d:"A sudden dangerous situation needing immediate action"},
+      {w:"Gravity",d:"The force that pulls objects toward the earth"},
+      {w:"Environment",d:"The natural world around us"},
+      {w:"Jealous",d:"Feeling upset because someone else has something you want"},
+      {w:"Scientific",d:"Relating to science or using its methods"},
+      {w:"Partner",d:"A person who works or acts together with another"},
+      {w:"Balance",d:"The ability to stay steady without falling"},
+      {w:"Library",d:"A place where books are kept for people to read or borrow"},
+      {w:"Investigation",d:"A careful search to find out the facts about something"},
+      {w:"Category",d:"A group of things sharing similar features"},
+      {w:"Necklace",d:"A piece of jewellery worn around the neck"},
+      {w:"Architect",d:"A person who designs buildings"},
+      {w:"Snowfall",d:"Snow that has fallen or is falling from the sky"},
+      {w:"Inspiration",d:"Something that gives you the urge to create or take action"},
+      {w:"Accommodate",d:"To provide space or make room for someone or something",tb:true},
+      {w:"Occurrence",d:"Something that happens or takes place",tb:true},
+      {w:"Questionnaire",d:"A set of written questions used to collect information",tb:true},
+      {w:"Acquaintance",d:"A person you know slightly but not closely",tb:true},
+      {w:"Conscientious",d:"Taking great care to do things well and thoroughly",tb:true},
+      {w:"Supersede",d:"To take the place of something older or less effective",tb:true},
+      {w:"Millennium",d:"A period of one thousand years",tb:true},
+      {w:"Mediterranean",d:"Relating to the sea between Europe, Africa, and Asia",tb:true},
+      {w:"Idiosyncrasy",d:"An unusual habit or way of behaving that is particular to one person",tb:true},
+      {w:"Perseverance",d:"Continued effort and determination despite difficulty",tb:true}
+    ]
+  }
+
+]; // end LISTS
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let selectedList = -1;
+let words = [], currentIndex = 0, letterStates = [], currentLetter = 0, wordDone = false;
+
+// ── WORD LIST TAB ──
+let wlVisible = false, wlActiveTab = 0;
+function renderWordList(idx) {
+  const grid = document.getElementById('wordlist-grid');
+  const list = LISTS[idx].words;
+  grid.innerHTML = list.map((w, i) =>
+    `<span style="display:block">${i+1}. ${w.w}${w.tb ? ' <span style="font-size:.7em;color:var(--wrong)">★TB</span>' : ''}</span>`
+  ).join('');
+}
+document.getElementById('wordlist-btn').addEventListener('click', () => {
+  wlVisible = !wlVisible;
+  const panel = document.getElementById('wordlist-panel');
+  panel.style.display = wlVisible ? 'block' : 'none';
+  document.getElementById('wordlist-btn').textContent = wlVisible ? '✖ Hide Word Lists' : '📋 View Word Lists';
+  if (wlVisible) renderWordList(wlActiveTab);
+});
+document.querySelectorAll('.wl-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.wl-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    wlActiveTab = parseInt(btn.dataset.wl);
+    renderWordList(wlActiveTab);
+  });
+});
+
+// ═══════════════════════════════════════════════════
+//  SETUP UI
+// ═══════════════════════════════════════════════════
+document.querySelectorAll('.event-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.event-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedList = parseInt(btn.dataset.list);
+    const count = LISTS[selectedList].words.length;
+    const tbCount = LISTS[selectedList].words.filter(w => w.tb).length;
+    let note = count + ' words';
+    if (tbCount > 0) note += ' (including ' + tbCount + ' tiebreakers)';
+    document.getElementById('word-count-note').textContent = note;
+    document.getElementById('start-btn').disabled = false;
+  });
+});
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  if (selectedList < 0) return;
+  words = LISTS[selectedList].words;
+  currentIndex = 0;
+  document.getElementById('game-badge').textContent = LISTS[selectedList].label;
+  document.getElementById('setup-panel').style.display = 'none';
+  document.getElementById('game-area').style.display = 'flex';
+  loadWord();
+});
+
+// ═══════════════════════════════════════════════════
+//  GAME
+// ═══════════════════════════════════════════════════
+function loadWord() {
+  wordDone = false; currentLetter = 0;
+  const entry = words[currentIndex];
+  letterStates = entry.w.split('').map(() => 'neutral');
+  document.getElementById('word-def').innerHTML = entry.d || '';
+  document.getElementById('progress-label').textContent = (currentIndex + 1) + ' / ' + words.length;
+  document.getElementById('progress-bar').style.width = ((currentIndex / words.length) * 100) + '%';
+  // Tiebreaker badge
+  const tbBadge = document.getElementById('tb-badge');
+  tbBadge.style.display = entry.tb ? 'inline-block' : 'none';
+  setStatus('spelling');
+  renderLetters();
+}
+
+function renderLetters() {
+  const row = document.getElementById('letter-row');
+  row.innerHTML = '';
+  const word = words[currentIndex].w;
+  const n = word.length;
+  const cardWidth = document.getElementById('word-card').clientWidth - 80;
+  const gap = 10;
+  const maxTileW = 76, maxTileH = 84, maxFont = 2.6;
+  const availW = cardWidth - (gap * (n - 1));
+  const tileW = Math.min(maxTileW, Math.floor(availW / n));
+  const scale = tileW / maxTileW;
+  const tileH = Math.max(36, Math.round(maxTileH * scale));
+  const fontSize = Math.max(1, +(maxFont * scale).toFixed(2));
+
+  word.split('').forEach((ch, i) => {
+    const d = document.createElement('div');
+    d.className = 'letter';
+    d.style.width = tileW + 'px';
+    d.style.height = tileH + 'px';
+    d.style.fontSize = fontSize + 'rem';
+    d.textContent = ch;
+    if (letterStates[i] === 'correct') d.classList.add('correct');
+    else if (letterStates[i] === 'wrong') d.classList.add('wrong');
+    if (i === currentLetter && !wordDone) d.classList.add('current');
+    row.appendChild(d);
+  });
+}
+
+function setStatus(type) {
+  const b = document.getElementById('status-badge');
+  if (type === 'spelling')     { b.className = 'status-badge spelling';     b.textContent = 'Spelling...'; }
+  else if (type === 'correct') { b.className = 'status-badge done-correct'; b.textContent = '✓ Correct!'; }
+  else if (type === 'wrong')   { b.className = 'status-badge done-wrong';   b.textContent = '✗ Incorrect'; }
+}
+
+function advanceLetter(state) {
+  if (wordDone) return;
+  letterStates[currentLetter] = state;
+  currentLetter++;
+  if (currentLetter >= words[currentIndex].w.length) {
+    wordDone = true;
+    const allCorrect = letterStates.every(s => s === 'correct');
+    setStatus(allCorrect ? 'correct' : 'wrong');
+    if (allCorrect) launchConfetti();
+  }
+  renderLetters();
+}
+
+function undoLetter() {
+  if (wordDone || currentLetter === 0) return;
+  currentLetter--;
+  letterStates[currentLetter] = 'neutral';
+  renderLetters();
+}
+
+function nextWord() {
+  currentIndex++;
+  if (currentIndex >= words.length) {
+    document.getElementById('progress-bar').style.width = '100%';
+    document.getElementById('result-overlay').classList.add('show');
+    launchConfetti();
+  } else {
+    loadWord();
+  }
+}
+
+function prevWord() {
+  if (currentIndex <= 0) return;
+  currentIndex--;
+  loadWord();
+}
+
+// KEYBOARD
+document.addEventListener('keydown', e => {
+  if (document.getElementById('setup-panel').style.display !== 'none') return;
+  if (document.getElementById('result-overlay').classList.contains('show')) return;
+  if (e.code === 'Space')                                               { e.preventDefault(); advanceLetter('correct'); }
+  else if (e.code === 'ArrowDown')                                      { e.preventDefault(); advanceLetter('wrong'); }
+  else if (e.code === 'ArrowLeft' || e.code === 'Backspace')            { e.preventDefault(); undoLetter(); }
+  else if ((e.code === 'ArrowRight' || e.code === 'Enter') && wordDone) { e.preventDefault(); nextWord(); }
+  else if (e.code === 'ArrowUp')                                        { e.preventDefault(); prevWord(); }
+});
+
+// BUTTONS
+document.getElementById('btn-prev').addEventListener('click', prevWord);
+document.getElementById('btn-next').addEventListener('click', nextWord);
+document.getElementById('btn-reset-word').addEventListener('click', loadWord);
+document.getElementById('btn-restart').addEventListener('click', () => {
+  document.getElementById('game-area').style.display = 'none';
+  document.getElementById('setup-panel').style.display = 'flex';
+});
+document.getElementById('btn-play-again').addEventListener('click', () => {
+  document.getElementById('result-overlay').classList.remove('show');
+  document.getElementById('game-area').style.display = 'none';
+  document.getElementById('setup-panel').style.display = 'flex';
+});
+
+// ═══════════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════════
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+let pieces = [], animating = false;
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+const COLORS = ['#f5a623','#ffd966','#27ae60','#3498db','#e74c3c','#9b59b6','#1abc9c','#ff6b9d','#fff'];
+
+function launchConfetti() {
+  const cx = canvas.width / 2, cy = canvas.height * 0.42;
+  for (let i = 0; i < 90; i++) {
+    const angle = Math.random() * Math.PI * 2, speed = 4 + Math.random() * 8;
+    pieces.push({
+      x: cx, y: cy,
+      vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 6,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      size: 6 + Math.random() * 8,
+      rotation: Math.random() * 360, rotSpeed: (Math.random() - .5) * 9,
+      alpha: 1, shape: Math.random() > .5 ? 'rect' : 'circle'
+    });
+  }
+  if (!animating) animateConfetti();
+}
+
+function animateConfetti() {
+  animating = true;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  pieces = pieces.filter(p => p.alpha > 0.02);
+  pieces.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += 0.3; p.vx *= 0.99;
+    p.rotation += p.rotSpeed; p.alpha -= 0.014;
+    ctx.save(); ctx.globalAlpha = Math.max(0, p.alpha);
+    ctx.translate(p.x, p.y); ctx.rotate(p.rotation * Math.PI / 180);
+    ctx.fillStyle = p.color;
+    if (p.shape === 'rect') ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+    else { ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fill(); }
+    ctx.restore();
+  });
+  if (pieces.length > 0) requestAnimationFrame(animateConfetti);
+  else animating = false;
+}
+</script>
+</body>
+</html>
