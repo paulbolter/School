@@ -75,9 +75,79 @@
     display: flex;
     gap: 24px;
     flex-wrap: wrap;
+    align-items: center;
   }
   .stat { font-size: 12px; font-weight: 300; color: #9999bb; }
   .stat strong { color: var(--gold); font-weight: 400; }
+
+  /* ── QUIZ NAV BUTTON (header) ── */
+  .quiz-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    border-radius: 8px;
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    margin-left: auto;
+  }
+  .quiz-nav:hover {
+    background: var(--gold);
+    color: var(--ink);
+    transform: translateY(-1px);
+  }
+  .quiz-nav svg {
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .quiz-nav:hover svg {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 640px) {
+    .quiz-nav {
+      margin-left: 0;
+      margin-top: 4px;
+    }
+  }
+
+  /* ── QUIZ CTA BUTTON (in-section) ── */
+  .quiz-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: #e67e22;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    margin-top: 14px;
+  }
+  .quiz-cta:hover {
+    background: #cf6d17;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(230, 126, 34, 0.35);
+  }
+  .quiz-cta svg {
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .quiz-cta:hover svg {
+    transform: translateX(4px);
+  }
 
   /* ── MAIN ── */
   main {
@@ -254,6 +324,12 @@
     <div class="stats-bar">
       <div class="stat"><span id="file-count">Loading…</span></div>
       <div class="stat">Updated: <strong id="last-updated">—</strong></div>
+      <a class="quiz-nav" href="https://paulbolter.github.io/Quizzes/" target="_blank" rel="noopener">
+        Quizzes
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
     </div>
   </div>
 </header>
@@ -286,6 +362,7 @@
 const GITHUB_USER   = 'paulbolter';
 const GITHUB_REPO   = 'School';
 const GITHUB_BRANCH = 'main';
+const QUIZ_PAGE_URL = 'https://paulbolter.github.io/Quizzes/';
 
 const PRETTY_NAMES = {
   'Compare-game-Grade8.html':               'Compare Game · Grade 8',
@@ -338,7 +415,6 @@ const CATEGORIES = [
     key: 'writing',
     label: 'Writing',
     color: '#b5560a',
-    // Explicit list so order is always guaranteed
     order: ['WRITING-tool.html', 'ArticleChecker.html'],
     test: (f, p) => ['WRITING-tool.html', 'ArticleChecker.html'].includes(f)
   },
@@ -422,7 +498,6 @@ function renderSections(files) {
     return;
   }
 
-  // Group files into categories — Quizzes appears between Grade 8 and General
   const RENDER_ORDER = ['igcse', 'writing', 'discussion', 'grade6', 'grade8', 'quizzes', FALLBACK.key, 'pickers'];
   const groups = new Map();
   RENDER_ORDER.forEach(key => {
@@ -438,7 +513,6 @@ function renderSections(files) {
   // Sort within each group
   for (const { cat, files: catFiles } of groups.values()) {
     if (cat.order) {
-      // Fixed order for Writing category
       catFiles.sort((a, b) => {
         const ai = cat.order.indexOf(a.name);
         const bi = cat.order.indexOf(b.name);
@@ -470,6 +544,13 @@ function renderSections(files) {
               <div class="card-title">${prettyName(f.name)}</div>
             </a>`).join('')}
         </div>
+        ${cat.key === 'quizzes' ? `
+        <a class="quiz-cta" href="${QUIZ_PAGE_URL}" target="_blank" rel="noopener">
+          Take me to the Quiz page
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>` : ''}
       </div>`;
   }
 
