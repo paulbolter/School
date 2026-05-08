@@ -569,5 +569,30 @@ document.getElementById('sort').addEventListener('change', () => renderSections(
 
 loadFiles();
 </script>
+// ── ANALYTICS: log tool clicks to Google Sheet ──
+(function() {
+  const ANALYTICS_URL = https://script.google.com/macros/s/AKfycbz2uPDUuszswITwNobesTrGoljYpG1yJwYVHdvXlwTTd-VMjBBlR_bJVjTia7zHiE-Mng/exec;
+
+  document.addEventListener('click', function(e) {
+    // Find the closest link that was clicked
+    var link = e.target.closest('a[href]');
+    if (!link) return;
+
+    var href = link.getAttribute('href');
+
+    // Only track clicks to .html files (your tools)
+    if (!href || !href.toLowerCase().endsWith('.html')) return;
+
+    // Extract just the filename
+    var toolName = href.split('/').pop();
+
+    // Send the log (fire-and-forget, doesn't slow anything down)
+    var img = new Image();
+    img.src = ANALYTICS_URL
+      + '?tool=' + encodeURIComponent(toolName)
+      + '&page=school';
+  });
+})();
+</script>
 </body>
 </html>
