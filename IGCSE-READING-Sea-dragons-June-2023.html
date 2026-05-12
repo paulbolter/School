@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE 0510 – Exercises 1, 2 & 3 | May/June 2023 (Core)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1a2e; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: #13132a; border-bottom: 2px solid var(--gold); }
+  .tab-btn {
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #8888aa; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #ccccee; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 18px; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.sc-correct { border-color: var(--self-yes); background: #e8f5e9; }
+  .question-item.sc-wrong { border-color: var(--self-no); background: #fdecea; }
+  .question-item.sc-half { border-color: var(--self-partial); background: #fffde7; }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+  .inputs-row { display: flex; flex-direction: column; gap: 7px; }
+
+  .abcd-row { display: flex; gap: 8px; margin-top: 2px; }
+  .abcd-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .abcd-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .abcd-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abcd-btn:disabled { cursor: default; }
+  .abcd-btn.correct-answer { background: #4caf50; color: white; border-color: #4caf50; }
+  .abcd-btn.wrong-answer { background: #e53935; color: white; border-color: #e53935; }
+
+  input[type="text"] {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 4px;
+    padding: 8px 11px; font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+    color: var(--ink); background: white; transition: border-color 0.2s; outline: none;
+  }
+  input[type="text"]:focus { border-color: var(--ink); }
+  input[type="text"]:disabled { background: #f0ece6; cursor: default; color: var(--muted); }
+
+  .answer-reveal-box {
+    display: none; margin-top: 10px; padding: 10px 13px; border-radius: 5px;
+    background: #fffbea; border: 1.5px solid #e8c84a; font-size: 13px; line-height: 1.6;
+  }
+  .answer-reveal-box.show { display: block; }
+  .answer-label { font-weight: 700; color: #7a5c00; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .answer-text { font-weight: 600; color: #1a6e2a; font-size: 14px; }
+  .answer-also { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .self-check-row { display: none; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .self-check-row.show { display: flex; }
+  .self-check-label { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .sc-btn {
+    padding: 5px 14px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
+    border: 2px solid; cursor: pointer; transition: all 0.15s; background: white;
+  }
+  .sc-btn:disabled { cursor: default; opacity: 0.6; }
+  .sc-yes { border-color: var(--self-yes); color: var(--self-yes); }
+  .sc-yes:hover:not(:disabled), .sc-yes.active { background: var(--self-yes); color: white; }
+  .sc-no { border-color: var(--self-no); color: var(--self-no); }
+  .sc-no:hover:not(:disabled), .sc-no.active { background: var(--self-no); color: white; }
+  .sc-partial { border-color: var(--self-partial); color: var(--self-partial); }
+  .sc-partial:hover:not(:disabled), .sc-partial.active { background: var(--self-partial); color: white; }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: #1a1a2e; }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .input-with-check { display: flex; align-items: center; gap: 8px; }
+  .inline-check { display: none; width: 18px; height: 18px; background: #4caf50; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0; }
+  .inline-check.show { display: flex; }
+
+  .btn-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  .notes-heading { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--ink); margin: 18px 0 8px; border-bottom: 1.5px solid var(--border); padding-bottom: 6px; }
+  .notes-heading:first-of-type { margin-top: 0; }
+  .example-note { font-size: 12px; color: var(--muted); font-style: italic; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IGCSE 0510/13 · Core · May/June 2023</span>
+    <h1>Sea Dragons, Songs &amp; Buildings</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 24</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('ex1')">Exercise 1</button>
+  <button class="tab-btn" onclick="showTab('ex2')">Exercise 2</button>
+  <button class="tab-btn" onclick="showTab('ex3')">Exercise 3</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 1 — Leafy sea dragons
+═══════════════════════════════════════════════════════ -->
+<div id="ex1" class="exercise active">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">Leafy sea dragons</div>
+      <div class="article-body">
+        <p>Leafy sea dragons are remarkable creatures found around the coast of Australia. They are a type of fish and belong to the same family as seahorses, although their appearance is rather different. Unlike many seahorses, leafy sea dragons look as if they are covered in small leaves. Their name comes from this and also because they resemble dragons in ancient Chinese myths – they even have sharp spikes on their backs which help protect them. They do, however, share seahorses' ability to move each eye independently and can see all around. Leafy sea dragons' diet consists of tiny creatures called sea lice, and they feed by pulling them up through their long noses. This is a different technique from the way other fish eat, as many take in water through their mouths and consume whatever they find in it.</p>
+        <p>Leafy sea dragons grow to around 35 centimetres, and can swim to a depth of 30 metres out at sea. Many species, however, prefer shallower waters and come in as close as 3 metres to the coast. Even at this distance, they are extremely easy to miss as they are able to disguise themselves as pieces of seaweed. Leafy sea dragons usually live among this seaweed that grows on the seabed, but also search for food that lives around wooden constructions built in the water. These places are where divers have the best chance of spotting one although it is still rare. People are always keen to see them, and this helps raise awareness of the need to protect these amazing creatures. Unfortunately, their interesting appearance means that people want to keep them as pets. The Australian Government has therefore made strict laws which only permit scientists to take leafy sea dragons from the ocean to study. The creatures are very sensitive and cannot survive any extreme changes in water temperature, which is why the numbers of leafy sea dragons are being monitored.</p>
+        <p>Like seahorses, leafy sea dragons are unusual as although the females produce eggs, the male looks after them until the young are big enough to leave his protection. However, while a male seahorse keeps the eggs in a special pocket on his stomach, called a pouch, a leafy sea dragon's eggs grow on the tail of the male. Another feature of the eggs which makes them a little different from those of many other creatures is that they are bright pink. This is unusual, as many fish eggs are typically sand-coloured, brown or green to match the colour of their habitat, helping them to remain safe from danger. However, when leafy sea dragons become fully grown, they are able to avoid being seen by changing colour to match their surroundings. For example, they tend to become darker in deeper water.</p>
+        <p>The female produces around 250 eggs twice during each breeding season, which starts in October and lasts a few weeks. It takes 9 weeks until the tiny leafy sea dragons are ready to hatch out of the eggs and leave their parent. The young leafy sea dragons fall off the adult male and drop down onto the seabed, still partly attached to the egg. They eat the remains of the egg, which provides food for two days, after which time, the young are ready to start hunting by themselves. Even at this early stage, they know how to hide from danger by moving with the flow of the water.</p>
+        <p>Leafy sea dragons certainly catch people's imaginations. If you see one, you'll understand why!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 1–8 &nbsp;[Total: 9 marks]</div>
+
+    <div class="nudge-banner" id="ex1-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please answer all questions before revealing answers.</span>
+    </div>
+
+    <div class="result-bar" id="ex1-result">Exercise 1: <span id="ex1-score-display">0</span> / 9</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex1-submit" onclick="submitEx1()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex1')">Reset</button>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-item" id="ex1-q1-item">
+      <div class="q-header">
+        <div class="q-num">1</div>
+        <div class="q-text">How do leafy sea dragons eat their food?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q1" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q1-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">(Through their long) noses</div>
+      </div>
+      <div class="self-check-row" id="ex1-q1-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q1','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q1','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-item" id="ex1-q2-item">
+      <div class="q-header">
+        <div class="q-num">2</div>
+        <div class="q-text">How near to the shore can leafy sea dragons be found?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q2" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q2-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">3 metres</div>
+      </div>
+      <div class="self-check-row" id="ex1-q2-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q2','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q2','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-item" id="ex1-q3-item">
+      <div class="q-header">
+        <div class="q-num">3</div>
+        <div class="q-text">Where are you more likely to see a leafy sea dragon if you are diving in Australia?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q3" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q3-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Around (wooden) constructions</div>
+      </div>
+      <div class="self-check-row" id="ex1-q3-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q3','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q3','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-item" id="ex1-q4-item">
+      <div class="q-header">
+        <div class="q-num">4</div>
+        <div class="q-text">What dangers do leafy sea dragons face? Give <strong>two</strong> details.</div>
+        <div class="q-marks">[2]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q4a" placeholder="Detail 1…">
+        <input type="text" id="ex1-q4b" placeholder="Detail 2…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q4-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">1. People want to keep them (as pets)</div>
+        <div class="answer-text">2. (Cannot survive any) extreme changes in (water) temperature</div>
+      </div>
+      <div class="self-check-row" id="ex1-q4-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q4','yes',2)">✓ Both correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheck('ex1','q4','partial',1)">½ One correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q4','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-item" id="ex1-q5-item">
+      <div class="q-header">
+        <div class="q-num">5</div>
+        <div class="q-text">Where do leafy sea dragon eggs develop?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q5" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q5-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">(On the) tail of the male</div>
+      </div>
+      <div class="self-check-row" id="ex1-q5-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q5','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q5','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-item" id="ex1-q6-item">
+      <div class="q-header">
+        <div class="q-num">6</div>
+        <div class="q-text">What colour are the eggs of leafy sea dragons?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q6" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q6-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">(Bright) pink</div>
+      </div>
+      <div class="self-check-row" id="ex1-q6-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q6','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q6','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-item" id="ex1-q7-item">
+      <div class="q-header">
+        <div class="q-num">7</div>
+        <div class="q-text">How many times do leafy sea dragons lay eggs in a year?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q7" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q7-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Twice / 2</div>
+      </div>
+      <div class="self-check-row" id="ex1-q7-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q7','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q7','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-item" id="ex1-q8-item">
+      <div class="q-header">
+        <div class="q-num">8</div>
+        <div class="q-text">How do the young leafy sea dragons get food before they become independent?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="ex1-q8" placeholder="Your answer…">
+      </div>
+      <div class="answer-reveal-box" id="ex1-q8-reveal">
+        <div class="answer-label">Mark Scheme Answer</div>
+        <div class="answer-text">Eat (the) remains of (the) egg</div>
+      </div>
+      <div class="self-check-row" id="ex1-q8-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheck('ex1','q8','yes')">✓ Correct</button>
+        <button class="sc-btn sc-no" onclick="selfCheck('ex1','q8','no')">✗ Wrong</button>
+      </div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex1 -->
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 2 — My Favourite Song
+═══════════════════════════════════════════════════════ -->
+<div id="ex2" class="exercise">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">My Favourite Song</div>
+      <div class="article-body">
+        <p><strong>A &nbsp; Yashi: Perfect Moon</strong></p>
+        <p><em>Perfect Moon</em> is a song that's important to me. It's one my mum has played every now and again for as long as I can remember. She always talks about first hearing it on holiday, and how it brings back memories of that special time – which I guess is why she loves it, and now I love it too! And I know that won't change, since it's the one I turn to when things aren't going too well, or I need cheering up. Although the singer's recorded a lot of songs in the past, this is the one that I think shows off her talent the best. And even though when I play it on my phone my mates all laugh about how old-fashioned they think it is, I don't mind! I know they're only teasing, and I'd still recommend it to anyone who loves beautiful music.</p>
+        <p><strong>B &nbsp; Peta: Whole World</strong></p>
+        <p>The song I love, <em>Whole World</em>, is rather special. You see, it was written for me by my dad! He sang in a band – not one that was well known, but at one point it was important enough to play at a few festivals. There were even some in Spain and France, but I was too young to go, unfortunately! I used to think no one would ever write a better song, although I've come to appreciate that's not actually the case – my dad won't mind me saying that! But the most exciting moment for our family was when his band went on to record the song in a studio. They even performed it at some of their concerts when I was older – can you imagine how great it was for me, being in the crowd at a local festival, listening to everyone singing along to MY song? It's definitely an old favourite and it's become a bit of a tradition to play it on my birthday. It's one I'll keep for sure!</p>
+        <p><strong>C &nbsp; Sue: Tell Me</strong></p>
+        <p>I'm not sure if many people will have heard of my favourite song. It's called <em>Tell Me</em>, and I think I like it so much because it's just a really happy song! I find it's the perfect choice of song to play when I'm in a great mood and just want to sing loudly and dance around my room. There's also something about the fact that the lead singer isn't singing in her first language – it allows her accent to come through in the song. When it came out a few years ago now, I had a lot going on, you know, a lot of big changes like moving schools, and I guess I was still finding my way a little. It's funny how just hearing a song brings back all sorts of memories of a particular time, isn't it! The song is quite different to a lot of other music I listen to, but I really think it's good to have a variety, and I don't think I'll ever stop listening to it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Question 9(a)–(h) &nbsp;[Total: 8 marks]</div>
+
+    <div class="nudge-banner" id="ex2-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please answer all questions before submitting.</span>
+    </div>
+
+    <div class="result-bar" id="ex2-result">Exercise 2: <span id="ex2-score-display">0</span> / 8</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex2-submit" onclick="submitEx2()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex2')">Reset</button>
+    </div>
+
+    <div class="ex-intro">For each question write the correct letter <strong>A, B or C</strong> on the line. Which person…</div>
+
+    <!-- 9a -->
+    <div class="question-item" id="ex2-qa-item">
+      <div class="q-header">
+        <div class="q-num">a</div>
+        <div class="q-text">says she first heard the song at an important time of her life?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qa-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qa','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qa-fb"></div>
+    </div>
+
+    <!-- 9b -->
+    <div class="question-item" id="ex2-qb-item">
+      <div class="q-header">
+        <div class="q-num">b</div>
+        <div class="q-text">explains how she felt hearing the song with other people who liked it too?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qb-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qb','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qb-fb"></div>
+    </div>
+
+    <!-- 9c -->
+    <div class="question-item" id="ex2-qc-item">
+      <div class="q-header">
+        <div class="q-num">c</div>
+        <div class="q-text">explains how the song can affect how she is feeling?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qc-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qc','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qc-fb"></div>
+    </div>
+
+    <!-- 9d -->
+    <div class="question-item" id="ex2-qd-item">
+      <div class="q-header">
+        <div class="q-num">d</div>
+        <div class="q-text">admits that her feelings about the song have changed?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qd-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qd','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qd-fb"></div>
+    </div>
+
+    <!-- 9e -->
+    <div class="question-item" id="ex2-qe-item">
+      <div class="q-header">
+        <div class="q-num">e</div>
+        <div class="q-text">suggests it is very different to the songs her friends like?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qe-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qe','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qe-fb"></div>
+    </div>
+
+    <!-- 9f -->
+    <div class="question-item" id="ex2-qf-item">
+      <div class="q-header">
+        <div class="q-num">f</div>
+        <div class="q-text">mentions how the singer's background affected the song?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qf-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qf','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qf-fb"></div>
+    </div>
+
+    <!-- 9g -->
+    <div class="question-item" id="ex2-qg-item">
+      <div class="q-header">
+        <div class="q-num">g</div>
+        <div class="q-text">mentions a special time when she likes to listen to the song?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qg-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qg','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qg-fb"></div>
+    </div>
+
+    <!-- 9h -->
+    <div class="question-item" id="ex2-qh-item">
+      <div class="q-header">
+        <div class="q-num">h</div>
+        <div class="q-text">compares the song with the singer's other work?</div>
+        <div class="q-marks">[1]</div>
+      </div>
+      <div class="abcd-row" id="ex2-qh-btns">
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','A',this)">A</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','B',this)">B</button>
+        <button class="abcd-btn" onclick="selectAbcd('ex2-qh','C',this)">C</button>
+      </div>
+      <div class="feedback" id="ex2-qh-fb"></div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex2 -->
+
+<!-- ═══════════════════════════════════════════════════════
+     EXERCISE 3 — Designing buildings
+═══════════════════════════════════════════════════════ -->
+<div id="ex3" class="exercise">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage</div>
+    <div class="article-box">
+      <div class="article-title">Designing buildings</div>
+      <div class="article-body">
+        <p>Most of us spend the majority of our lives indoors. But how often do we stop to consider the design of buildings where we spend so much time? When we're not in our homes, we're in various public places, including schools or places of work. Apparently, research shows that in well-designed buildings, people take less time off, so you can clearly see that design matters! Of course, there are also practical considerations which can affect the design of a building, like the date to complete a project, which the architects and designers involved in creating buildings can't avoid. Given enough time, however, there's no end to how amazing a building can be.</p>
+        <p>A key consideration for those who design buildings is being aware of the performance requirements – in other words, understanding what a space will be used for. There's no point in designing a building with lovely large open-plan rooms if what's needed are smaller spaces where people can talk privately or work individually without interruption. It's generally agreed that we work more efficiently when there are different-sized spaces to suit our individual needs, whether the building is designed for work or study. Of course, we all need to be able to concentrate on whatever task we're occupied with. If you're working on something artistic, then it might be useful to know that higher ceilings can generate more creative thoughts. So perhaps that's something to remember when you're struggling to write your next novel or trying to find the perfect lyrics to a song!</p>
+        <p>Now, you might think that staring out of the window is certain to result in a lack of concentration, but actually, having windows with views of natural scenes can help people pay better attention to what they're doing. While it might not always be possible to have great views – the position of neighbouring properties might get in the way, for example – it's certainly worth bearing in mind. If a country is naturally very hot and sunny, then perhaps large windows might not be the most practical idea, so building designers also need to think carefully about the local climate conditions. It is perfectly possible to use special glass, but it can be expensive and may put it outside the available budget.</p>
+        <p>It is not just the structural features of the building that are important; the interior design features also play an essential role in a well-designed building. The level of lighting changes how fast people move around a building. This is why, for example, bright lighting is often used in places such as fast-food-style canteens as it encourages people to move more quickly. And lighting isn't the only thing that should be carefully considered. Scientific research has shown that certain colour schemes can alter people's mood quite significantly.</p>
+        <p>As you can see, therefore, the buildings that we use every day can have more effect on our lives than we might realise at first.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 10–11 &nbsp;[Total: 7 marks]</div>
+
+    <div class="nudge-banner" id="ex3-nudge">
+      <span class="nudge-icon">⚠️</span>
+      <span>Please fill in all boxes before revealing answers.</span>
+    </div>
+
+    <div class="result-bar" id="ex3-result">Exercise 3: <span id="ex3-score-display">0</span> / 7</div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex3-submit" onclick="submitEx3()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex3')">Reset</button>
+    </div>
+
+    <div class="ex-intro">You are going to give a talk about building design to your class at school. Make short notes under each heading.</div>
+
+    <!-- Q10 -->
+    <div class="question-item" id="ex3-q10-item">
+      <div class="notes-heading">Question 10 — The effects that a well-designed building can have on people [4 marks]</div>
+      <div class="inputs-row">
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10a" placeholder="Effect 1…">
+          <div class="inline-check" id="ex3-q10a-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10b" placeholder="Effect 2…">
+          <div class="inline-check" id="ex3-q10b-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10c" placeholder="Effect 3…">
+          <div class="inline-check" id="ex3-q10c-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q10d" placeholder="Effect 4…">
+          <div class="inline-check" id="ex3-q10d-check">✓</div>
+        </div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q10-reveal">
+        <div class="answer-label">Mark Scheme — any 4 of these</div>
+        <div class="answer-text">1. (People) take less time off</div>
+        <div class="answer-text">2. Work more efficiently / work without interruption</div>
+        <div class="answer-text">3. (Higher ceilings can generate) more creative thoughts</div>
+        <div class="answer-text">4. Pay (better) attention / concentrate better</div>
+        <div class="answer-text">5. (Level of lighting) changes how fast people move / move more quickly</div>
+        <div class="answer-text">6. (Different colour schemes can) alter (people's) mood</div>
+      </div>
+      <div class="self-check-row" id="ex3-q10-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q10','yes',4)">✓ 4 correct (4)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q10','partial3',3)">3 correct (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q10','partial2',2)">2 correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q10','partial1',1)">1 correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q10','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="question-item" id="ex3-q11-item">
+      <div class="notes-heading">Question 11 — Factors which influence a designer's plans for a building [3 marks]</div>
+      <div class="inputs-row">
+        <div class="input-with-check">
+          <input type="text" id="ex3-q11a" placeholder="Factor 1…">
+          <div class="inline-check" id="ex3-q11a-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q11b" placeholder="Factor 2…">
+          <div class="inline-check" id="ex3-q11b-check">✓</div>
+        </div>
+        <div class="input-with-check">
+          <input type="text" id="ex3-q11c" placeholder="Factor 3…">
+          <div class="inline-check" id="ex3-q11c-check">✓</div>
+        </div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q11-reveal">
+        <div class="answer-label">Mark Scheme — any 3 of these</div>
+        <div class="answer-text">1. Date to complete a project / time</div>
+        <div class="answer-text">2. Performance requirements / what a space will be used for</div>
+        <div class="answer-text">3. Position of neighbouring properties</div>
+        <div class="answer-text">4. (Local) climate conditions / if the country is (very) hot</div>
+        <div class="answer-text">5. Available budget</div>
+        <div class="answer-text">6. Interior design (features)</div>
+        <div class="answer-text">7. (Level of) lighting</div>
+        <div class="answer-text">8. Colour (schemes)</div>
+      </div>
+      <div class="self-check-row" id="ex3-q11-sc">
+        <span class="self-check-label">Mark yourself:</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q11','yes',3)">✓ 3 correct (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q11','partial2',2)">2 correct (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q11','partial1',1)">1 correct (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q11','no',0)">✗ Wrong (0)</button>
+      </div>
+    </div>
+
+  </div><!-- /questions-panel -->
+</div><!-- /ex3 -->
+
+<script>
+// ── SCORE STATE ──────────────────────────────────────────
+const scores = { ex1: {}, ex2: {}, ex3: {} };
+
+function updateScores() {
+  const ex1Total = Object.values(scores.ex1).reduce((a,b)=>a+b,0);
+  const ex2Total = Object.values(scores.ex2).reduce((a,b)=>a+b,0);
+  const ex3Total = Object.values(scores.ex3).reduce((a,b)=>a+b,0);
+  document.getElementById('total-score').textContent = ex1Total + ex2Total + ex3Total;
+  document.getElementById('ex1-score-display').textContent = ex1Total;
+  document.getElementById('ex2-score-display').textContent = ex2Total;
+  document.getElementById('ex3-score-display').textContent = ex3Total;
+}
+
+// ── TAB SWITCHING ────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['ex1','ex2','ex3'].indexOf(id);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+}
+
+// ── EXERCISE 1 — reveal + self-check ────────────────────
+function submitEx1() {
+  const ids1 = ['ex1-q1','ex1-q2','ex1-q3','ex1-q4a','ex1-q4b','ex1-q5','ex1-q6','ex1-q7','ex1-q8'];
+  const allFilled = ids1.every(id => document.getElementById(id).value.trim());
+  if (!allFilled) {
+    const nb = document.getElementById('ex1-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ids1.forEach(id => { document.getElementById(id).disabled = true; });
+  ['q1','q2','q3','q4','q5','q6','q7','q8'].forEach(q => {
+    document.getElementById('ex1-'+q+'-reveal').classList.add('show');
+    document.getElementById('ex1-'+q+'-sc').classList.add('show');
+  });
+  document.getElementById('ex1-result').classList.add('show');
+  document.getElementById('ex1-submit').disabled = true;
+}
+
+function selfCheck(ex, q, result, marks) {
+  const pts = marks !== undefined ? marks : (result === 'yes' ? 1 : 0);
+  scores[ex][q] = pts;
+  const item = document.getElementById(ex+'-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  if (result === 'yes') item.classList.add('sc-correct');
+  else if (result === 'no') item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById(ex+'-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ── EXERCISE 2 — A/B/C multiple choice ──────────────────
+const ex2Selections = {};
+const ex2Correct = {
+  'ex2-qa': 'C',
+  'ex2-qb': 'B',
+  'ex2-qc': 'A',
+  'ex2-qd': 'B',
+  'ex2-qe': 'A',
+  'ex2-qf': 'C',
+  'ex2-qg': 'B',
+  'ex2-qh': 'A'
+};
+const ex2Explanations = {
+  'ex2-qa': 'C (Sue) — "When it came out a few years ago now, I had a lot going on… big changes like moving schools" — heard it during an important time.',
+  'ex2-qb': 'B (Peta) — "being in the crowd at a local festival, listening to everyone singing along to MY song" — hearing it with other fans.',
+  'ex2-qc': 'A (Yashi) — "the one I turn to when things aren\'t going too well, or I need cheering up" — the song affects how she feels.',
+  'ex2-qd': 'B (Peta) — "I used to think no one would ever write a better song, although I\'ve come to appreciate that\'s not actually the case."',
+  'ex2-qe': 'A (Yashi) — "my mates all laugh about how old-fashioned they think it is" — it\'s different from what her friends like.',
+  'ex2-qf': 'C (Sue) — "the lead singer isn\'t singing in her first language – it allows her accent to come through in the song."',
+  'ex2-qg': 'B (Peta) — "it\'s become a bit of a tradition to play it on my birthday."',
+  'ex2-qh': 'A (Yashi) — "Although the singer\'s recorded a lot of songs in the past, this is the one that I think shows off her talent the best."'
+};
+
+function selectAbcd(qId, letter, btn) {
+  const allBtns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+  allBtns.forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  ex2Selections[qId] = letter;
+}
+
+function submitEx2() {
+  const keys = ['ex2-qa','ex2-qb','ex2-qc','ex2-qd','ex2-qe','ex2-qf','ex2-qg','ex2-qh'];
+  if (!keys.every(k => ex2Selections[k])) {
+    const nb = document.getElementById('ex2-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  keys.forEach(qId => {
+    const correct = ex2Correct[qId];
+    const selected = ex2Selections[qId];
+    const btns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+    btns.forEach(b => b.disabled = true);
+    btns.forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + ex2Explanations[qId];
+      fb.style.display = 'block';
+      scores.ex2[qId] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + ex2Explanations[qId];
+      fb.style.display = 'block';
+      scores.ex2[qId] = 0;
+    }
+  });
+  updateScores();
+  document.getElementById('ex2-result').classList.add('show');
+  document.getElementById('ex2-submit').disabled = true;
+}
+
+// ── EXERCISE 3 — reveal + self-check ────────────────────
+function submitEx3() {
+  const allIds = ['ex3-q10a','ex3-q10b','ex3-q10c','ex3-q10d','ex3-q11a','ex3-q11b','ex3-q11c'];
+  const allFilled = allIds.every(id => document.getElementById(id).value.trim());
+  if (!allFilled) {
+    const nb = document.getElementById('ex3-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  allIds.forEach(id => {
+    document.getElementById(id).disabled = true;
+    const chk = document.getElementById(id + '-check');
+    if (chk) chk.classList.add('show');
+  });
+  ['ex3-q10-reveal','ex3-q11-reveal'].forEach(id => {
+    document.getElementById(id).classList.add('show');
+  });
+  ['ex3-q10-sc','ex3-q11-sc'].forEach(id => {
+    document.getElementById(id).classList.add('show');
+  });
+  document.getElementById('ex3-result').classList.add('show');
+  document.getElementById('ex3-submit').disabled = true;
+}
+
+function selfCheckEx3(q, result, pts) {
+  scores.ex3[q] = pts;
+  const item = document.getElementById('ex3-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  if (pts > 0 && result === 'yes') item.classList.add('sc-correct');
+  else if (pts === 0) item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById('ex3-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ── RESET ────────────────────────────────────────────────
+function resetEx(ex) {
+  if (ex === 'ex1') {
+    scores.ex1 = {};
+    ['ex1-q1','ex1-q2','ex1-q3','ex1-q4a','ex1-q4b','ex1-q5','ex1-q6','ex1-q7','ex1-q8'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+    });
+    ['q1','q2','q3','q4','q5','q6','q7','q8'].forEach(q => {
+      const item = document.getElementById('ex1-'+q+'-item');
+      if (item) item.classList.remove('sc-correct','sc-wrong','sc-half');
+      const rev = document.getElementById('ex1-'+q+'-reveal');
+      if (rev) rev.classList.remove('show');
+      const sc = document.getElementById('ex1-'+q+'-sc');
+      if (sc) { sc.classList.remove('show'); sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); }); }
+    });
+    document.getElementById('ex1-result').classList.remove('show');
+    document.getElementById('ex1-submit').disabled = false;
+  } else if (ex === 'ex2') {
+    scores.ex2 = {};
+    ['qa','qb','qc','qd','qe','qf','qg','qh'].forEach(qKey => {
+      const qId = 'ex2-' + qKey;
+      document.querySelectorAll('#'+qId+'-btns .abcd-btn').forEach(b => {
+        b.disabled=false; b.classList.remove('selected','correct-answer','wrong-answer');
+      });
+      delete ex2Selections[qId];
+      const item = document.getElementById(qId+'-item');
+      if (item) item.classList.remove('correct','wrong');
+      const fb = document.getElementById(qId+'-fb');
+      if (fb) { fb.style.display='none'; fb.innerHTML=''; }
+    });
+    document.getElementById('ex2-result').classList.remove('show');
+    document.getElementById('ex2-submit').disabled = false;
+  } else {
+    scores.ex3 = {};
+    ['ex3-q10a','ex3-q10b','ex3-q10c','ex3-q10d','ex3-q11a','ex3-q11b','ex3-q11c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+      const chk = document.getElementById(id+'-check');
+      if (chk) chk.classList.remove('show');
+    });
+    ['ex3-q10-reveal','ex3-q11-reveal'].forEach(id => {
+      document.getElementById(id).classList.remove('show');
+    });
+    ['ex3-q10-sc','ex3-q11-sc'].forEach(id => {
+      const sc = document.getElementById(id);
+      sc.classList.remove('show');
+      sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); });
+    });
+    ['ex3-q10-item','ex3-q11-item'].forEach(id => {
+      document.getElementById(id).classList.remove('sc-correct','sc-wrong','sc-half');
+    });
+    document.getElementById('ex3-result').classList.remove('show');
+    document.getElementById('ex3-submit').disabled = false;
+  }
+  updateScores();
+}
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
