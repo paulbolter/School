@@ -335,6 +335,13 @@
 </header>
 
 <main>
+  <a class="quiz-cta" href="https://paulbolter.github.io/Quizzes/" target="_blank" rel="noopener" style="margin-top:0; margin-bottom:20px;">
+    Take me to the Quiz page
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+  </a>
+
   <div class="search-row">
     <div class="search-wrap">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -544,13 +551,6 @@ function renderSections(files) {
               <div class="card-title">${prettyName(f.name)}</div>
             </a>`).join('')}
         </div>
-        ${cat.key === 'quizzes' ? `
-        <a class="quiz-cta" href="${QUIZ_PAGE_URL}" target="_blank" rel="noopener">
-          Take me to the Quiz page
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>` : ''}
       </div>`;
   }
 
