@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bubble Pop Vocabulary — Grade 6 Unit 12</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Quicksand', sans-serif;
+    background:
+      radial-gradient(ellipse at 20% 80%, #1e3a8a 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, #155e75 0%, transparent 60%),
+      linear-gradient(180deg, #0c1844 0%, #164e63 100%);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  /* Underwater shimmer overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(125, 211, 252, 0.15) 0%, transparent 30%),
+      radial-gradient(circle at 70% 60%, rgba(192, 132, 252, 0.12) 0%, transparent 35%);
+    animation: shimmer 8s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes shimmer {
+    to { transform: translate(40px, -30px) scale(1.1); }
+  }
+
+  /* Tiny background bubbles rising */
+  .bg-bubble {
+    position: fixed;
+    bottom: -30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5), rgba(255,255,255,0.05));
+    pointer-events: none;
+    z-index: 1;
+    animation: rise linear infinite;
+  }
+  @keyframes rise {
+    to {
+      transform: translateY(calc(-100vh - 50px)) translateX(var(--drift));
+      opacity: 0;
+    }
+  }
+
+  #game {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+  }
+
+  /* Screen flash for correct answer */
+  #flash {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, rgba(74, 222, 128, 0.4), transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+    transition: opacity 0.4s ease;
+  }
+  #flash.on { opacity: 1; }
+
+  /* HUD */
+  .hud {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    z-index: 20;
+  }
+  .hud-pill {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 12px 22px;
+    border-radius: 18px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: white;
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .definition-box {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    padding: 18px 32px;
+    border-radius: 22px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: 1.7rem;
+    color: #0c1844;
+    text-align: center;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.3);
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  /* Unit-selection tabs on the start/end screens */
+  .unit-tabs {
+    display: flex;
+    gap: 10px;
+    margin: 18px 0 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .unit-tab {
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.85);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 10px 22px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    backdrop-filter: blur(8px);
+  }
+  .unit-tab:hover {
+    background: rgba(255,255,255,0.22);
+    transform: translateY(-2px);
+  }
+  .unit-tab.active {
+    background: #fbbf24;
+    border-color: #f59e0b;
+    color: #422006;
+    box-shadow: 0 4px 16px rgba(251,191,36,0.5);
+  }
+  .unit-tab.active:hover {
+    background: #fcd34d;
+  }
+  .unit-info {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  /* Floating back-to-units button — visible during gameplay only */
+  #back-btn {
+    position: fixed;
+    top: 90px;
+    left: 20px;
+    z-index: 25;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 10px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: none;
+  }
+  #back-btn:hover {
+    background: rgba(255,255,255,0.28);
+    transform: translateY(-1px);
+  }
+  #back-btn.visible {
+    display: block;
+  }
+
+  /* COMBO counter when on a streak */
+  .combo {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    color: #fde047;
+    text-shadow: 0 0 20px #fde047, 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 15;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .combo.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.1);
+  }
+
+  /* Floating bubbles — round, glassy, translucent */
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255,255,255,0.5);
+    box-shadow:
+      0 8px 30px rgba(0,0,0,0.25),
+      inset 0 -10px 25px rgba(255,255,255,0.15),
+      inset 0 10px 25px rgba(255,255,255,0.25);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7), 0 0 12px rgba(0,0,0,0.5);
+    z-index: 5;
+    will-change: transform;
+    transition: box-shadow 0.15s ease;
+  }
+  /* Glossy highlight */
+  .bubble::before {
+    content: '';
+    position: absolute;
+    top: 12%;
+    left: 20%;
+    width: 30%;
+    height: 25%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.8), transparent);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .bubble:hover {
+    box-shadow:
+      0 12px 40px rgba(0,0,0,0.4),
+      inset 0 -8px 20px rgba(0,0,0,0.2),
+      inset 0 8px 20px rgba(255,255,255,0.4);
+  }
+
+  /* Bubble colour variants - translucent, like real soap bubbles */
+  .b-pink   { background: radial-gradient(circle at 30% 30%, rgba(251, 113, 133, 0.45), rgba(190, 18, 60, 0.35)); }
+  .b-blue   { background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.45), rgba(29, 78, 216, 0.35)); }
+  .b-green  { background: radial-gradient(circle at 30% 30%, rgba(74, 222, 128, 0.45), rgba(21, 128, 61, 0.35)); }
+  .b-orange { background: radial-gradient(circle at 30% 30%, rgba(251, 146, 60, 0.45), rgba(194, 65, 12, 0.35)); }
+  .b-purple { background: radial-gradient(circle at 30% 30%, rgba(192, 132, 252, 0.45), rgba(124, 58, 237, 0.35)); }
+  .b-teal   { background: radial-gradient(circle at 30% 30%, rgba(45, 212, 191, 0.45), rgba(15, 118, 110, 0.35)); }
+  .b-red    { background: radial-gradient(circle at 30% 30%, rgba(248, 113, 113, 0.45), rgba(185, 28, 28, 0.35)); }
+  .b-yellow { background: radial-gradient(circle at 30% 30%, rgba(251, 191, 36, 0.5),  rgba(180, 83, 9, 0.35)); }
+
+  /* POP animation - dramatic */
+  @keyframes pop {
+    0%   { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 1; }
+    30%  { transform: translate(var(--tx), var(--ty)) scale(1.4); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+  }
+  .bubble.popped {
+    animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    pointer-events: none;
+  }
+
+  /* Shockwave ring on correct pop */
+  .shockwave {
+    position: absolute;
+    border-radius: 50%;
+    border: 4px solid rgba(74, 222, 128, 0.8);
+    pointer-events: none;
+    z-index: 4;
+    animation: shockwave 0.8s ease-out forwards;
+  }
+  @keyframes shockwave {
+    0%   { transform: scale(0.3); opacity: 1; border-width: 6px; }
+    100% { transform: scale(3); opacity: 0; border-width: 1px; }
+  }
+
+  /* Shake for wrong */
+  @keyframes shakeWrong {
+    0%, 100% { transform: translate(var(--tx), var(--ty)) rotate(0deg); }
+    20% { transform: translate(calc(var(--tx) - 10px), var(--ty)) rotate(-6deg); }
+    40% { transform: translate(calc(var(--tx) + 10px), var(--ty)) rotate(6deg); }
+    60% { transform: translate(calc(var(--tx) - 10px), var(--ty)) rotate(-6deg); }
+    80% { transform: translate(calc(var(--tx) + 10px), var(--ty)) rotate(6deg); }
+  }
+  .bubble.wrong {
+    animation: shakeWrong 0.5s ease-in-out;
+    box-shadow:
+      0 0 40px rgba(248, 113, 113, 0.9),
+      inset 0 -8px 20px rgba(0,0,0,0.2),
+      inset 0 8px 20px rgba(255,255,255,0.3) !important;
+  }
+
+  /* Sparkle particles */
+  .sparkle {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #fde047;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 0 20px #fde047, 0 0 40px #fbbf24;
+  }
+  @keyframes sparkleFly {
+    to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+  }
+
+  /* Overlays */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 24, 68, 0.85);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    text-align: center;
+    padding: 20px;
+  }
+  .overlay h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 4rem;
+    color: white;
+    margin-bottom: 16px;
+    text-shadow: 0 4px 30px rgba(125, 211, 252, 0.8);
+  }
+  .overlay p {
+    font-size: 1.4rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 30px;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+  .stats {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: #fde047;
+    margin-bottom: 20px;
+    text-shadow: 0 0 30px rgba(253, 224, 71, 0.6);
+  }
+  .stats-sub {
+    font-size: 1.3rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 30px;
+  }
+  .btn {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 1.7rem;
+    padding: 18px 48px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #fde047, #f59e0b);
+    color: #0c1844;
+    box-shadow: 0 8px 30px rgba(253, 224, 71, 0.5), inset 0 -4px 0 rgba(0,0,0,0.15);
+    transition: transform 0.15s ease;
+  }
+  .btn:hover  { transform: scale(1.05); }
+  .btn:active { transform: scale(0.96); }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 768px) {
+    .definition-box { font-size: 1.2rem; padding: 12px 20px; }
+    .hud-pill { font-size: 1rem; padding: 8px 14px; }
+    .bubble { font-size: 1rem; }
+    .overlay h1 { font-size: 2.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="flash"></div>
+
+<button id="back-btn" onclick="backToUnits()" title="Back to unit selection">← Units</button>
+
+<div id="game">
+  <div class="hud">
+    <div class="hud-pill">⭐ <span id="score">0</span></div>
+    <div class="definition-box" id="definition">Get ready!</div>
+    <div class="hud-pill"><span id="progress">0</span> / <span id="total">9</span></div>
+  </div>
+  <div class="combo" id="combo"></div>
+</div>
+
+<!-- Start -->
+<div class="overlay" id="start-screen">
+  <h1 id="start-title">🫧 Pop the Word! 🫧</h1>
+  <p>Read the definition.<br>Pop the bubble with the matching word!<br>Watch out — there are lots of bubbles bouncing around!</p>
+  <div class="unit-info">Choose a unit:</div>
+  <div class="unit-tabs" id="start-tabs"></div>
+  <button class="btn" onclick="startGame()">Start</button>
+</div>
+
+<!-- End -->
+<div class="overlay hidden" id="end-screen">
+  <h1>🎉 All popped! 🎉</h1>
+  <div class="stats"><span id="final-score">0</span> / <span id="final-total">0</span></div>
+  <div class="stats-sub">Best combo: <span id="final-combo">0</span> 🔥</div>
+  <p id="end-message">Great work!</p>
+  <div class="unit-info">Play another unit:</div>
+  <div class="unit-tabs" id="end-tabs"></div>
+  <button class="btn" onclick="resetGame()">Play Again</button>
+</div>
+
+<script>
+  // ╔══════════════════════════════════════════════════════════════════╗
+  // ║  ✏️  TO ADD OR EDIT A UNIT:                                      ║
+  // ║                                                                  ║
+  // ║  Each unit goes in the UNITS object below.                       ║
+  // ║  Format: id (used internally), label (shown on tab), vocab list. ║
+  // ║  Keep definitions short — they show inside bouncing bubbles!     ║
+  // ╚══════════════════════════════════════════════════════════════════╝
+
+  const GAME_TITLE = '🫧 Pop the Word! 🫧';
+
+  const UNITS = {
+    unit9: {
+      label: 'Unit 9',
+      vocab: [
+        { word: 'career',              def: 'the type of work someone does for most of their life' },
+        { word: 'challenging',         def: 'difficult — needs a lot of effort and skill' },
+        { word: 'promoted',            def: 'given a higher or more important job at work' },
+        { word: 'blind',               def: 'not able to see' },
+        { word: 'deaf',                def: 'not able to hear' },
+        { word: 'disabled',            def: 'having a condition that makes some things harder' },
+        { word: 'work long hours',     def: 'to spend a lot of time at your job each day' },
+        { word: 'give notice',         def: 'to tell your employer you are leaving the job' },
+        { word: 'obsolete',            def: 'no longer useful because something newer exists' },
+        { word: 'replaced',            def: 'taken over by something or someone new' },
+        { word: 'raise money',         def: 'to collect money to help someone or something' },
+        { word: 'a good cause',        def: 'something worth doing because it helps others' },
+        { word: 'sponsored',           def: 'supported by people who give money for a challenge' },
+        { word: 'sponge',              def: 'a soft object that soaks up water for cleaning' },
+        { word: 'accept an invitation',def: 'to say yes when someone invites you to an event' },
+        { word: 'refuse an invitation',def: 'to say no when someone invites you to an event' }
+      ]
+    },
+    unit10: {
+      label: 'Unit 10',
+      vocab: [
+        { word: 'annual',           def: 'happening once every year' },
+        { word: 'overcome',         def: 'to succeed in dealing with a problem' },
+        { word: 'popular',          def: 'liked or enjoyed by a lot of people' },
+        { word: 'brave',            def: 'willing to do something dangerous or difficult' },
+        { word: 'illness',          def: 'a disease that makes your body unwell' },
+        { word: 'impact',           def: 'a strong effect that something has' },
+        { word: 'passionate',       def: 'having very strong feelings for something' },
+        { word: 'lack of',          def: 'not having enough of something' },
+        { word: 'reduce the risk',  def: 'to make something bad less likely to happen' },
+        { word: 'immune system',    def: 'the parts of your body that fight illness' },
+        { word: 'valid',            def: 'based on good reasoning — acceptable' },
+        { word: 'suffer from',      def: 'to be affected by an illness over time' },
+        { word: 'exhausted',        def: 'extremely tired with no energy left' },
+        { word: 'strengthen',       def: 'to make something more strong' },
+        { word: 'training',         def: 'learning the skills needed for a job' },
+        { word: 'competitive',      def: 'having a strong desire to win' },
+        { word: 'apprentice',       def: 'someone who works to learn a trade or skill' }
+      ]
+    },
+    unit11: {
+      label: 'Unit 11',
+      vocab: [
+        { word: 'hilarious',     def: 'extremely funny — makes people laugh a lot' },
+        { word: 'make fun of',   def: 'to laugh at someone in an unkind way' },
+        { word: 'hailstorm',     def: 'a storm where balls of ice fall from the sky' },
+        { word: 'blizzard',      def: 'a very strong snowstorm with powerful winds' },
+        { word: 'journalist',    def: 'someone whose job is to write news stories' },
+        { word: 'persuade',      def: 'to make someone agree by giving good reasons' },
+        { word: 'encourage',     def: 'to give someone confidence or support' },
+        { word: 'warn',          def: 'to tell someone about a danger so they avoid it' },
+        { word: 'remind',        def: 'to help someone remember something' },
+        { word: 'allow',         def: 'to let someone do something' },
+        { word: 'expect',        def: 'to think that something will happen' },
+        { word: 'expert',        def: 'a person who knows a lot about a subject' },
+        { word: 'crop',          def: 'a plant that farmers grow for food' },
+        { word: 'candidate',     def: 'a person trying to get a job or position' }
+      ]
+    },
+    unit12: {
+      label: 'Unit 12',
+      vocab: [
+        { word: 'scold',        def: 'to speak angrily to someone who did something wrong' },
+        { word: 'illegal',      def: 'not allowed by the law' },
+        { word: 'crime',        def: 'something someone does that is against the law' },
+        { word: 'encourage',    def: 'to give someone confidence or support to do something' },
+        { word: 'behave well',  def: 'to act in a good, polite way' },
+        { word: 'expected to',  def: 'something people think you should do' },
+        { word: 'warn',         def: 'to tell someone about a danger so they can be careful' },
+        { word: 'a rebel',      def: 'a person who refuses to follow the rules' },
+        { word: 'nasty',        def: 'very unkind or unpleasant' }
+      ]
+    }
+  };
+
+  // Which unit is selected — change here to set the default
+  let currentUnitId = 'unit12';
+  let VOCAB = UNITS[currentUnitId].vocab;
+
+  const COLOURS = ['b-pink','b-blue','b-green','b-orange','b-purple','b-teal','b-red','b-yellow'];
+  const BUBBLES_ON_SCREEN = 8;  // 1 correct + 7 distractors
+
+  // ─── State ───────────────────────────────────────────────────────
+  let queue = [];
+  let current = null;
+  let bubbles = [];
+  let score = 0;
+  let progress = 0;
+  let combo = 0;
+  let maxCombo = 0;
+  let animationId = null;
+  let locked = false;
+
+  const gameEl       = document.getElementById('game');
+  const flashEl      = document.getElementById('flash');
+  const defEl        = document.getElementById('definition');
+  const scoreEl      = document.getElementById('score');
+  const progressEl   = document.getElementById('progress');
+  const totalEl      = document.getElementById('total');
+  const comboEl      = document.getElementById('combo');
+  const startScreen  = document.getElementById('start-screen');
+  const endScreen    = document.getElementById('end-screen');
+  const finalScoreEl = document.getElementById('final-score');
+  const finalComboEl = document.getElementById('final-combo');
+  const endMessageEl = document.getElementById('end-message');
+
+  document.getElementById('start-title').textContent = GAME_TITLE;
+  document.title = GAME_TITLE.replace(/[🫧 ]/g, ' ').trim() + ' — Bubble Pop';
+
+  // ─── Unit tabs: build buttons on both start and end screens ──────
+  function buildTabs() {
+    ['start-tabs', 'end-tabs'].forEach(function(containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      Object.keys(UNITS).forEach(function(id) {
+        const btn = document.createElement('button');
+        btn.className = 'unit-tab' + (id === currentUnitId ? ' active' : '');
+        btn.textContent = UNITS[id].label;
+        btn.dataset.unitId = id;
+        btn.onclick = function() { selectUnit(id); };
+        container.appendChild(btn);
+      });
+    });
+  }
+
+  function selectUnit(id) {
+    currentUnitId = id;
+    VOCAB = UNITS[id].vocab;
+    totalEl.textContent = VOCAB.length;
+    document.getElementById('final-total').textContent = VOCAB.length;
+    // Refresh active states on all tabs
+    document.querySelectorAll('.unit-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.unitId === id);
+    });
+  }
+
+  buildTabs();
+  totalEl.textContent = VOCAB.length;
+  document.getElementById('final-total').textContent = VOCAB.length;
+
+  function shuffle(a) {
+    a = [...a];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ─── Background rising bubbles (decorative) ──────────────────────
+  function spawnBgBubble() {
+    const b = document.createElement('div');
+    b.className = 'bg-bubble';
+    const size = 10 + Math.random() * 30;
+    b.style.width  = size + 'px';
+    b.style.height = size + 'px';
+    b.style.left   = Math.random() * 100 + 'vw';
+    b.style.setProperty('--drift', (Math.random() * 100 - 50) + 'px');
+    b.style.animationDuration = (6 + Math.random() * 8) + 's';
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), 14000);
+  }
+  setInterval(spawnBgBubble, 600);
+
+  // ─── Game flow ───────────────────────────────────────────────────
+  function startGame() {
+    startScreen.classList.add('hidden');
+    endScreen.classList.add('hidden');
+    document.getElementById('back-btn').classList.add('visible');
+    score = 0;
+    progress = 0;
+    combo = 0;
+    maxCombo = 0;
+    scoreEl.textContent = '0';
+    progressEl.textContent = '0';
+    queue = shuffle(VOCAB);
+    nextRound();
+  }
+
+  function backToUnits() {
+    // Stop the game and return to the unit-selection start screen
+    if (animationId) cancelAnimationFrame(animationId);
+    clearBubbles();
+    document.getElementById('back-btn').classList.remove('visible');
+    endScreen.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+    defEl.textContent = 'Get ready!';
+    comboEl.classList.remove('visible');
+  }
+
+  function resetGame() { startGame(); }
+
+  function nextRound() {
+    clearBubbles();
+    if (queue.length === 0) { endGame(); return; }
+    current = queue.shift();
+    defEl.textContent = current.def;
+
+    // Build choices: 1 correct + 7 distractors (other words from the list, repeating if needed)
+    const others = shuffle(VOCAB.filter(v => v.word !== current.word));
+    const distractors = [];
+    while (distractors.length < BUBBLES_ON_SCREEN - 1) {
+      distractors.push(others[distractors.length % others.length]);
+    }
+    const choices = shuffle([current, ...distractors]);
+
+    const colourPool = [...COLOURS];
+    while (colourPool.length < choices.length) colourPool.push(...COLOURS);
+
+    choices.forEach((item, idx) => spawnBubble(item, colourPool[idx], idx));
+    locked = false;
+    startAnimation();
+  }
+
+  // ─── Bubble spawning ─────────────────────────────────────────────
+  function spawnBubble(item, colourClass, index) {
+    const el = document.createElement('div');
+    el.className = `bubble ${colourClass}`;
+    el.textContent = item.word;
+
+    // Size based on word length so text fits inside the circle
+    const baseSize = 135;
+    const lenBonus = Math.max(0, item.word.length - 6) * 9;
+    const size = Math.min(200, baseSize + lenBonus);
+    el.style.width  = size + 'px';
+    el.style.height = size + 'px';
+
+    gameEl.appendChild(el);
+
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const topPad = 150;
+    const padding = 20;
+
+    // Place in a rough grid then jitter, to avoid overlaps at spawn
+    const cols = 4;
+    const col = index % cols;
+    const row = Math.floor(index / cols);
+    const cellW = (W - padding * 2) / cols;
+    const cellH = (H - topPad - padding) / Math.ceil(BUBBLES_ON_SCREEN / cols);
+    const x = padding + col * cellW + Math.random() * Math.max(0, cellW - size);
+    const y = topPad + row * cellH + Math.random() * Math.max(0, cellH - size);
+
+    const speed = 0.8 + Math.random() * 0.6;
+    const angle = Math.random() * Math.PI * 2;
+
+    const bubble = {
+      el, item, size,
+      x, y,
+      r: size / 2,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed
+    };
+
+    el.style.transform = `translate(${x}px, ${y}px)`;
+    el.style.setProperty('--tx', x + 'px');
+    el.style.setProperty('--ty', y + 'px');
+    el.addEventListener('click', () => handleClick(bubble));
+    bubbles.push(bubble);
+  }
+
+  function clearBubbles() {
+    bubbles.forEach(b => b.el.remove());
+    bubbles = [];
+  }
+
+  // ─── Physics: drift + bubble-to-bubble collisions ────────────────
+  function startAnimation() {
+    if (animationId) cancelAnimationFrame(animationId);
+
+    function loop() {
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      const topBound = 130;
+
+      // Move
+      bubbles.forEach(b => {
+        b.x += b.vx;
+        b.y += b.vy;
+
+        // Wall bounces
+        if (b.x <= 0)            { b.x = 0;          b.vx = Math.abs(b.vx); }
+        if (b.x + b.size >= W)   { b.x = W - b.size; b.vx = -Math.abs(b.vx); }
+        if (b.y <= topBound)     { b.y = topBound;   b.vy = Math.abs(b.vy); }
+        if (b.y + b.size >= H)   { b.y = H - b.size; b.vy = -Math.abs(b.vy); }
+      });
+
+      // Bubble-to-bubble collisions (simple equal-mass elastic)
+      for (let i = 0; i < bubbles.length; i++) {
+        for (let j = i + 1; j < bubbles.length; j++) {
+          const a = bubbles[i], c = bubbles[j];
+          const ax = a.x + a.r, ay = a.y + a.r;
+          const cx = c.x + c.r, cy = c.y + c.r;
+          const dx = cx - ax, dy = cy - ay;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          const minDist = a.r + c.r;
+          if (dist > 0 && dist < minDist) {
+            // Separate
+            const overlap = (minDist - dist) / 2;
+            const nx = dx / dist, ny = dy / dist;
+            a.x -= nx * overlap;
+            a.y -= ny * overlap;
+            c.x += nx * overlap;
+            c.y += ny * overlap;
+            // Elastic collision response (swap velocity components along normal)
+            const va = a.vx * nx + a.vy * ny;
+            const vc = c.vx * nx + c.vy * ny;
+            a.vx += (vc - va) * nx;
+            a.vy += (vc - va) * ny;
+            c.vx += (va - vc) * nx;
+            c.vy += (va - vc) * ny;
+          }
+        }
+      }
+
+      // Render
+      bubbles.forEach(b => {
+        b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
+        b.el.style.setProperty('--tx', b.x + 'px');
+        b.el.style.setProperty('--ty', b.y + 'px');
+      });
+
+      animationId = requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  // ─── Click handling ──────────────────────────────────────────────
+  function handleClick(bubble) {
+    if (locked) return;
+    if (bubble.item.word === current.word) {
+      locked = true;
+      // CORRECT
+      score++;
+      progress++;
+      combo++;
+      if (combo > maxCombo) maxCombo = combo;
+      scoreEl.textContent = score;
+      progressEl.textContent = progress;
+
+      // Combo display from 2+
+      if (combo >= 2) {
+        comboEl.textContent = `${combo}× COMBO! 🔥`;
+        comboEl.classList.add('show');
+        setTimeout(() => comboEl.classList.remove('show'), 1200);
+      }
+
+      // Screen flash
+      flashEl.classList.add('on');
+      setTimeout(() => flashEl.classList.remove('on'), 400);
+
+      // Shockwave at bubble center
+      const cx = bubble.x + bubble.r;
+      const cy = bubble.y + bubble.r;
+      spawnShockwave(cx, cy);
+      spawnSparkles(cx, cy);
+
+      bubble.el.classList.add('popped');
+
+      // Pop the others too (no sparkles) to clear the screen
+      bubbles.forEach(b => {
+        if (b !== bubble) {
+          b.el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          b.el.style.opacity = '0';
+        }
+      });
+      setTimeout(nextRound, 800);
+    } else {
+      // WRONG - no lock, they can try again
+      combo = 0;
+      bubble.el.classList.add('wrong');
+      setTimeout(() => bubble.el.classList.remove('wrong'), 500);
+    }
+  }
+
+  function spawnShockwave(cx, cy) {
+    const ring = document.createElement('div');
+    ring.className = 'shockwave';
+    const size = 100;
+    ring.style.width  = size + 'px';
+    ring.style.height = size + 'px';
+    ring.style.left = (cx - size / 2) + 'px';
+    ring.style.top  = (cy - size / 2) + 'px';
+    gameEl.appendChild(ring);
+    setTimeout(() => ring.remove(), 900);
+  }
+
+  function spawnSparkles(cx, cy) {
+    for (let i = 0; i < 18; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.style.left = cx + 'px';
+      s.style.top  = cy + 'px';
+      const angle = (Math.PI * 2 / 18) * i + Math.random() * 0.3;
+      const dist = 80 + Math.random() * 60;
+      s.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      s.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+      s.style.animation = 'sparkleFly 0.8s ease-out forwards';
+      gameEl.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+
+  // ─── End ─────────────────────────────────────────────────────────
+  function endGame() {
+    if (animationId) cancelAnimationFrame(animationId);
+    document.getElementById('back-btn').classList.remove('visible');
+    finalScoreEl.textContent = score;
+    finalComboEl.textContent = maxCombo;
+    const total = VOCAB.length;
+    let msg = '';
+    if      (maxCombo === total)       msg = '🌟 PERFECT RUN! Unstoppable!';
+    else if (score === total)          msg = '👏 All correct — great job!';
+    else if (score >= total * 0.75)    msg = '😊 Well done!';
+    else                                msg = '💪 Keep practicing — try again!';
+    endMessageEl.textContent = msg;
+    endScreen.classList.remove('hidden');
+  }
+
+  // Resize handling
+  window.addEventListener('resize', () => {
+    bubbles.forEach(b => {
+      if (b.x + b.size > window.innerWidth)  b.x = window.innerWidth  - b.size;
+      if (b.y + b.size > window.innerHeight) b.y = window.innerHeight - b.size;
+    });
+  });
+</script>
+</body>
+</html>
