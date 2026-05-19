@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE 0510 – Exercises 1, 2, 3 & 4 | May/June 2025 (Core)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1e2a5e; --ink-deep: #182347; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: var(--ink-deep); border-bottom: 2px solid var(--gold); }
+  .tab-btn {
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #9aa3c4; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #d6dcf0; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .article-byline { font-family: 'Source Serif 4', serif; font-style: italic; font-size: 13px; text-align: center; color: var(--muted); margin-bottom: 18px; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+  .section-letter { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); margin: 16px 0 6px; }
+  .section-letter:first-child { margin-top: 0; }
+
+  /* Numbered line layout for Ex 4 */
+  .lined-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; }
+  .lined-body .line { display: flex; gap: 12px; }
+  .lined-body .line-num { color: #b8a890; font-size: 11px; min-width: 22px; text-align: right; padding-top: 4px; user-select: none; font-family: 'DM Sans', sans-serif; }
+  .lined-body .line-text { flex: 1; text-align: justify; }
+  .lined-body .para-spacer { height: 10px; }
+  .highlight-word { background: #fff3b8; padding: 0 3px; border-radius: 3px; font-weight: 600; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.sc-correct { border-color: var(--self-yes); background: #e8f5e9; }
+  .question-item.sc-wrong { border-color: var(--self-no); background: #fdecea; }
+  .question-item.sc-half { border-color: var(--self-partial); background: #fffde7; }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+  .inputs-row { display: flex; flex-direction: column; gap: 7px; }
+
+  .abc-row { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .abc-opt {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    border: 1.5px solid var(--border); border-radius: 5px; background: white; cursor: pointer;
+    font-size: 13px; transition: all 0.15s;
+  }
+  .abc-opt:hover { border-color: var(--ink); }
+  .abc-opt.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abc-opt.correct-answer { background: #4caf50; color: white; border-color: #4caf50; }
+  .abc-opt.wrong-answer { background: #e53935; color: white; border-color: #e53935; }
+  .abc-letter { font-weight: 700; min-width: 18px; }
+  .abc-opt.disabled { cursor: default; }
+
+  .abcd-row { display: flex; gap: 8px; margin-top: 2px; flex-wrap: wrap; }
+  .abcd-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .abcd-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .abcd-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abcd-btn:disabled { cursor: default; }
+  .abcd-btn.correct-answer { background: #4caf50; color: white; border-color: #4caf50; }
+  .abcd-btn.wrong-answer { background: #e53935; color: white; border-color: #e53935; }
+
+  input[type="text"] {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 4px;
+    padding: 8px 11px; font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+    color: var(--ink); background: white; transition: border-color 0.2s; outline: none;
+  }
+  input[type="text"]:focus { border-color: var(--ink); }
+  input[type="text"]:disabled { background: #f0ece6; cursor: default; color: var(--muted); }
+
+  .answer-reveal-box {
+    display: none; margin-top: 10px; padding: 10px 13px; border-radius: 5px;
+    background: #fffbea; border: 1.5px solid #e8c84a; font-size: 13px; line-height: 1.6;
+  }
+  .answer-reveal-box.show { display: block; }
+  .answer-label { font-weight: 700; color: #7a5c00; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .answer-text { font-weight: 600; color: #1a6e2a; font-size: 14px; }
+  .answer-also { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .answer-list { margin: 4px 0 0 0; padding-left: 20px; }
+  .answer-list li { color: #1a6e2a; font-weight: 600; font-size: 13.5px; margin-bottom: 3px; }
+
+  .self-check-row { display: none; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .self-check-row.show { display: flex; }
+  .self-check-label { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .sc-btn {
+    padding: 5px 14px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
+    border: 2px solid; cursor: pointer; transition: all 0.15s; background: white;
+  }
+  .sc-btn:disabled { cursor: default; opacity: 0.6; }
+  .sc-yes { border-color: var(--self-yes); color: var(--self-yes); }
+  .sc-yes:hover:not(:disabled), .sc-yes.active { background: var(--self-yes); color: white; }
+  .sc-no { border-color: var(--self-no); color: var(--self-no); }
+  .sc-no:hover:not(:disabled), .sc-no.active { background: var(--self-no); color: white; }
+  .sc-partial { border-color: var(--self-partial); color: var(--self-partial); }
+  .sc-partial:hover:not(:disabled), .sc-partial.active { background: var(--self-partial); color: white; }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: var(--ink); }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .input-with-check { display: flex; align-items: center; gap: 8px; }
+  .inline-check { display: none; width: 18px; height: 18px; background: #4caf50; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0; }
+  .inline-check.show { display: flex; }
+
+  .btn-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  .notes-heading { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--ink); margin: 18px 0 8px; border-bottom: 1.5px solid var(--border); padding-bottom: 6px; }
+  .notes-heading:first-of-type { margin-top: 0; }
+  .example-note { font-size: 12px; color: var(--muted); font-style: italic; margin-bottom: 8px; }
+
+  .format-badge { display: inline-block; background: var(--gold); color: var(--ink); font-size: 9px; font-weight: 700; letter-spacing: 1.5px; padding: 2px 7px; border-radius: 3px; margin-left: 6px; text-transform: uppercase; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IGCSE 0510/11 · Core · May/June 2025 <span class="format-badge">New Format</span></span>
+    <h1>Parkour, Seals, Atlantic Challenge &amp; Prickly Pears</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 30</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('ex1')">Exercise 1</button>
+  <button class="tab-btn" onclick="showTab('ex2')">Exercise 2</button>
+  <button class="tab-btn" onclick="showTab('ex3')">Exercise 3</button>
+  <button class="tab-btn" onclick="showTab('ex4')">Exercise 4</button>
+</div>
+
+<!-- ════════════════════ EXERCISE 1 ════════════════════ -->
+<div class="exercise active" id="ex1">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Exercise 1</div>
+    <div class="article-box">
+      <div class="article-title">Parkour</div>
+      <div class="article-byline">Journalist Sebastian Kyte writes about his experience</div>
+      <div class="article-body">
+        <p>Have you ever heard of parkour? The aim is to move from one point to another in an urban environment, without any equipment, and in the quickest and most efficient way. This usually involves running, jumping and climbing. I'd seen videos of people doing this in cities – even jumping from one roof to another – and always thought it looked amazing. So when I heard there was a new beginners' course at my gym, I signed up immediately. The advert said it was particularly good for improving fitness, but what I actually found is that I had great fun.</p>
+        <p>Before the first session, I decided to find out more about parkour. The name comes from the French word 'parcours', which can be translated as 'route' or 'journey', but it's also often known as freerunning. A French man, David Belle, is considered to be the person who started parkour in the 1990s, although it's based on activities and military training that have been used for centuries in other countries. David and eight friends developed a system for training, using a range of movements and challenges. They began calling themselves Yamakasi, which comes from a phrase in Lingala, a west-African language, meaning 'strong in one's person' or 'strong man, strong spirit'. I certainly felt more confident after a few weeks, although I can't claim that it made me stronger.</p>
+        <p>There were seven of us in my group, ranging in age from 16 to 57. Jeff, our trainer, was an incredibly calm person, and moved like a dancer. When I asked him if that was what he'd done before, he said he'd actually been a circus performer. He explained we would spend the first three sessions in the gym, learning various movements, before trying them outdoors. As the weeks passed, I became more aware of safety, which was an aim of the course. We practised swinging from bars, which looks easy but is the opposite, and did lots of forward and backward rolls, which are useful when you land after a jump. Before either of these, we spent some time running on both hands and feet – apparently having four points on the ground makes you more stable, although most of us couldn't stop laughing while we were doing it.</p>
+        <p>In the fourth week, we went to the local park to try some moves. First, we watched Jeff calmly running and jumping between large blocks of stone, and over a tall metal fence. Fortunately, we only practised on a park bench, which was much lower and easier to manage. I noticed my ability to balance was starting to improve. I'm nowhere near Jeff's standard yet, but I'm going to keep trying!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 1–6 · 8 marks</div>
+    <div class="ex-intro">Type your answer for each question, then click <strong>Reveal Answers</strong>. Use the self-check buttons to score yourself honestly.</div>
+    <div class="result-bar" id="ex1-result">Exercise 1 complete — Score: <span id="ex1-score">0</span> / 8</div>
+    <div class="nudge-banner" id="ex1-nudge"><span class="nudge-icon">✏️</span> Please answer all questions before revealing.</div>
+
+    <div class="question-item" id="ex1-q1-item">
+      <div class="q-header"><span class="q-num">1</span><span class="q-text">What is another term for parkour?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q1"><span class="inline-check" id="ex1-q1-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q1-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">freerunning</div></div>
+      <div class="self-check-row" id="ex1-q1-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q1','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q1','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q2-item">
+      <div class="q-header"><span class="q-num">2</span><span class="q-text">What was the name of the group of friends who started parkour?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q2"><span class="inline-check" id="ex1-q2-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q2-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">Yamakasi</div></div>
+      <div class="self-check-row" id="ex1-q2-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q2','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q2','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q3-item">
+      <div class="q-header"><span class="q-num">3</span><span class="q-text">What was the group instructor's previous job?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q3"><span class="inline-check" id="ex1-q3-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q3-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">circus performer</div></div>
+      <div class="self-check-row" id="ex1-q3-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q3','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q3','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q4-item">
+      <div class="q-header"><span class="q-num">4</span><span class="q-text">Which movement did Sebastian try first?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q4"><span class="inline-check" id="ex1-q4-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q4-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">running on hands and feet</div></div>
+      <div class="self-check-row" id="ex1-q4-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q4','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q4','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q5-item">
+      <div class="q-header"><span class="q-num">5</span><span class="q-text">Which object did the group use to practise parkour in the park?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q5"><span class="inline-check" id="ex1-q5-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q5-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">bench</div></div>
+      <div class="self-check-row" id="ex1-q5-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q5','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q5','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q6-item">
+      <div class="q-header"><span class="q-num">6</span><span class="q-text">How did Sebastian say he benefited from doing parkour? Give <strong>three</strong> details.</span><span class="q-marks">3</span></div>
+      <div class="inputs-row">
+        <div class="input-with-check"><input type="text" id="ex1-q6a" placeholder="Detail 1"><span class="inline-check" id="ex1-q6a-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex1-q6b" placeholder="Detail 2"><span class="inline-check" id="ex1-q6b-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex1-q6c" placeholder="Detail 3"><span class="inline-check" id="ex1-q6c-check">✓</span></div>
+      </div>
+      <div class="answer-reveal-box" id="ex1-q6-reveal">
+        <div class="answer-label">Model Answers (any 3 of 4)</div>
+        <ul class="answer-list">
+          <li>fun</li>
+          <li>more confident</li>
+          <li>more aware of safety</li>
+          <li>balance was starting to improve / better balance</li>
+        </ul>
+      </div>
+      <div class="self-check-row" id="ex1-q6-sc"><span class="self-check-label">How many correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q6','yes',3)">All 3 (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx1('q6','partial',2)">2 right (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx1('q6','partial',1)">1 right (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q6','no',0)">None (0)</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex1-submit" onclick="submitEx1()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex1')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ EXERCISE 2 ════════════════════ -->
+<div class="exercise" id="ex2">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Exercise 2</div>
+    <div class="article-box">
+      <div class="article-title">Young seals in New Zealand</div>
+      <div class="article-body">
+        <div class="section-letter">A</div>
+        <p>In New Zealand, the seal breeding season lasts from May until December. It's a time when many young seals are born, and some then leave the groups that they have been raised in, and start to explore the area around them. They are young, they lack experience, and it's in their nature to explore. When this starts happening, the government actually releases an official public notice that seal season has begun, warning people that they might encounter higher numbers of young seals in human-dominated spaces. Busy roads are quite often affected: one year, a young seal blocked traffic on a highway at rush hour, as parents were trying to take their children to a local school. It's not uncommon to see seals relaxing in such places, and it's also not surprising that people are often concerned if they come across a young seal there.</p>
+
+        <div class="section-letter">B</div>
+        <p>Local people refer to this time of year as the seal silly season, because of all the unusual and unexpected places that seals have been known to turn up in. One young seal broke into a house, and spent several hours on the sofa before it was discovered and led back to the sea. According to one wildlife specialist, this sort of behaviour is similar to that of a teenager away from home – they don't quite know what to do with themselves, so they go exploring. For example, in 2021, a seal spent more than a week occupying the outdoor film set which had been used to make the well-known <em>Lord of the Rings</em> series. Tourists visiting the film set were entertained by the seal playing in the lake, and tour guides quickly made it part of their script.</p>
+
+        <div class="section-letter">C</div>
+        <p>Each year, scientists from the government's Department of Conservation warn people that young seals can behave strangely when they are in an unfamiliar setting. They might appear to be lost or having difficulty moving, but they are usually able to find their way back to the sea. Therefore, when people spot them, they should be left alone unless they are in immediate danger. Fortunately, the majority of seals will remain on or near the beaches where they were born, but some are much bolder. Even though movement on land might look awkward, seals can actually travel long distances – in fact, some have even been known to end up more than eighty kilometres away from the shore. The middle of a road is somewhere that frequently attracts seals, as its black surface absorbs heat during the day, so it becomes a nice warm place for them to rest.</p>
+
+        <div class="section-letter">D</div>
+        <p>Advisers to the government report that the sight of so many seals each year is welcome. The species was in decline until the 1940s because they were hunted, mostly for their fur. These days, seals are legally protected in New Zealand, and the population is steadily increasing. The issue is that the human population has also increased, so seals are coming into contact with people much more frequently. Seals have been spotted in people's gardens, on golf courses, and have even approached a football pitch while a match was in progress. And even though seal season takes place every year, and people have become familiar with the event, the Department of Conservation typically receives an enormous number of calls about seals turning up in odd places. However, the majority of these seals find their own way back to the beaches where they came from.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Question 7 (a–i) · 9 marks</div>
+    <div class="ex-intro">For each statement, select the correct section <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.</div>
+    <div class="result-bar" id="ex2-result">Exercise 2 complete — Score: <span id="ex2-score">0</span> / 9</div>
+    <div class="nudge-banner" id="ex2-nudge"><span class="nudge-icon">✏️</span> Please answer all questions before submitting.</div>
+
+    <div id="ex2-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex2-submit" onclick="submitEx2()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex2')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ EXERCISE 3 ════════════════════ -->
+<div class="exercise" id="ex3">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Exercise 3</div>
+    <div class="article-box">
+      <div class="article-title">Atlantic Challenge</div>
+      <div class="article-body">
+        <p>Are you interested in extreme sports? Here's an example for you – the Atlantic Challenge. This involves crossing the Atlantic Ocean in a rowing boat, and you can choose to do it solo, or in a small team. It has been described as the world's toughest rowing race.</p>
+        <p>I first came across this event when I saw a newspaper report about a 23-year-old woman from the UK who set a new record in 2023 for completing the race solo. She rowed for 59 days, 16 hours and 36 minutes, beating the previous record by two hours and 38 minutes. But then I discovered that she isn't the youngest person to take part in the race – the minimum age is 18, and I read about at least two teenagers who have successfully completed the challenge.</p>
+        <p>The race begins in La Gomera, in the Canary Islands, in December each year. Meeting the other competitors before setting off is reported to be one of the more memorable aspects of the race – everyone has the same objective, which is preparing to row 3000 miles across the Atlantic to the finishing point in Antigua. Personally, I can't imagine being able to do this, not only due to the extreme physical challenge, but because of the mental challenge too. Successful participants admit that it is really tough, and during the race, you can't accept any kind of support, but many have experiences that more than make up for this – seeing whales swimming beside the boat is one example. Most participants are extremely well prepared, though, with specially designed boats to travel in, and they have all sorts of technology on board. Even so, if something goes wrong, you are responsible for carrying out repairs yourself. Of course, if that isn't possible, you will need to be rescued, so having insurance is an essential requirement.</p>
+        <p>When I read about the race, the fastest team to have crossed the Atlantic was a four-man team, who finished in just over 29 days. But no matter how long it takes, spotting land in the distance towards the end of the race is something that gives all participants a huge boost. By that point, some might be running low on supplies of food – there is limited space on board, and another regulation is to take everything you need for the entire journey. There isn't much time to cook and clean when the daily routine consists of three main tasks – rowing, eating and sleeping. Competitors tend to row for two hours at a time, then sleep for two hours, and they try to keep this up twenty-four hours a day. If that doesn't sound appealing, then rowing into the sunset might tempt you – that's what several competitors have said was truly unforgettable. I have to admit that it's something I'm very unlikely to experience. But what about you?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 8–9 · 7 marks</div>
+    <div class="ex-intro">Imagine you are giving a talk to your classmates about the Atlantic Challenge. Use words from the article to write short notes under each heading.</div>
+    <div class="result-bar" id="ex3-result">Exercise 3 complete — Score: <span id="ex3-score">0</span> / 7</div>
+    <div class="nudge-banner" id="ex3-nudge"><span class="nudge-icon">✏️</span> Please fill in all bullets before revealing.</div>
+
+    <div class="question-item" id="ex3-q8-item">
+      <div class="q-header"><span class="q-num">8</span><span class="q-text"><strong>Rules of the Atlantic Challenge</strong> — give 4 details</span><span class="q-marks">4</span></div>
+      <div class="inputs-row">
+        <div class="input-with-check"><input type="text" id="ex3-q8a" placeholder="Rule 1"><span class="inline-check" id="ex3-q8a-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q8b" placeholder="Rule 2"><span class="inline-check" id="ex3-q8b-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q8c" placeholder="Rule 3"><span class="inline-check" id="ex3-q8c-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q8d" placeholder="Rule 4"><span class="inline-check" id="ex3-q8d-check">✓</span></div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q8-reveal">
+        <div class="answer-label">Model Answers (any 4 of 5)</div>
+        <ul class="answer-list">
+          <li>minimum age is 18</li>
+          <li>can't accept support (if something goes wrong)</li>
+          <li>responsible for carrying out repairs yourself</li>
+          <li>having insurance</li>
+          <li>take everything you need</li>
+        </ul>
+      </div>
+      <div class="self-check-row" id="ex3-q8-sc"><span class="self-check-label">How many correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q8','yes',4)">All 4 (4)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q8','partial',3)">3 right (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q8','partial',2)">2 right (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q8','partial',1)">1 right (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q8','no',0)">None (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex3-q9-item">
+      <div class="q-header"><span class="q-num">9</span><span class="q-text"><strong>Highlights of the Atlantic Challenge</strong> — give 3 details</span><span class="q-marks">3</span></div>
+      <div class="inputs-row">
+        <div class="input-with-check"><input type="text" id="ex3-q9a" placeholder="Highlight 1"><span class="inline-check" id="ex3-q9a-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q9b" placeholder="Highlight 2"><span class="inline-check" id="ex3-q9b-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q9c" placeholder="Highlight 3"><span class="inline-check" id="ex3-q9c-check">✓</span></div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q9-reveal">
+        <div class="answer-label">Model Answers (any 3 of 4)</div>
+        <ul class="answer-list">
+          <li>meeting the other competitors</li>
+          <li>seeing whales / whales beside the boat</li>
+          <li>spotting land in the distance / towards the end of the race</li>
+          <li>rowing into sunset</li>
+        </ul>
+      </div>
+      <div class="self-check-row" id="ex3-q9-sc"><span class="self-check-label">How many correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q9','yes',3)">All 3 (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q9','partial',2)">2 right (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q9','partial',1)">1 right (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q9','no',0)">None (0)</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex3-submit" onclick="submitEx3()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex3')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ EXERCISE 4 ════════════════════ -->
+<div class="exercise" id="ex4">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Exercise 4</div>
+    <div class="article-box">
+      <div class="article-title">Prickly pears growing in Switzerland</div>
+      <div class="article-byline">by Lia Collins</div>
+      <div class="article-body" id="ex4-article"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 10–15 · 6 marks</div>
+    <div class="ex-intro">Choose the correct answer <strong>A</strong>, <strong>B</strong> or <strong>C</strong> for each question.</div>
+    <div class="result-bar" id="ex4-result">Exercise 4 complete — Score: <span id="ex4-score">0</span> / 6</div>
+    <div class="nudge-banner" id="ex4-nudge"><span class="nudge-icon">✏️</span> Please answer all questions before submitting.</div>
+
+    <div id="ex4-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex4-submit" onclick="submitEx4()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex4')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────── TAB SWITCHING ───────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─────────── SCORE TRACKING ───────────
+const scores = { ex1:{}, ex2:{}, ex3:{}, ex4:{} };
+function sum(o){ return Object.values(o).reduce((a,b)=>a+b,0); }
+function updateScores() {
+  const e1=sum(scores.ex1), e2=sum(scores.ex2), e3=sum(scores.ex3), e4=sum(scores.ex4);
+  document.getElementById('ex1-score').textContent = e1;
+  document.getElementById('ex2-score').textContent = e2;
+  document.getElementById('ex3-score').textContent = e3;
+  document.getElementById('ex4-score').textContent = e4;
+  document.getElementById('total-score').textContent = e1+e2+e3+e4;
+}
+
+// ─────────── EXERCISE 1 — reveal + self-check ───────────
+function submitEx1() {
+  const ids = ['ex1-q1','ex1-q2','ex1-q3','ex1-q4','ex1-q5','ex1-q6a','ex1-q6b','ex1-q6c'];
+  if (!ids.every(id => document.getElementById(id).value.trim())) {
+    const nb = document.getElementById('ex1-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ids.forEach(id => {
+    document.getElementById(id).disabled = true;
+    const chk = document.getElementById(id + '-check');
+    if (chk) chk.classList.add('show');
+  });
+  ['q1','q2','q3','q4','q5','q6'].forEach(q => {
+    document.getElementById('ex1-'+q+'-reveal').classList.add('show');
+    document.getElementById('ex1-'+q+'-sc').classList.add('show');
+  });
+  document.getElementById('ex1-result').classList.add('show');
+  document.getElementById('ex1-submit').disabled = true;
+}
+
+function selfCheckEx1(q, result, pts) {
+  scores.ex1[q] = pts;
+  const item = document.getElementById('ex1-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  const maxPts = (q === 'q6') ? 3 : 1;
+  if (pts === maxPts) item.classList.add('sc-correct');
+  else if (pts === 0) item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById('ex1-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ─────────── EXERCISE 2 — auto-mark A/B/C/D ───────────
+const ex2Questions = [
+  { id:'qa', text:'an informal name for an annual event', correct:'B' },
+  { id:'qb', text:'why one type of location is particularly appealing to seals', correct:'C' },
+  { id:'qc', text:'several reasons why young seals tend to wander', correct:'A' },
+  { id:'qd', text:'a comparison between young seals and young people', correct:'B' },
+  { id:'qe', text:'the suggestion that more people report seeing seals than necessary', correct:'D' },
+  { id:'qf', text:'how people tend to feel when they see a young seal away from the beach', correct:'A' },
+  { id:'qg', text:'advice about what to do with a young seal on land', correct:'C' },
+  { id:'qh', text:'why researchers are pleased to see large numbers of seals in the area', correct:'D' },
+  { id:'qi', text:'a particular incident that negatively affected a large number of people', correct:'A' }
+];
+
+const ex2Explanations = {
+  qa: 'Section B uses the phrase "seal silly season" — an informal name.',
+  qb: 'Section C explains roads attract seals because the black surface absorbs heat.',
+  qc: 'Section A: young, lack experience, in their nature to explore.',
+  qd: 'Section B compares seal behaviour to "a teenager away from home".',
+  qe: 'Section D says the Department of Conservation receives "an enormous number of calls" though most seals find their own way back.',
+  qf: 'Section A: "people are often concerned if they come across a young seal there".',
+  qg: 'Section C: "they should be left alone unless they are in immediate danger".',
+  qh: 'Section D: advisers report the sight of so many seals is "welcome" — the population is recovering after being hunted.',
+  qi: 'Section A: "a young seal blocked traffic on a highway at rush hour" — affected many parents and children.'
+};
+
+const ex2Selections = {};
+function renderEx2() {
+  const container = document.getElementById('ex2-questions');
+  ex2Questions.forEach((q, i) => {
+    const qId = 'ex2-' + q.id;
+    const letter = String.fromCharCode(97 + i); // a-i
+    container.innerHTML += `
+      <div class="question-item" id="${qId}-item">
+        <div class="q-header">
+          <span class="q-num">7${letter}</span>
+          <span class="q-text">${q.text}</span>
+          <span class="q-marks">1</span>
+        </div>
+        <div class="abcd-row" id="${qId}-btns">
+          <button class="abcd-btn" onclick="selectAbcd('${qId}','A',this)">A</button>
+          <button class="abcd-btn" onclick="selectAbcd('${qId}','B',this)">B</button>
+          <button class="abcd-btn" onclick="selectAbcd('${qId}','C',this)">C</button>
+          <button class="abcd-btn" onclick="selectAbcd('${qId}','D',this)">D</button>
+        </div>
+        <div class="feedback" id="${qId}-fb"></div>
+      </div>`;
+  });
+}
+
+function selectAbcd(qId, letter, btn) {
+  const allBtns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+  allBtns.forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  ex2Selections[qId] = letter;
+}
+
+function submitEx2() {
+  const allAnswered = ex2Questions.every(q => ex2Selections['ex2-' + q.id]);
+  if (!allAnswered) {
+    const nb = document.getElementById('ex2-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ex2Questions.forEach(q => {
+    const qId = 'ex2-' + q.id;
+    const selected = ex2Selections[qId];
+    const correct = q.correct;
+    const btns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+    btns.forEach(b => { b.disabled = true; });
+    btns.forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + ex2Explanations[q.id];
+      scores.ex2[q.id] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + ex2Explanations[q.id];
+      scores.ex2[q.id] = 0;
+    }
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('ex2-result').classList.add('show');
+  document.getElementById('ex2-submit').disabled = true;
+}
+
+// ─────────── EXERCISE 3 — reveal + self-check ───────────
+function submitEx3() {
+  const allIds = ['ex3-q8a','ex3-q8b','ex3-q8c','ex3-q8d','ex3-q9a','ex3-q9b','ex3-q9c'];
+  if (!allIds.every(id => document.getElementById(id).value.trim())) {
+    const nb = document.getElementById('ex3-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  allIds.forEach(id => {
+    document.getElementById(id).disabled = true;
+    const chk = document.getElementById(id + '-check');
+    if (chk) chk.classList.add('show');
+  });
+  ['ex3-q8-reveal','ex3-q9-reveal'].forEach(id => document.getElementById(id).classList.add('show'));
+  ['ex3-q8-sc','ex3-q9-sc'].forEach(id => document.getElementById(id).classList.add('show'));
+  document.getElementById('ex3-result').classList.add('show');
+  document.getElementById('ex3-submit').disabled = true;
+}
+
+function selfCheckEx3(q, result, pts) {
+  scores.ex3[q] = pts;
+  const item = document.getElementById('ex3-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  const maxPts = (q === 'q8') ? 4 : 3;
+  if (pts === maxPts) item.classList.add('sc-correct');
+  else if (pts === 0) item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById('ex3-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ─────────── EXERCISE 4 — auto-mark A/B/C with line numbers ───────────
+const ex4Paragraphs = [
+  "The prickly pear is a type of cactus, which is a plant that usually grows in hot, dry desert conditions, for example in Mexico or in South America. So you might be surprised to discover that it is now spreading across mountainsides in Switzerland – land which is typically covered in snow in winter.",
+  "I had to do a project last term on something to do with the environment. I couldn't decide what to do it on, so I spent some time browsing websites one weekend, looking for something suitable. After a while, I came across some information about the issue of prickly pears growing in Switzerland. I immediately knew I'd found my topic, as although I hadn't been recently, I have fond memories of a long summer holiday there in my childhood. I contacted my uncle, who is a biologist, to see if he knew about the issue. It was news to him, but he said he would look into it for me.",
+  "I wanted to know why prickly pears were a problem in Switzerland. I imagined that people walking in the hills and valleys where they are found might get hurt by them – the plants are covered in fine needle-like hairs which can stick to your skin and are difficult to remove. The plants are also spreading in areas where many people like to ski each winter. However, what is particularly concerning is that where the plants are found, they cover the soil completely. Flowers that used to be common in summer are now in danger of disappearing.",
+  "How did the prickly pears end up in Switzerland in the first place? Could they have been imported by someone who was interested in new species, and wanted to try growing them on their own land? I already knew that the plants produce fruit which is very tasty, and they have attractive flowers – could this have tempted someone? In the end I was only able to establish the fact that the plants have been present since the late eighteenth century, so they are far from being a recent introduction, as I had originally thought.",
+  "Scientists believe that a warmer climate in the mountains of Switzerland means that snow cover is __HIGHLIGHT__diminishing__ENDHIGHLIGHT__ – particularly down in the valleys, which in the past would have been covered with snow each winter. This warmth is creating ideal conditions for the plants to spread. They can in fact tolerate low temperatures, but they need to be in a dry place and don't like to be covered in snow.",
+  "The aim now is to try to prevent the prickly pears from spreading further, and to remove them from the areas of land which are badly affected. But judging by previous attempts, this will be far from straightforward. In one area, large quantities of the plants were cut down, and they were placed in huge piles in a forest, where it was thought that the shade and humid air would make the material decay and eventually turn into new soil. However, what scientists soon discovered was that bits of plants at the top of these piles were growing into new plants. They also found that new plants were growing back in the areas where the plants had been removed.",
+  "This is clearly a serious matter, and I'm fascinated. I'll definitely be keeping an eye on what happens in the future."
+];
+
+function renderEx4Article() {
+  const container = document.getElementById('ex4-article');
+  let html = '';
+  ex4Paragraphs.forEach(para => {
+    const processed = para
+      .replace(/__HIGHLIGHT__/g, '<span class="highlight-word">')
+      .replace(/__ENDHIGHLIGHT__/g, '</span>');
+    html += `<p>${processed}</p>`;
+  });
+  container.innerHTML = html;
+}
+
+const ex4Questions = [
+  { num:10, text:'Lia chose to do a project on prickly pears in Switzerland because',
+    options:{A:'she had visited this place before.', B:'a relative was researching the plants.', C:'it was the first subject that she found online.'},
+    correct:'A',
+    explain:'Lia had "fond memories of a long summer holiday there in my childhood" — she had visited Switzerland before. (B is wrong: her uncle hadn\'t researched it yet; C is wrong: she spent time browsing before finding the topic.)' },
+  { num:11, text:'What is the main problem with prickly pears in Switzerland?',
+    options:{A:'They can cause nasty injuries.', B:'They prevent anything else from growing.', C:'They affect popular winter sports.'},
+    correct:'B',
+    explain:'Lia says "what is particularly concerning is that where the plants are found, they cover the soil completely. Flowers that used to be common in summer are now in danger of disappearing."' },
+  { num:12, text:'Lia discovered that prickly pear plants were first brought to Switzerland',
+    options:{A:'many years ago.', B:'by a plant collector.', C:'as a source of food.'},
+    correct:'A',
+    explain:'The plants "have been present since the late eighteenth century, so they are far from being a recent introduction". B and C were only her guesses — she couldn\'t establish them as facts.' },
+  { num:13, text:"What does the word <strong>'diminishing'</strong> (highlighted in the text) mean?",
+    options:{A:'getting smaller', B:'causing plants to die', C:'happening at a lower level'},
+    correct:'A',
+    explain:'"Snow cover is diminishing" means there is less snow than before — it is getting smaller in amount.' },
+  { num:14, text:'What does Lia suggest about removing the prickly pear plants?',
+    options:{A:'It is easier in certain locations.', B:'It has never been tried before.', C:'It is unlikely to be successful.'},
+    correct:'C',
+    explain:'"Judging by previous attempts, this will be far from straightforward" — bits of plants grew back even after being cut down and piled up.' },
+  { num:15, text:'The purpose of the blog is to',
+    options:{A:'report on a long-term scientific project.', B:'encourage people to help remove plants.', C:'make people aware of an environmental issue.'},
+    correct:'C',
+    explain:'Lia introduces the topic, explains the problem, and says "This is clearly a serious matter" — she\'s informing readers about an environmental issue, not running a project or recruiting helpers.' }
+];
+
+const ex4Selections = {};
+function renderEx4Questions() {
+  const container = document.getElementById('ex4-questions');
+  ex4Questions.forEach(q => {
+    const qId = 'ex4-q' + q.num;
+    let optsHtml = '';
+    ['A','B','C'].forEach(L => {
+      optsHtml += `<div class="abc-opt" onclick="selectAbc('${qId}','${L}',this)"><span class="abc-letter">${L}</span><span>${q.options[L]}</span></div>`;
+    });
+    container.innerHTML += `
+      <div class="question-item" id="${qId}-item">
+        <div class="q-header">
+          <span class="q-num">${q.num}</span>
+          <span class="q-text">${q.text}</span>
+          <span class="q-marks">1</span>
+        </div>
+        <div class="abc-row" id="${qId}-opts">${optsHtml}</div>
+        <div class="feedback" id="${qId}-fb"></div>
+      </div>`;
+  });
+}
+
+function selectAbc(qId, letter, opt) {
+  const allOpts = document.querySelectorAll('#' + qId + '-opts .abc-opt');
+  allOpts.forEach(o => o.classList.remove('selected'));
+  opt.classList.add('selected');
+  ex4Selections[qId] = letter;
+}
+
+function submitEx4() {
+  const allAnswered = ex4Questions.every(q => ex4Selections['ex4-q' + q.num]);
+  if (!allAnswered) {
+    const nb = document.getElementById('ex4-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ex4Questions.forEach(q => {
+    const qId = 'ex4-q' + q.num;
+    const selected = ex4Selections[qId];
+    const correct = q.correct;
+    const opts = document.querySelectorAll('#' + qId + '-opts .abc-opt');
+    opts.forEach(o => {
+      o.classList.add('disabled');
+      o.onclick = null;
+      const letter = o.querySelector('.abc-letter').textContent;
+      o.classList.remove('selected');
+      if (letter === correct) o.classList.add('correct-answer');
+      else if (letter === selected && selected !== correct) o.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + q.explain;
+      scores.ex4['q' + q.num] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + q.explain;
+      scores.ex4['q' + q.num] = 0;
+    }
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('ex4-result').classList.add('show');
+  document.getElementById('ex4-submit').disabled = true;
+}
+
+// ─────────── RESET ───────────
+function resetEx(ex) {
+  if (ex === 'ex1') {
+    scores.ex1 = {};
+    ['ex1-q1','ex1-q2','ex1-q3','ex1-q4','ex1-q5','ex1-q6a','ex1-q6b','ex1-q6c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+      const chk = document.getElementById(id+'-check');
+      if (chk) chk.classList.remove('show');
+    });
+    ['q1','q2','q3','q4','q5','q6'].forEach(q => {
+      const item = document.getElementById('ex1-'+q+'-item');
+      if (item) item.classList.remove('sc-correct','sc-wrong','sc-half');
+      const rev = document.getElementById('ex1-'+q+'-reveal');
+      if (rev) rev.classList.remove('show');
+      const sc = document.getElementById('ex1-'+q+'-sc');
+      if (sc) { sc.classList.remove('show'); sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); }); }
+    });
+    document.getElementById('ex1-result').classList.remove('show');
+    document.getElementById('ex1-submit').disabled = false;
+  } else if (ex === 'ex2') {
+    scores.ex2 = {};
+    ex2Questions.forEach(q => {
+      const qId = 'ex2-' + q.id;
+      document.querySelectorAll('#'+qId+'-btns .abcd-btn').forEach(b => {
+        b.disabled=false; b.classList.remove('selected','correct-answer','wrong-answer');
+      });
+      delete ex2Selections[qId];
+      const item = document.getElementById(qId+'-item');
+      if (item) item.classList.remove('correct','wrong');
+      const fb = document.getElementById(qId+'-fb');
+      if (fb) { fb.style.display='none'; fb.innerHTML=''; }
+    });
+    document.getElementById('ex2-result').classList.remove('show');
+    document.getElementById('ex2-submit').disabled = false;
+  } else if (ex === 'ex3') {
+    scores.ex3 = {};
+    ['ex3-q8a','ex3-q8b','ex3-q8c','ex3-q8d','ex3-q9a','ex3-q9b','ex3-q9c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+      const chk = document.getElementById(id+'-check');
+      if (chk) chk.classList.remove('show');
+    });
+    ['ex3-q8-reveal','ex3-q9-reveal'].forEach(id => document.getElementById(id).classList.remove('show'));
+    ['ex3-q8-sc','ex3-q9-sc'].forEach(id => {
+      const sc = document.getElementById(id);
+      sc.classList.remove('show');
+      sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); });
+    });
+    ['ex3-q8-item','ex3-q9-item'].forEach(id => document.getElementById(id).classList.remove('sc-correct','sc-wrong','sc-half'));
+    document.getElementById('ex3-result').classList.remove('show');
+    document.getElementById('ex3-submit').disabled = false;
+  } else {
+    scores.ex4 = {};
+    ex4Questions.forEach(q => {
+      const qId = 'ex4-q' + q.num;
+      delete ex4Selections[qId];
+      const opts = document.querySelectorAll('#' + qId + '-opts .abc-opt');
+      opts.forEach((o, i) => {
+        o.classList.remove('selected','correct-answer','wrong-answer','disabled');
+        const letter = ['A','B','C'][i];
+        o.onclick = () => selectAbc(qId, letter, o);
+      });
+      const item = document.getElementById(qId+'-item');
+      if (item) item.classList.remove('correct','wrong');
+      const fb = document.getElementById(qId+'-fb');
+      if (fb) { fb.style.display='none'; fb.innerHTML=''; }
+    });
+    document.getElementById('ex4-result').classList.remove('show');
+    document.getElementById('ex4-submit').disabled = false;
+  }
+  updateScores();
+}
+
+// ─────────── INIT ───────────
+renderEx2();
+renderEx4Article();
+renderEx4Questions();
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
