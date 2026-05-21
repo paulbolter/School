@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE Writing — Refresher</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a1a;
+    --paper: #faf8f4;
+    --cream: #f2ede4;
+    --rule: #c8bfaf;
+    --accent: #1d3d72;
+    --accent-mid: #2a5298;
+    --accent-light: #dce6f5;
+    --accent-dark: #142a52;
+    --green: #1d6b35;
+    --green-light: #d6f0df;
+    --amber: #9a5a00;
+    --amber-light: #fdefd8;
+    --teal: #1a5a5a;
+    --teal-light: #d0eeee;
+    --shadow: 0 4px 28px rgba(0,0,0,0.12);
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23b8a898' fill-opacity='0.12'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/svg%3E");
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1.5rem 2rem;
+  }
+
+  .shell {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    box-shadow: var(--shadow);
+    border-radius: 3px;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--accent);
+    padding: 1.1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .header-left h1 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    font-size: 1.3rem;
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+  .header-left .sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-nav-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 9px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+  }
+  .header-nav-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border-color: rgba(255,255,255,0.6);
+  }
+  .header-nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .header-nav-btn.primary {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.55);
+    color: #fff;
+    font-size: 0.82rem;
+    padding: 10px 26px;
+  }
+  .header-nav-btn.primary:hover:not(:disabled) {
+    background: rgba(255,255,255,0.28);
+    border-color: #fff;
+  }
+  .header-dot-row {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .header-dot-row .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    transition: background 0.2s;
+  }
+  .header-dot-row .dot.active { background: #fff; }
+  .header-dot-row .dot.done { background: rgba(255,255,255,0.5); }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--rule);
+    background: var(--paper);
+    flex-shrink: 0;
+  }
+  .tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2rem;
+    color: #999;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--accent-mid); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── Main two-panel ── */
+  .main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    flex: 1.1;
+    padding: 2rem 2.2rem;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-mid);
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-label::after { content: ''; flex: 1; height: 1px; background: var(--accent-light); }
+
+  .card-type-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+
+  .card-type-badge.report-badge { background: var(--teal); }
+  .card-type-badge.article-badge { background: #5a3a7a; }
+
+  .card-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 0.9rem;
+  }
+
+  .card-divider {
+    height: 1px;
+    background: var(--rule);
+    margin: 1rem 0;
+    opacity: 0.5;
+  }
+
+  .card-body {
+    font-family: 'Source Serif 4', serif;
+    font-size: 14.5px;
+    line-height: 1.9;
+    color: #1a1a1a;
+    flex: 1;
+  }
+  .card-body p { margin-bottom: 0.85rem; }
+  .card-body p:last-child { margin-bottom: 0; }
+
+  /* ── Progress dots ── */
+  .dot-row { display: flex; gap: 6px; align-items: center; justify-content: center; margin: 1rem 0 0.5rem; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rule); transition: background 0.2s; }
+  .dot.active { background: var(--accent-mid); }
+  .dot.done { background: var(--accent-light); border: 1.5px solid var(--accent-mid); }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    flex: 0.75;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem 1.5rem;
+    border-left: 1px solid var(--rule);
+    gap: 0;
+  }
+
+  .notes-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .notes-label::after { content: ''; flex: 1; height: 1px; background: #eee; }
+
+  .notes-area { flex: 1; position: relative; min-height: 0; }
+
+  .notes-area::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent calc(2.2em - 1px),
+      #e8e2d8 calc(2.2em - 1px),
+      #e8e2d8 2.2em
+    );
+    background-position: 0 0.4rem;
+    pointer-events: none;
+    opacity: 0.5;
+    border-radius: 2px;
+  }
+
+  .notes-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    padding: 0.4rem 4px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    line-height: 2.2;
+    color: var(--ink);
+    background: transparent;
+    outline: none;
+    resize: none;
+    position: relative;
+    z-index: 1;
+  }
+  .notes-textarea::placeholder { color: #ccc; font-style: italic; font-size: 13px; }
+
+  .notes-hint {
+    margin-top: 0.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: #ccc;
+    letter-spacing: 0.06em;
+    text-align: right;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: #ccc;
+    text-align: center;
+    padding: 0.8rem;
+    border-top: 1px solid var(--rule);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--paper);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>IGCSE Writing</h1>
+      <div class="sub">Word count 120–150</div>
+    </div>
+    <div class="header-nav">
+      <button class="header-nav-btn" id="btn-prev" onclick="navigate(-1)">← Prev</button>
+      <div class="header-dot-row" id="dot-row"></div>
+      <button class="header-nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('email', this)">Email</div>
+    <div class="tab" onclick="switchTab('article', this)">Article</div>
+    <div class="tab" onclick="switchTab('report', this)">Report</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEFT -->
+    <div class="left-panel" id="left-panel">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-panel">
+      <div class="notes-label">My notes</div>
+      <div class="notes-area">
+        <textarea class="notes-textarea" id="notes-area" placeholder="Key points, structure reminders, phrases to use…"></textarea>
+      </div>
+      <div class="notes-hint">Notes save automatically</div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">Presidential School · IGCSE Writing 0510 · Exam Refresher</div>
+
+</div>
+
+<script>
+const content = {
+
+  email: [
+    {
+      type: 'Email',
+      tabColour: '',
+      title: 'A family celebration event',
+      body: `<p>You recently organised an event for your family to celebrate a special occasion. Write an email to a friend telling them about this event.</p>
+<p>In your email, you should:</p>
+<p>• say what the special occasion was<br>
+• explain what you did to make the event memorable<br>
+• describe your family's reactions</p>`,
+      tip: 'All three bullet points must be covered. Tick them off as you write. Missing even one will cost you content marks.',
+      example: null
+    },
+    {
+      type: 'Email',
+      tabColour: '',
+      title: 'An international event in your town',
+      body: `<p>Your town has been chosen as the location for a large international event. Write an email to a friend telling them about this.</p>
+<p>In your email, you should:</p>
+<p>• explain why your town was chosen for the event<br>
+• describe what will happen at the event<br>
+• suggest how you could both get tickets to watch the event</p>`,
+      tip: 'The third bullet asks you to include your friend — use "we" naturally: "I was thinking we could…" or "What if we both…"',
+      example: null
+    },
+    {
+      type: 'Email',
+      tabColour: '',
+      title: 'A no-technology challenge',
+      body: `<p>You and your family recently took part in a 'no technology' challenge. This meant not using any technology for a week. Write an email to a friend about this.</p>
+<p>In your email, you should:</p>
+<p>• explain why you decided to take part in the challenge<br>
+• say what you found difficult during the challenge<br>
+• describe how your habits have changed since completing the challenge</p>`,
+      tip: 'Notice the tenses: bullet 1 and 2 are past (why you did it, what was hard), bullet 3 is present perfect or present (how things have changed). Don\'t use the same tense for all three.',
+      example: null
+    },
+    {
+      type: 'Email',
+      tabColour: '',
+      title: 'A photography competition',
+      body: `<p>You recently took part in a photography competition. Write an email to a friend telling them about the competition.</p>
+<p>In your email, you should:</p>
+<p>• explain how you found out about the competition<br>
+• describe the photograph you took for the competition<br>
+• tell your friend how you felt about the competition result</p>`,
+      tip: 'Bullet 2 is a chance to use descriptive language — colours, subjects, mood, lighting. Don\'t just say "I took a photo of a mountain." Make it vivid.',
+      example: null
+    },
+    {
+      type: 'Email',
+      tabColour: '',
+      title: 'An after-school club',
+      body: `<p>You have been attending an after-school club for several weeks. Write an email to a friend about the after-school club.</p>
+<p>In your email, you should:</p>
+<p>• explain how you found out about the club<br>
+• describe what you usually do in club meetings<br>
+• suggest improvements you would like to see at the club</p>`,
+      tip: 'Bullet 3 asks for your opinion — use phrases like "I think it would be great if…" or "One thing I\'d love to see is…" to show a personal voice.',
+      example: null
+    },
+    {
+      type: 'Email',
+      tabColour: '',
+      title: 'Changing something in your bedroom',
+      body: `<p>You recently changed something about your bedroom at home. Write an email to a friend.</p>
+<p>In your email, you should:</p>
+<p>• describe what you changed<br>
+• explain how you made the change<br>
+• say how you feel about the change</p>`,
+      tip: 'This is personal and informal — a friend is reading it. Use a warm, conversational tone. Contractions (I\'ve, it\'s, you\'d) are completely fine here.',
+      example: null
+    },
+    {
+      type: 'Email',
+      tabColour: '',
+      title: 'Setting up a new school club',
+      body: `<p>You have recently set up a new club at school. Write an email to a friend telling them about your new club.</p>
+<p>In your email, you should:</p>
+<p>• explain why you decided to set up a new club<br>
+• describe the preparations you made for your new club<br>
+• tell your friend about your future plans for the club</p>`,
+      tip: 'Bullet 3 is about the future — use will, going to, or hope to: "We\'re planning to…", "I hope we\'ll eventually…", "By next term I want to…"',
+      example: null
+    },
+    {
+      type: 'Email',
+      tabColour: '',
+      title: 'Earning money by helping a family member',
+      body: `<p>You recently helped someone in your family who then gave you some money to say thank you for helping. Now you are not sure what to do with the money. Write an email to a friend telling them about this.</p>
+<p>In your email, you should:</p>
+<p>• explain what you did to help your family member<br>
+• describe some ideas you have about what you could do with the money<br>
+• say why you think your friend is a good person to help you decide</p>`,
+      tip: 'Bullet 3 is a great chance to say something personal and warm about your friend — it lifts the whole email and shows you can write beyond just answering the task.',
+      example: null
+    }
+  ],
+
+  article: [
+    {
+      type: 'Article',
+      tabColour: 'article-badge',
+      title: 'School day: start and finish later?',
+      body: `<p>In class, you have been discussing whether the school day should start and finish later, because many teenagers find it hard to get up early in the mornings.</p>
+<p>Comments from classmates:</p>
+<p>• I don't want to have less free time after school.<br>
+• Our parents have to go to work early, so we should too.<br>
+• I can't concentrate early in the morning.<br>
+• I never go to bed before midnight, so I hate early mornings!</p>
+<p>Write an article for the school magazine, giving your views.</p>`,
+      tip: null,
+      example: null
+    },
+    {
+      type: 'Article',
+      tabColour: 'article-badge',
+      title: 'Books vs listening to stories',
+      body: `<p>Your class recently held a discussion about whether reading stories in books is better than listening to stories on the radio or online. You have decided to write an article for your school magazine.</p>
+<p>Comments from classmates:</p>
+<p>• I can swap books with my friends.<br>
+• My books are some of my favourite possessions.<br>
+• When I listen to stories, I can easily imagine the characters.<br>
+• I can do other things while I'm listening to stories.</p>
+<p>Write an article for your school magazine, giving your views.</p>`,
+      tip: null,
+      example: null
+    },
+    {
+      type: 'Article',
+      tabColour: 'article-badge',
+      title: 'Is being a professional athlete an easy job?',
+      body: `<p>In your class, you have been talking about whether being a professional athlete is an easy job. Your teacher has asked you to write an article about it.</p>
+<p>Comments from classmates:</p>
+<p>• They have to train every day.<br>
+• They get to do a job they love.<br>
+• There's a lot of pressure on them to win.<br>
+• They can earn a lot of money.</p>
+<p>Write an article for your teacher, giving your views.</p>`,
+      tip: null,
+      example: null
+    },
+    {
+      type: 'Article',
+      tabColour: 'article-badge',
+      title: 'The advantages and disadvantages of homework',
+      body: `<p>Your class recently had a debate about the advantages and disadvantages of homework. Your teacher would like you to write an article for your school magazine, giving your opinions.</p>
+<p>Comments from classmates:</p>
+<p>• I'd rather stay longer at school than get homework.<br>
+• Homework takes up far too much of my free time.<br>
+• We don't have time to study everything we need to know in class.<br>
+• In some ways, I learn better when I'm at home.</p>
+<p>Write an article for your school magazine, giving your views.</p>`,
+      tip: null,
+      example: null
+    },
+    {
+      type: 'Article',
+      tabColour: 'article-badge',
+      title: 'A school exchange trip abroad',
+      body: `<p>You recently went on a school exchange trip to another country. You stayed with another family and went to school there for two weeks. Your teacher has asked you to write an article about your experience for the school magazine.</p>
+<p>Comments from classmates:</p>
+<p>• I found it difficult to get used to the food.<br>
+• The lessons were really interesting.<br>
+• I didn't have much time to explore the area.<br>
+• I made lots of new friends.</p>
+<p>Write an article for the school magazine.</p>`,
+      tip: null,
+      example: null
+    },
+    {
+      type: 'Article',
+      tabColour: 'article-badge',
+      title: 'Is being a professional athlete easy? (Short)',
+      body: `<p>In your class, you have been talking about whether being a professional athlete is an easy job. Your teacher has asked you to write an article about it.</p>
+<p>Comments from classmates:</p>
+<p>• There's a lot of pressure on them to win.<br>
+• They get to do a job they love.</p>
+<p>Write an article for your teacher, giving your views.</p>`,
+      tip: null,
+      example: null
+    },
+    {
+      type: 'Article',
+      tabColour: 'article-badge',
+      title: 'Why aren\'t teenagers interested in the news?',
+      body: `<p>In class, you have been talking about why some teenagers are not very interested in the news. You have decided to write an article about this for your school magazine.</p>
+<p>Comments from classmates:</p>
+<p>• I don't have much time to read the news.<br>
+• It's easy to find out what's happening in the world.<br>
+• It isn't relevant to people my age.<br>
+• I learn a lot from the news.</p>
+<p>Write an article for your school magazine, giving your views.</p>`,
+      tip: null,
+      example: null
+    },
+    {
+      type: 'Article',
+      tabColour: 'article-badge',
+      title: 'One best friend or a big group?',
+      body: `<p>In class, you have been talking about whether it is better to have a big group of friends or just one best friend. Your teacher has asked you to write an article about it.</p>
+<p>Comments from classmates:</p>
+<p>• I can tell my best friend everything.<br>
+• Having lots of friends means having more fun!<br>
+• My group of friends all like different things.<br>
+• It's hard to please everybody in a big group.</p>
+<p>Write an article for your teacher, giving your views.</p>`,
+      tip: null,
+      example: null
+    }
+  ],
+
+  report: [
+    {
+      type: 'Report',
+      tabColour: 'report-badge',
+      title: 'Science Exhibition',
+      body: `<p>You and your class recently spent the day at a science exhibition, and now your teacher has asked you to write a report about it.</p>
+<p>In your report, say <strong>what you learned from the trip</strong> and <strong>how it could be improved</strong> if it is repeated next year.</p>
+<p>Use these cues to help you:</p>
+<p>• I liked meeting a real scientist.<br>
+• The explanations were a bit confusing.<br>
+• It was a really long day!<br>
+• It was fun being able to do some experiments.</p>
+<p>Write a report for your teacher, giving your views.</p>`,
+      tip: 'The cues are written in casual first-person. Your job is to transform them into formal report language. "It was a really long day!" becomes "The length of the visit was excessive and affected students\' concentration."',
+      example: null
+    },
+    {
+      type: 'Report',
+      tabColour: 'report-badge',
+      title: 'Art Exhibition',
+      body: `<p>Your school recently held an art exhibition to show students' artwork. Your teacher has asked you to write a report on the exhibition.</p>
+<p>In your report, say <strong>what was good about the exhibition</strong> and suggest <strong>how it could be improved</strong> next year.</p>
+<p>Use these cues to help you:</p>
+<p>• There were lots of different types of art.<br>
+• Everyone was really proud of their work.<br>
+• The art wasn't displayed well.<br>
+• The exhibition should last more than one week.</p>
+<p>Write a report for your teacher.</p>`,
+      tip: 'Split your report into two clear sections: positives first, then improvements. Use a heading for each. This makes your organisation immediately visible to the examiner.',
+      example: null
+    },
+    {
+      type: 'Report',
+      tabColour: 'report-badge',
+      title: 'After-School Music Club',
+      body: `<p>This year, you have been a member of the after-school music club. Your head teacher has asked you to write a report about the club.</p>
+<p>In your report, say <strong>what you like about the club</strong>, and suggest <strong>how it could be improved</strong> in the future.</p>
+<p>Use these cues to help you:</p>
+<p>• I'd like to meet more than once a month.<br>
+• There isn't enough space for everyone!<br>
+• Taking part in a concert was fun!<br>
+• There are lots of instruments we can try.</p>
+<p>Write a report for your head teacher, giving your views.</p>`,
+      tip: 'Notice the cues mix positives (concerts, instruments) and negatives (space, frequency). Group them — don\'t jump back and forth. Positives in one section, improvements in another.',
+      example: null
+    },
+    {
+      type: 'Report',
+      tabColour: 'report-badge',
+      title: 'Sports Day',
+      body: `<p>Recently, your school held a sports day in which all students had to take part in sports competitions. Your headteacher has asked you to write a report about it.</p>
+<p>In your report, say <strong>what was good about the sports day</strong>, and suggest <strong>how it could be made more enjoyable for all students</strong> next year.</p>
+<p>Use these cues to help you:</p>
+<p>• Seeing students who are great at sport makes me want to do better.<br>
+• I didn't know what time different competitions were going to start.<br>
+• I can really show that I have a talent for something on sports day.<br>
+• I hate sport but I still have to take part, which isn't fair.</p>
+<p>Write a report for your headteacher, giving your views.</p>`,
+      tip: 'The last cue ("I hate sport…") is a strong personal opinion — useful content, but it needs formal language: "Some students feel that compulsory participation is demotivating, and it is recommended that alternative activities be offered."',
+      example: null
+    }
+  ]
+};
+
+/* ── State ── */
+let currentTab = 'email';
+let currentIndex = { email: 0, article: 0, report: 0 };
+const notes = { email: {}, article: {}, report: {} };
+
+
+function render() {
+  const tab = currentTab;
+  const idx = currentIndex[tab];
+  const cards = content[tab];
+  const card = cards[idx];
+
+  saveCurrentNote();
+
+  const left = document.getElementById('left-panel');
+
+  const badgeClass = card.tabColour || '';
+
+  left.innerHTML = `
+    <div class="card-label">Card ${idx + 1} of ${cards.length}</div>
+    <div class="card-type-badge ${badgeClass}">${card.type}</div>
+    <div class="card-title">${card.title}</div>
+    <div class="card-divider"></div>
+    <div class="card-body">${card.body}</div>
+  `;
+
+  // Update dots
+  const dotsHtml = cards.map((_, i) => {
+    let cls = 'dot';
+    if (i === idx) cls += ' active';
+    else if (i < idx) cls += ' done';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+  document.getElementById('dot-row').innerHTML = dotsHtml;
+
+  // Update buttons
+  document.getElementById('btn-prev').disabled = (idx === 0);
+  document.getElementById('btn-next').disabled = (idx === cards.length - 1);
+
+  const notesArea = document.getElementById('notes-area');
+  notesArea.value = notes[tab][idx] || '';
+}
+
+function saveCurrentNote() {
+  const notesArea = document.getElementById('notes-area');
+  if (notesArea) notes[currentTab][currentIndex[currentTab]] = notesArea.value;
+}
+
+function navigate(dir) {
+  saveCurrentNote();
+  const max = content[currentTab].length - 1;
+  currentIndex[currentTab] = Math.max(0, Math.min(max, currentIndex[currentTab] + dir));
+  render();
+}
+
+function switchTab(tab, el) {
+  saveCurrentNote();
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  render();
+  document.getElementById('notes-area').addEventListener('input', () => {
+    notes[currentTab][currentIndex[currentTab]] = document.getElementById('notes-area').value;
+  });
+});
+</script>
+</body>
+</html>
