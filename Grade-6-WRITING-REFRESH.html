@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 6 Writing Exam — Refresher</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a1a;
+    --paper: #faf8f4;
+    --cream: #f2ede4;
+    --rule: #c8bfaf;
+    --accent: #1d3d72;
+    --accent-mid: #2a5298;
+    --accent-light: #dce6f5;
+    --accent-dark: #142a52;
+    --shadow: 0 4px 28px rgba(0,0,0,0.12);
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23b8a898' fill-opacity='0.12'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/svg%3E");
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1.5rem 2rem;
+  }
+
+  .shell {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    box-shadow: var(--shadow);
+    border-radius: 3px;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--accent);
+    padding: 1.1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .header-left h1 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    font-size: 1.3rem;
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+  .header-left .sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-nav-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 9px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+  }
+  .header-nav-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border-color: rgba(255,255,255,0.6);
+  }
+  .header-nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .header-nav-btn.primary {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.55);
+    color: #fff;
+    font-size: 0.82rem;
+    padding: 10px 26px;
+  }
+  .header-nav-btn.primary:hover:not(:disabled) {
+    background: rgba(255,255,255,0.28);
+    border-color: #fff;
+  }
+  .header-dot-row {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .header-dot-row .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    transition: background 0.2s;
+  }
+  .header-dot-row .dot.active { background: #fff; }
+  .header-dot-row .dot.done { background: rgba(255,255,255,0.5); }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--rule);
+    background: var(--paper);
+    flex-shrink: 0;
+  }
+  .tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2rem;
+    color: #999;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--accent-mid); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── Main two-panel ── */
+  .main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── Left panel ── */
+  .left-panel {
+    flex: 1.1;
+    padding: 2rem 2.2rem;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-mid);
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-label::after { content: ''; flex: 1; height: 1px; background: var(--accent-light); }
+  .card-type-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+  .card-type-badge.story-badge   { background: #2a7a4a; }
+  .card-type-badge.article-badge { background: #5a3a7a; }
+  .card-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 0.9rem;
+  }
+  .card-divider {
+    height: 1px;
+    background: var(--rule);
+    margin: 1rem 0;
+    opacity: 0.5;
+  }
+  .card-body {
+    font-family: 'Source Serif 4', serif;
+    font-size: 14.5px;
+    line-height: 1.9;
+    color: #1a1a1a;
+    flex: 1;
+  }
+  .card-body p { margin-bottom: 0.85rem; }
+  .card-body p:last-child { margin-bottom: 0; }
+
+  /* ── Right panel ── */
+  .right-panel {
+    flex: 0.75;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem 1.5rem;
+    border-left: 1px solid var(--rule);
+  }
+  .notes-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .notes-label::after { content: ''; flex: 1; height: 1px; background: #eee; }
+  .notes-area { flex: 1; position: relative; min-height: 0; }
+  .notes-area::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent calc(2.2em - 1px),
+      #e8e2d8 calc(2.2em - 1px),
+      #e8e2d8 2.2em
+    );
+    background-position: 0 0.4rem;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .notes-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    padding: 0.4rem 4px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    line-height: 2.2;
+    color: var(--ink);
+    background: transparent;
+    outline: none;
+    resize: none;
+    position: relative;
+    z-index: 1;
+  }
+  .notes-textarea::placeholder { color: #ccc; font-style: italic; font-size: 13px; }
+  .notes-hint {
+    margin-top: 0.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: #ccc;
+    letter-spacing: 0.06em;
+    text-align: right;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: #ccc;
+    text-align: center;
+    padding: 0.8rem;
+    border-top: 1px solid var(--rule);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--paper);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Grade 6 Writing Exam</h1>
+      <div class="sub">Word count 100–150</div>
+    </div>
+    <div class="header-nav">
+      <button class="header-nav-btn" id="btn-prev" onclick="navigate(-1)">← Prev</button>
+      <div class="header-dot-row" id="dot-row"></div>
+      <button class="header-nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('email', this)">Email</div>
+    <div class="tab" onclick="switchTab('story', this)">Story</div>
+    <div class="tab" onclick="switchTab('article', this)">Article</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="left-panel" id="left-panel"></div>
+    <div class="right-panel">
+      <div class="notes-label">My notes</div>
+      <div class="notes-area">
+        <textarea class="notes-textarea" id="notes-area" placeholder="Key words, ideas, things to remember…"></textarea>
+      </div>
+      <div class="notes-hint">Notes save automatically</div>
+    </div>
+  </div>
+
+  <div class="footer">Presidential School · Grade 6 Writing Exam</div>
+
+</div>
+
+<script>
+const content = {
+
+  email: [
+    {
+      type: 'Email', tabColour: '',
+      title: 'A Friend Moving Away',
+      body: `<p>Your best friend has just told you they are moving to a different city. Write an email to your friend.</p>
+<p>Remember to include:</p>
+<p>• Say how you feel about the news<br>
+• Suggest a way to stay in touch<br>
+• Invite them to meet before they leave</p>`
+    },
+    {
+      type: 'Email', tabColour: '',
+      title: 'A School Trip Problem',
+      body: `<p>You went on a school trip last week but there was a problem. Write an email to your teacher.</p>
+<p>Remember to include:</p>
+<p>• Describe what the problem was<br>
+• Explain how it affected you<br>
+• Suggest how to avoid the problem next time</p>`
+    },
+    {
+      type: 'Email', tabColour: '',
+      title: 'A New Hobby',
+      body: `<p>You have recently started a new hobby and you love it. Write an email to a friend.</p>
+<p>Remember to include:</p>
+<p>• Describe the hobby<br>
+• Explain why you enjoy it<br>
+• Invite your friend to try it with you</p>`
+    },
+    {
+      type: 'Email', tabColour: '',
+      title: 'A Birthday Party Invitation',
+      body: `<p>You are planning a birthday party for next month. Write an email to a friend.</p>
+<p>Remember to include:</p>
+<p>• Give details about the party<br>
+• Ask your friend to come<br>
+• Request their help with one thing</p>`
+    },
+    {
+      type: 'Email', tabColour: '',
+      title: 'A Lost Item',
+      body: `<p>You left something important at a café you visited yesterday. Write an email to the café manager.</p>
+<p>Remember to include:</p>
+<p>• Describe the item<br>
+• Explain where you think you left it<br>
+• Ask what you should do next</p>`
+    },
+    {
+      type: 'Email', tabColour: '',
+      title: 'An Exciting Piece of News',
+      body: `<p>Something exciting has just happened in your life. Write an email to a relative.</p>
+<p>Remember to include:</p>
+<p>• Share your news<br>
+• Explain why it is important to you<br>
+• Ask about something in their life</p>`
+    }
+  ],
+
+  story: [
+    {
+      type: 'Story', tabColour: 'story-badge',
+      title: 'The Unexpected Guest',
+      body: `<p>Your teacher has asked you to write a story.</p>
+<p>Your story must <strong>begin</strong> with this sentence:</p>
+<p><em>"When I opened the front door, I couldn't believe who was standing there."</em></p>`
+    },
+    {
+      type: 'Story', tabColour: 'story-badge',
+      title: 'A Rainy Day Adventure',
+      body: `<p>Your teacher has asked you to write a story.</p>
+<p>Write a story about a rainy day that turned into an adventure.</p>`
+    },
+    {
+      type: 'Story', tabColour: 'story-badge',
+      title: 'The Power Cut',
+      body: `<p>Your teacher has asked you to write a story.</p>
+<p>Your story must include these <strong>four words</strong>:</p>
+<p><strong>darkness &nbsp;·&nbsp; phone &nbsp;·&nbsp; candle &nbsp;·&nbsp; laughing</strong></p>`
+    },
+    {
+      type: 'Story', tabColour: 'story-badge',
+      title: 'An Unexpected Friendship',
+      body: `<p>Your teacher has asked you to write a story.</p>
+<p>Write a story about an unexpected friendship between two very different people.</p>`
+    },
+    {
+      type: 'Story', tabColour: 'story-badge',
+      title: 'A Time I Helped Someone',
+      body: `<p>Your teacher has asked you to write a story.</p>
+<p>Write a story about a time you helped someone.</p>`
+    },
+    {
+      type: 'Story', tabColour: 'story-badge',
+      title: 'A Very Important Day',
+      body: `<p>Your teacher has asked you to write a story.</p>
+<p>Your story must <strong>end</strong> with this sentence:</p>
+<p><em>"As I walked home, I knew that everything in my life had just changed."</em></p>`
+    }
+  ],
+
+  article: [
+    {
+      type: 'Article', tabColour: 'article-badge',
+      title: 'My Favourite Season',
+      body: `<p>You see this notice in your school's English magazine:</p>
+<p><em>We want articles from students! Tell us about your favourite season of the year. What do you like about it and what do you do during this time?</em></p>
+<p>Write your article.</p>`
+    },
+    {
+      type: 'Article', tabColour: 'article-badge',
+      title: 'Trying Something New',
+      body: `<p>You see this notice in your school's English magazine:</p>
+<p><em>We want to hear from students! Write about a day when you tried something for the first time. What happened and how did you feel?</em></p>
+<p>Write your article.</p>`
+    },
+    {
+      type: 'Article', tabColour: 'article-badge',
+      title: 'A Person I Admire',
+      body: `<p>You see this notice in your school's English magazine:</p>
+<p><em>Write an article about a person you admire. It could be someone famous or someone you know. Tell us who they are and why they are special to you.</em></p>
+<p>Write your article.</p>`
+    },
+    {
+      type: 'Article', tabColour: 'article-badge',
+      title: 'A Place I Love',
+      body: `<p>You see this notice in your school's English magazine:</p>
+<p><em>Tell us about a place that is special to you. Where is it? Why do you love it? What can you do there?</em></p>
+<p>Write your article.</p>`
+    },
+    {
+      type: 'Article', tabColour: 'article-badge',
+      title: 'Technology in Our Lives',
+      body: `<p>You see this notice in your school's English magazine:</p>
+<p><em>How important is technology in your daily life? Write an article telling us how you use technology and whether you think it is mostly good or mostly bad.</em></p>
+<p>Write your article.</p>`
+    },
+    {
+      type: 'Article', tabColour: 'article-badge',
+      title: 'A Memorable Journey',
+      body: `<p>You see this notice in your school's English magazine:</p>
+<p><em>Have you ever been on a journey or trip that you will always remember? Write an article telling us where you went, what happened, and why it was so special.</em></p>
+<p>Write your article.</p>`
+    },
+    {
+      type: 'Article', tabColour: 'article-badge',
+      title: 'The Best Way to Stay Healthy',
+      body: `<p>You see this notice in your school's English magazine:</p>
+<p><em>We are looking for articles about health! What do you think is the best way for young people to stay healthy? Give us your ideas and tips.</em></p>
+<p>Write your article.</p>`
+    }
+  ]
+
+};
+
+/* ── State ── */
+let currentTab = 'email';
+let currentIndex = { email: 0, story: 0, article: 0 };
+const notes = { email: {}, story: {}, article: {} };
+
+function render() {
+  const tab = currentTab;
+  const idx = currentIndex[tab];
+  const cards = content[tab];
+  const card = cards[idx];
+
+  saveCurrentNote();
+
+  const badgeClass = card.tabColour || '';
+  document.getElementById('left-panel').innerHTML = `
+    <div class="card-label">Card ${idx + 1} of ${cards.length}</div>
+    <div class="card-type-badge ${badgeClass}">${card.type}</div>
+    <div class="card-title">${card.title}</div>
+    <div class="card-divider"></div>
+    <div class="card-body">${card.body}</div>
+  `;
+
+  // Dots
+  document.getElementById('dot-row').innerHTML = cards.map((_, i) => {
+    let cls = 'dot';
+    if (i === idx) cls += ' active';
+    else if (i < idx) cls += ' done';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  // Buttons
+  document.getElementById('btn-prev').disabled = (idx === 0);
+  document.getElementById('btn-next').disabled = (idx === cards.length - 1);
+
+  // Notes
+  document.getElementById('notes-area').value = notes[tab][idx] || '';
+}
+
+function saveCurrentNote() {
+  const el = document.getElementById('notes-area');
+  if (el) notes[currentTab][currentIndex[currentTab]] = el.value;
+}
+
+function navigate(dir) {
+  saveCurrentNote();
+  const max = content[currentTab].length - 1;
+  currentIndex[currentTab] = Math.max(0, Math.min(max, currentIndex[currentTab] + dir));
+  render();
+}
+
+function switchTab(tab, el) {
+  saveCurrentNote();
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  render();
+  document.getElementById('notes-area').addEventListener('input', () => {
+    notes[currentTab][currentIndex[currentTab]] = document.getElementById('notes-area').value;
+  });
+});
+</script>
+</body>
+</html>
