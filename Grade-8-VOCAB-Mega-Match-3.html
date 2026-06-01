@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mega Match Grid — Vocabulary</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #eef2fb;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px 14px 48px;
+  }
+  .wrap { width: 100%; max-width: 1000px; }
+  .vm-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem;
+    color: #34487a;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+    text-shadow: 3px 3px 0 rgba(120,150,210,0.25);
+  }
+  .vm-sub { text-align: center; color: #7388b5; font-weight: 700; font-size: 1.05rem; margin-bottom: 16px; }
+
+  .vm-legend { display: flex; justify-content: center; gap: 22px; margin-bottom: 14px; flex-wrap: wrap; }
+  .vm-legend span { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 0.92rem; color: #44588c; }
+  .vm-swatch { width: 22px; height: 22px; border-radius: 6px; border: 2px solid rgba(0,0,0,0.12); }
+  .sw-word { background: #6486c4; }
+  .sw-def  { background: #eaf2fc; border-color: #bcd0ea; }
+
+  .vm-round-label { text-align: center; font-size: 0.95rem; font-weight: 900; color: #7388b5; margin-bottom: 10px; letter-spacing: 0.5px; }
+  .vm-progress-wrap { max-width: 480px; margin: 0 auto 22px; height: 12px; background: #d6e2f3; border-radius: 10px; overflow: hidden; border: 2px solid #bcd0ea; }
+  .vm-progress-fill { height: 100%; background: linear-gradient(90deg, #ef8b6b, #f4a989); border-radius: 10px; transition: width 0.4s cubic-bezier(.34,1.56,.64,1); }
+
+  .vm-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+  .vm-tile {
+    min-height: 96px;
+    padding: 8px 6px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
+    border: 3px solid transparent;
+    transition: transform 0.1s, box-shadow 0.12s, background 0.15s;
+    user-select: none;
+  }
+  /* WORD tiles = blue */
+  .vm-tile.word {
+    background: #6486c4;
+    color: #f2f6fc;
+    border-color: #4f6fae;
+    box-shadow: 0 4px 0 #3f5d99;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
+  }
+  /* DEFINITION tiles = pale blue */
+  .vm-tile.def {
+    background: #eaf2fc;
+    color: #3f5074;
+    border-color: #bcd0ea;
+    box-shadow: 0 4px 0 #aac0e0;
+    font-weight: 700;
+    font-size: 0.86rem;
+  }
+  .vm-tile.word:hover { background: #5778b6; transform: translateY(-2px); box-shadow: 0 6px 0 #3f5d99; }
+  .vm-tile.def:hover  { background: #ddeafa; transform: translateY(-2px); box-shadow: 0 6px 0 #aac0e0; }
+
+  .vm-tile.selected {
+    background: #f0936e !important;
+    color: #fff !important;
+    border-color: #db6b45 !important;
+    box-shadow: 0 4px 0 #bf5530, 0 0 16px rgba(240,147,110,0.5) !important;
+    transform: translateY(-2px) scale(1.04);
+  }
+  .vm-tile.wrong {
+    background: #d96a52 !important;
+    color: #fff !important;
+    border-color: #b84a36 !important;
+    box-shadow: 0 4px 0 #9c3c2a !important;
+    animation: wobble 0.35s ease;
+  }
+  .vm-tile.matched {
+    background: #dde3ef !important;
+    color: #9ba8c2 !important;
+    border-color: #cdd6e6 !important;
+    box-shadow: none !important;
+    cursor: default;
+    transform: none;
+    opacity: 0.65;
+    animation: lockin 0.35s ease;
+  }
+  @keyframes wobble {
+    0%   { transform: translateX(0); }
+    25%  { transform: translateX(-6px); }
+    50%  { transform: translateX(6px); }
+    75%  { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes lockin {
+    0%   { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+
+  .vm-done { text-align: center; padding: 50px 16px; }
+  .vm-star { font-size: 4rem; display: inline-block; animation: starspin 0.6s ease; }
+  @keyframes starspin {
+    0%   { transform: rotate(-20deg) scale(0); }
+    60%  { transform: rotate(10deg) scale(1.4); }
+    100% { transform: rotate(0deg) scale(1); }
+  }
+  .vm-done-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    color: #34487a;
+    text-shadow: 3px 3px 0 rgba(120,150,210,0.25);
+    margin: 14px 0 10px;
+  }
+  .vm-done-msg { font-size: 1.2rem; color: #7388b5; font-weight: 700; margin-bottom: 32px; }
+  .vm-again-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    background: #ef8b6b;
+    color: #fff;
+    border: 3px solid #db6b45;
+    border-radius: 16px;
+    padding: 18px 48px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #bf5530;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .vm-again-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #bf5530; }
+  .vm-again-btn:active { transform: translateY(2px); box-shadow: 0 3px 0 #bf5530; }
+
+  @media (max-width: 640px) {
+    .vm-grid { grid-template-columns: repeat(3, 1fr); }
+    .vm-title { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="vm-title">Mega Match Grid</div>
+  <div class="vm-sub">Vocabulary &mdash; 18 pairs</div>
+
+  <div class="vm-legend">
+    <span><span class="vm-swatch sw-word"></span> Word</span>
+    <span><span class="vm-swatch sw-def"></span> Definition</span>
+  </div>
+
+  <div class="vm-round-label" id="vm-count">0 / 18 matched</div>
+  <div class="vm-progress-wrap"><div class="vm-progress-fill" id="vpbar" style="width:0%"></div></div>
+
+  <div id="vm-game"></div>
+</div>
+
+<script>
+const pairs = [
+  ["Dread", "a strong fear of something that will happen"],
+  ["Obstruct", "block something or get in the way"],
+  ["Linguist", "a person who studies or speaks many languages"],
+  ["Paparazzi", "photographers who follow famous people"],
+  ["Eclipse", "when the sun or moon is blocked from view"],
+  ["Admit", "agree that something is true, often unwillingly"],
+  ["Blame", "say someone is responsible for something bad"],
+  ["Deny", "say that something is not true"],
+  ["Far-fetched", "hard to believe; very unlikely"],
+  ["Stunning", "extremely beautiful or impressive"],
+  ["Memorable", "special and easy to remember"],
+  ["Embark", "begin a journey or a new activity"],
+  ["Squeeze", "press something firmly together"],
+  ["Reputation", "what people generally think of someone"],
+  ["Quest", "a long search for something important"],
+  ["Canyon", "a deep valley with steep rocky sides"],
+  ["Reef", "a line of rock or coral near the sea surface"],
+  ["Glacier", "a huge slow-moving mass of ice"]
+];
+
+const TOTAL = pairs.length;
+let tiles = [];        // {pairId, type, text}
+let selected = null;   // tile DOM id, e.g. "t12"
+let matched = 0;
+let locked = false;    // brief lock during wrong-flash
+
+function shuffle(a) {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+
+function init() {
+  matched = 0;
+  selected = null;
+  locked = false;
+  tiles = [];
+  pairs.forEach((p, id) => {
+    tiles.push({ pairId: id, type: 'word', text: p[0] });
+    tiles.push({ pairId: id, type: 'def',  text: p[1] });
+  });
+  tiles = shuffle(tiles);
+  render();
+  updateProgress();
+}
+
+function render() {
+  let h = '<div class="vm-grid">';
+  tiles.forEach((t, idx) => {
+    h += `<div class="vm-tile ${t.type}" id="t${idx}" data-pair="${t.pairId}" data-type="${t.type}" onclick="clickTile(${idx})">${t.text}</div>`;
+  });
+  h += '</div>';
+  document.getElementById('vm-game').innerHTML = h;
+}
+
+function updateProgress() {
+  const pct = Math.round(matched / TOTAL * 100);
+  const pb = document.getElementById('vpbar');
+  const cl = document.getElementById('vm-count');
+  if (pb) pb.style.width = pct + '%';
+  if (cl) cl.textContent = `${matched} / ${TOTAL} matched`;
+}
+
+function clickTile(idx) {
+  if (locked) return;
+  const tile = document.getElementById('t' + idx);
+  if (!tile || tile.classList.contains('matched')) return;
+
+  // nothing selected yet -> select this one
+  if (selected === null) {
+    selected = 't' + idx;
+    tile.classList.add('selected');
+    return;
+  }
+
+  // clicking the same tile again -> deselect
+  if (selected === 't' + idx) {
+    tile.classList.remove('selected');
+    selected = null;
+    return;
+  }
+
+  const prev = document.getElementById(selected);
+
+  // same TYPE (word+word or def+def) -> can never be a pair; just move selection
+  if (prev.dataset.type === tile.dataset.type) {
+    prev.classList.remove('selected');
+    selected = 't' + idx;
+    tile.classList.add('selected');
+    return;
+  }
+
+  // different types -> a genuine attempt
+  if (prev.dataset.pair === tile.dataset.pair) {
+    // CORRECT
+    prev.classList.remove('selected');
+    prev.classList.add('matched');
+    tile.classList.add('matched');
+    selected = null;
+    matched++;
+    updateProgress();
+    if (matched === TOTAL) {
+      setTimeout(showDone, 450);
+    }
+  } else {
+    // WRONG -> flash the just-clicked tile red, reveal nothing, deselect both
+    locked = true;
+    tile.classList.add('wrong');
+    setTimeout(() => {
+      tile.classList.remove('wrong');
+      prev.classList.remove('selected');
+      selected = null;
+      locked = false;
+    }, 420);
+  }
+}
+
+function showDone() {
+  document.getElementById('vm-game').innerHTML = `
+    <div class="vm-done">
+      <div class="vm-star">&#11088;</div>
+      <div class="vm-done-title">Well done!</div>
+      <div class="vm-done-msg">You matched all ${TOTAL} pairs. Excellent work!</div>
+      <button class="vm-again-btn" onclick="init()">Play again!</button>
+    </div>`;
+}
+
+init();
+</script>
+</body>
+</html>
