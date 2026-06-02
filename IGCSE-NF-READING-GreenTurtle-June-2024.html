@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCSE 0510 – Exercises 1, 2, 3 & 4 | May/June 2024 (Core)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1e2a5e; --ink-deep: #182347; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: var(--ink-deep); border-bottom: 2px solid var(--gold); }
+  .tab-btn {
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #9aa3c4; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #d6dcf0; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .article-byline { font-family: 'Source Serif 4', serif; font-style: italic; font-size: 13px; text-align: center; color: var(--muted); margin-bottom: 18px; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+  .article-img { display: block; margin: 0 auto 18px; max-width: 240px; width: 100%; border-radius: 4px; border: 1px solid var(--border); }
+  .section-letter { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); margin: 16px 0 6px; }
+  .section-letter:first-child { margin-top: 0; }
+
+  /* Numbered line layout for Ex 4 */
+  .lined-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; }
+  .lined-body .line { display: flex; gap: 12px; }
+  .lined-body .line-num { color: #b8a890; font-size: 11px; min-width: 22px; text-align: right; padding-top: 4px; user-select: none; font-family: 'DM Sans', sans-serif; }
+  .lined-body .line-text { flex: 1; text-align: justify; }
+  .lined-body .para-spacer { height: 10px; }
+  .highlight-word { background: #fff3b8; padding: 0 3px; border-radius: 3px; font-weight: 600; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.sc-correct { border-color: var(--self-yes); background: #e8f5e9; }
+  .question-item.sc-wrong { border-color: var(--self-no); background: #fdecea; }
+  .question-item.sc-half { border-color: var(--self-partial); background: #fffde7; }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+  .inputs-row { display: flex; flex-direction: column; gap: 7px; }
+
+  .abc-row { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .abc-opt {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    border: 1.5px solid var(--border); border-radius: 5px; background: white; cursor: pointer;
+    font-size: 13px; transition: all 0.15s;
+  }
+  .abc-opt:hover { border-color: var(--ink); }
+  .abc-opt.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abc-opt.correct-answer { background: #4caf50; color: white; border-color: #4caf50; }
+  .abc-opt.wrong-answer { background: #e53935; color: white; border-color: #e53935; }
+  .abc-letter { font-weight: 700; min-width: 18px; }
+  .abc-opt.disabled { cursor: default; }
+
+  .abcd-row { display: flex; gap: 8px; margin-top: 2px; flex-wrap: wrap; }
+  .abcd-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .abcd-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .abcd-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .abcd-btn:disabled { cursor: default; }
+  .abcd-btn.correct-answer { background: #4caf50; color: white; border-color: #4caf50; }
+  .abcd-btn.wrong-answer { background: #e53935; color: white; border-color: #e53935; }
+
+  input[type="text"] {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 4px;
+    padding: 8px 11px; font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+    color: var(--ink); background: white; transition: border-color 0.2s; outline: none;
+  }
+  input[type="text"]:focus { border-color: var(--ink); }
+  input[type="text"]:disabled { background: #f0ece6; cursor: default; color: var(--muted); }
+
+  .answer-reveal-box {
+    display: none; margin-top: 10px; padding: 10px 13px; border-radius: 5px;
+    background: #fffbea; border: 1.5px solid #e8c84a; font-size: 13px; line-height: 1.6;
+  }
+  .answer-reveal-box.show { display: block; }
+  .answer-label { font-weight: 700; color: #7a5c00; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .answer-text { font-weight: 600; color: #1a6e2a; font-size: 14px; }
+  .answer-also { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .answer-list { margin: 4px 0 0 0; padding-left: 20px; }
+  .answer-list li { color: #1a6e2a; font-weight: 600; font-size: 13.5px; margin-bottom: 3px; }
+
+  .self-check-row { display: none; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .self-check-row.show { display: flex; }
+  .self-check-label { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .sc-btn {
+    padding: 5px 14px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
+    border: 2px solid; cursor: pointer; transition: all 0.15s; background: white;
+  }
+  .sc-btn:disabled { cursor: default; opacity: 0.6; }
+  .sc-yes { border-color: var(--self-yes); color: var(--self-yes); }
+  .sc-yes:hover:not(:disabled), .sc-yes.active { background: var(--self-yes); color: white; }
+  .sc-no { border-color: var(--self-no); color: var(--self-no); }
+  .sc-no:hover:not(:disabled), .sc-no.active { background: var(--self-no); color: white; }
+  .sc-partial { border-color: var(--self-partial); color: var(--self-partial); }
+  .sc-partial:hover:not(:disabled), .sc-partial.active { background: var(--self-partial); color: white; }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: var(--ink); }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .input-with-check { display: flex; align-items: center; gap: 8px; }
+  .inline-check { display: none; width: 18px; height: 18px; background: #4caf50; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0; }
+  .inline-check.show { display: flex; }
+
+  .btn-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  .notes-heading { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--ink); margin: 18px 0 8px; border-bottom: 1.5px solid var(--border); padding-bottom: 6px; }
+  .notes-heading:first-of-type { margin-top: 0; }
+  .example-note { font-size: 12px; color: var(--muted); font-style: italic; margin-bottom: 8px; }
+
+  .format-badge { display: inline-block; background: var(--gold); color: var(--ink); font-size: 9px; font-weight: 700; letter-spacing: 1.5px; padding: 2px 7px; border-radius: 3px; margin-left: 6px; text-transform: uppercase; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IGCSE 0510/12 · May/June 2024 <span class="format-badge">New Format</span></span>
+    <h1>Green Turtle, Voices, Underground Homes &amp; Feedback</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 30</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('ex1')">Exercise 1</button>
+  <button class="tab-btn" onclick="showTab('ex2')">Exercise 2</button>
+  <button class="tab-btn" onclick="showTab('ex3')">Exercise 3</button>
+  <button class="tab-btn" onclick="showTab('ex4')">Exercise 4</button>
+</div>
+
+<!-- ════════════════════ EXERCISE 1 ════════════════════ -->
+<div class="exercise active" id="ex1">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Exercise 1</div>
+    <div class="article-box">
+      <div class="article-title">The green turtle</div>
+      <img class="article-img" src="data:image/jpeg;base64,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" alt="Illustration of a green turtle">
+      <div class="article-body">
+        <p>The green turtle is the second largest of the seven species of sea turtle and grows to a length of around 140 centimetres. It spends most of its life in the open ocean. The hard, protective shell covering its back is often green in colour, and you might assume it is this feature which gives the turtle its name. However, it actually comes from the fat beneath the shell, which is a delicate shade of green. This species of turtle has two bone-like plates near its eyes that distinguish it from other species of turtle, which have more.</p>
+        <p>Female green turtles return to the beach where they were born to lay their eggs. They dig a large hole before filling it with up to 200 eggs, which they cover with sand. Foxes eat turtle eggs if they can find them, so the sand provides protection. The babies emerge at night and head for the sea, but even so, many tiny turtles are eaten by birds as they make their way down the beach. The turtles feed primarily on small creatures at this stage but consume increasing quantities of plant-based materials as they mature. When they are fully grown, they are totally vegetarian, the only turtle species to be so.</p>
+        <p>Apart from when they are new-born or laying eggs, green turtles spend their entire lives at sea. Few animals are large or powerful enough to eat an adult green turtle, although tiger sharks occasionally attack them. Green turtles are capable of holding their breath for around five minutes when active but can do so for several hours when sleeping. This avoids the need for them to stay close to the surface, where it's not safe, and allows them to remain hidden among rocks when inactive at night.</p>
+        <p>Male and female green turtles can look surprisingly similar. Size is not necessarily a good indication of which is which, as mature males and females are roughly similar in length and weight. Additionally, a male that is larger than a female may simply be older. It has a longer tail when compared to the female, and it is this feature which is used to identify the gender.</p>
+        <p>Green turtle numbers worldwide are declining. They can accidentally eat plastic waste in the sea, which is a serious threat for them, and they sometimes get caught in fishing nets too. The International Union for Conservation of Nature lists animals and plants according to how common or threatened they are. Two of the seven types of sea turtle, the green turtle included, are seen by the organisation as endangered, so it's not just conservationists who should be concerned: we all need to be!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 1–6 · 8 marks</div>
+    <div class="ex-intro">Type your answer for each question, then click <strong>Reveal Answers</strong>. Use the self-check buttons to score yourself honestly.</div>
+    <div class="result-bar" id="ex1-result">Exercise 1 complete — Score: <span id="ex1-score">0</span> / 8</div>
+    <div class="nudge-banner" id="ex1-nudge"><span class="nudge-icon">✏️</span> Please answer all questions before revealing.</div>
+
+    <div class="question-item" id="ex1-q1-item">
+      <div class="q-header"><span class="q-num">1</span><span class="q-text">Where does the green turtle get its name from?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q1"><span class="inline-check" id="ex1-q1-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q1-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">fat beneath shell</div></div>
+      <div class="self-check-row" id="ex1-q1-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q1','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q1','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q2-item">
+      <div class="q-header"><span class="q-num">2</span><span class="q-text">What makes the diet of adult green turtles different from other turtle species?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q2"><span class="inline-check" id="ex1-q2-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q2-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">vegetarian</div></div>
+      <div class="self-check-row" id="ex1-q2-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q2','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q2','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q3-item">
+      <div class="q-header"><span class="q-num">3</span><span class="q-text">Where do green turtles usually sleep while underwater?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q3"><span class="inline-check" id="ex1-q3-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q3-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">(among) rocks</div></div>
+      <div class="self-check-row" id="ex1-q3-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q3','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q3','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q4-item">
+      <div class="q-header"><span class="q-num">4</span><span class="q-text">How does a male green turtle differ from a female?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q4"><span class="inline-check" id="ex1-q4-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q4-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">longer tail / long tail compared to female</div></div>
+      <div class="self-check-row" id="ex1-q4-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q4','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q4','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q5-item">
+      <div class="q-header"><span class="q-num">5</span><span class="q-text">How are green turtles described by the International Union for Conservation of Nature?</span><span class="q-marks">1</span></div>
+      <div class="input-with-check"><input type="text" id="ex1-q5"><span class="inline-check" id="ex1-q5-check">✓</span></div>
+      <div class="answer-reveal-box" id="ex1-q5-reveal"><div class="answer-label">Model Answer</div><div class="answer-text">endangered</div></div>
+      <div class="self-check-row" id="ex1-q5-sc"><span class="self-check-label">Did you get it right?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q5','yes',1)">Yes (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q5','no',0)">No (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex1-q6-item">
+      <div class="q-header"><span class="q-num">6</span><span class="q-text">How are green turtles put in danger during their lives? Give <strong>three</strong> details.</span><span class="q-marks">3</span></div>
+      <div class="inputs-row">
+        <div class="input-with-check"><input type="text" id="ex1-q6a" placeholder="Detail 1"><span class="inline-check" id="ex1-q6a-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex1-q6b" placeholder="Detail 2"><span class="inline-check" id="ex1-q6b-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex1-q6c" placeholder="Detail 3"><span class="inline-check" id="ex1-q6c-check">✓</span></div>
+      </div>
+      <div class="answer-reveal-box" id="ex1-q6-reveal">
+        <div class="answer-label">Model Answers (any 3 of 5)</div>
+        <ul class="answer-list">
+          <li>foxes eat (their) eggs</li>
+          <li>(tiny turtles) eaten by birds</li>
+          <li>tiger sharks attack / eaten by large/powerful animals</li>
+          <li>eat plastic (waste)</li>
+          <li>caught in (fishing) nets</li>
+        </ul>
+      </div>
+      <div class="self-check-row" id="ex1-q6-sc"><span class="self-check-label">How many correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx1('q6','yes',3)">All 3 (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx1('q6','partial',2)">2 right (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx1('q6','partial',1)">1 right (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx1('q6','no',0)">None (0)</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex1-submit" onclick="submitEx1()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex1')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ EXERCISE 2 ════════════════════ -->
+<div class="exercise" id="ex2">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Exercise 2</div>
+    <div class="article-box">
+      <div class="article-title">Four reviews of <em>Voices</em></div>
+      <div class="article-byline">Reviews by four young people of a poetry collection for teenagers</div>
+      <div class="article-body">
+        <div class="section-letter">A — Millie</div>
+        <p>To be honest, I've always thought that the subject matter of a lot of the poetry teenagers like me have to study at school is beyond our experience and understanding. So what a delightful surprise it was to come across <em>Voices</em>. Although I was unfamiliar with many of the poets in the collection, several are dear to me. Actually, some of their poems, thankfully included in this book, have supported me during emotionally upsetting periods of my life. I'm sure the same will be true for other readers. Work by several teenage poets is included, and although there's much to admire in their poems, I have to admit to preferring the poetry of more experienced writers. Once a poem goes beyond a page in length, I tend to lose interest, so seeing only one or two examples of such poems in <em>Voices</em> was a great relief.</p>
+
+        <div class="section-letter">B — Eduardo</div>
+        <p>My first impression of <em>Voices</em> was far from great, I'm afraid, as the cover struck me immediately as being rather childish. The contents of the book are much more pleasing on the whole, although I was expecting to see far more work by poets of the same age as me. I know too little about poetry to claim that any selection I could come up with would be any better, but the theme of lots of the poems seems too adult to me, which meant I was never really sure what they were trying to say. I'd like to have seen a maximum number of poems per writer. One poet especially, whose work I couldn't really connect with, should have had far fewer poems in the collection. I found the poetry relating to the environment, which appeared in several poets' work, inspiring to read, though.</p>
+
+        <div class="section-letter">C — Daiyu</div>
+        <p>I suspect that most adults will object to the cover of <em>Voices</em>, which has the title painted onto it in a street-art style. It's supposed to attract teenagers, though, which I think it does highly effectively. My affection for <em>Voices</em> only increased on reading the contents page, as there are more poems by Olivia Infanta, a writer whose work has inspired me for a while, than any other poet. The other poetry included in <em>Voices</em>, however, was rather disappointing. Many of the poems in <em>Voices</em> deal with environmental issues and I can understand why this might be the case, but a little more variety of themes would have been welcome. It's my guess that whoever put this collection together was not a teenager, and I can't help feeling that a poetry-loving sixteen-year-old like me could have come up with a more appropriate set of poems.</p>
+
+        <div class="section-letter">D — Radislav</div>
+        <p>Although I'd never describe myself as a regular reader of poetry, I really enjoyed <em>Voices</em>. When reading through the poem titles and the names of the writers at the beginning of the book, there wasn't even one I was familiar with. I actually see that as an advantage, because I could read the book with an open mind. What I found particularly satisfying was the fact that the environmental problems we're facing in these challenging times were the theme of many of these poems. There were several quite lengthy ones that were especially enjoyable, if that's the right word to use for such a difficult subject. Amazingly, I've actually started writing poetry myself since reading <em>Voices</em>, thanks mainly to seeing writers who are no older than me produce such beautiful verse. I can't think of a better selection of poems to introduce teenage readers like me to poetry.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Question 7 (a–i) · 9 marks</div>
+    <div class="ex-intro">Which review (<strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>) includes each idea or opinion? Select a letter for each statement.</div>
+    <div class="result-bar" id="ex2-result">Exercise 2 complete — Score: <span id="ex2-score">0</span> / 9</div>
+    <div class="nudge-banner" id="ex2-nudge"><span class="nudge-icon">✏️</span> Please answer all questions before submitting.</div>
+
+    <div id="ex2-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex2-submit" onclick="submitEx2()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex2')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ EXERCISE 3 ════════════════════ -->
+<div class="exercise" id="ex3">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Exercise 3</div>
+    <div class="article-box">
+      <div class="article-title">Underground homes</div>
+      <div class="article-body">
+        <p>Many thousands of years ago, long before the development of houses, people found shelter underground in caves that were either naturally formed or created by early humans. In recent years, there has been a trend towards living underground once more, in homes that are partly or almost entirely buried or surrounded by rock. Although interest in this type of home is steadily growing, suitable sites are limited, so it is unlikely that we will all end up living in one in the near future. Part of the attraction of building an underground home is that construction costs are low if an appropriate location can be found.</p>
+        <p>Underground homes vary a great deal in their design. Some are completely underground except for one external wall, in which there is a door to allow entry into the property and perhaps some windows. This type of home may lack interior light, which many people find a struggle to cope with. These homes are, however, extremely energy efficient as heat cannot easily escape from them into the surrounding atmosphere. An example of this type of home can be found in the mid-western United States. Home to a family of four, most of the building is hidden inside a small, grass-covered hill, which reduces damage to the landscape. An unexpected issue that can sometimes occur with this kind of home, which has trees and plants growing on top of it, is that the roots can damage the building. However, a special protective material is usually fitted to the building to prevent this from happening.</p>
+        <p>Other homes are only partly underground, and sections of their structure may appear very similar to more conventional houses from the front. One such property in Spain, for instance, looks exactly like a normal house when viewed from outside, with a typical roof, several windows and a front door facing out onto the road. However, a large amount of the living space is hidden in the hill behind it. As with all underground homes, this astonishing property is far easier to maintain than traditional houses, which is one of the many things that might attract a buyer.</p>
+        <p>Anyone exploring an underground home for the first time is highly likely to notice a particular characteristic which appeals to many people: the complete lack of background noise. When your home is covered or surrounded by tonnes and tonnes of soil or rock, very little sound can get in from outside. Another feature of underground homes, which is less favourable, is the poor air quality found in many of them. However, for those people who have chosen to buy an underground home, they generally find that there are more benefits to living in such buildings than there are disadvantages.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 8–9 · 7 marks</div>
+    <div class="ex-intro">Imagine you are giving a talk about underground homes to your classmates. Use words from the article to write short notes under each heading.</div>
+    <div class="result-bar" id="ex3-result">Exercise 3 complete — Score: <span id="ex3-score">0</span> / 7</div>
+    <div class="nudge-banner" id="ex3-nudge"><span class="nudge-icon">✏️</span> Please fill in all bullets before revealing.</div>
+
+    <div class="question-item" id="ex3-q8-item">
+      <div class="q-header"><span class="q-num">8</span><span class="q-text"><strong>Benefits which make underground homes popular</strong> — give 4 details</span><span class="q-marks">4</span></div>
+      <div class="inputs-row">
+        <div class="input-with-check"><input type="text" id="ex3-q8a" placeholder="Benefit 1"><span class="inline-check" id="ex3-q8a-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q8b" placeholder="Benefit 2"><span class="inline-check" id="ex3-q8b-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q8c" placeholder="Benefit 3"><span class="inline-check" id="ex3-q8c-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q8d" placeholder="Benefit 4"><span class="inline-check" id="ex3-q8d-check">✓</span></div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q8-reveal">
+        <div class="answer-label">Model Answers (any 4 of 5)</div>
+        <ul class="answer-list">
+          <li>construction costs low</li>
+          <li>energy efficient / heat cannot easily escape</li>
+          <li>reduces damage to landscape</li>
+          <li>easier to maintain</li>
+          <li>lack of background noise / little sound can get in</li>
+        </ul>
+      </div>
+      <div class="self-check-row" id="ex3-q8-sc"><span class="self-check-label">How many correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q8','yes',4)">All 4 (4)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q8','partial',3)">3 right (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q8','partial',2)">2 right (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q8','partial',1)">1 right (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q8','no',0)">None (0)</button>
+      </div>
+    </div>
+
+    <div class="question-item" id="ex3-q9-item">
+      <div class="q-header"><span class="q-num">9</span><span class="q-text"><strong>Disadvantages of underground homes</strong> — give 3 details</span><span class="q-marks">3</span></div>
+      <div class="inputs-row">
+        <div class="input-with-check"><input type="text" id="ex3-q9a" placeholder="Disadvantage 1"><span class="inline-check" id="ex3-q9a-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q9b" placeholder="Disadvantage 2"><span class="inline-check" id="ex3-q9b-check">✓</span></div>
+        <div class="input-with-check"><input type="text" id="ex3-q9c" placeholder="Disadvantage 3"><span class="inline-check" id="ex3-q9c-check">✓</span></div>
+      </div>
+      <div class="answer-reveal-box" id="ex3-q9-reveal">
+        <div class="answer-label">Model Answers (any 3 of 4)</div>
+        <ul class="answer-list">
+          <li>sites limited</li>
+          <li>lack (interior) light</li>
+          <li>roots damage the building / plants/trees on top damage building</li>
+          <li>poor air / air quality</li>
+        </ul>
+      </div>
+      <div class="self-check-row" id="ex3-q9-sc"><span class="self-check-label">How many correct?</span>
+        <button class="sc-btn sc-yes" onclick="selfCheckEx3('q9','yes',3)">All 3 (3)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q9','partial',2)">2 right (2)</button>
+        <button class="sc-btn sc-partial" onclick="selfCheckEx3('q9','partial',1)">1 right (1)</button>
+        <button class="sc-btn sc-no" onclick="selfCheckEx3('q9','no',0)">None (0)</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex3-submit" onclick="submitEx3()">Reveal Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex3')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ EXERCISE 4 ════════════════════ -->
+<div class="exercise" id="ex4">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Exercise 4</div>
+    <div class="article-box">
+      <div class="article-title">The power of feedback</div>
+      <div class="lined-body" id="ex4-article"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 10–15 · 6 marks</div>
+    <div class="ex-intro">Choose the correct answer <strong>A</strong>, <strong>B</strong> or <strong>C</strong> for each question.</div>
+    <div class="result-bar" id="ex4-result">Exercise 4 complete — Score: <span id="ex4-score">0</span> / 6</div>
+    <div class="nudge-banner" id="ex4-nudge"><span class="nudge-icon">✏️</span> Please answer all questions before submitting.</div>
+
+    <div id="ex4-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="ex4-submit" onclick="submitEx4()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetEx('ex4')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────── TAB SWITCHING ───────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─────────── SCORE TRACKING ───────────
+const scores = { ex1:{}, ex2:{}, ex3:{}, ex4:{} };
+function sum(o){ return Object.values(o).reduce((a,b)=>a+b,0); }
+function updateScores() {
+  const e1=sum(scores.ex1), e2=sum(scores.ex2), e3=sum(scores.ex3), e4=sum(scores.ex4);
+  document.getElementById('ex1-score').textContent = e1;
+  document.getElementById('ex2-score').textContent = e2;
+  document.getElementById('ex3-score').textContent = e3;
+  document.getElementById('ex4-score').textContent = e4;
+  document.getElementById('total-score').textContent = e1+e2+e3+e4;
+}
+
+// ─────────── EXERCISE 1 — reveal + self-check ───────────
+function submitEx1() {
+  const ids = ['ex1-q1','ex1-q2','ex1-q3','ex1-q4','ex1-q5','ex1-q6a','ex1-q6b','ex1-q6c'];
+  if (!ids.every(id => document.getElementById(id).value.trim())) {
+    const nb = document.getElementById('ex1-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ids.forEach(id => {
+    document.getElementById(id).disabled = true;
+    const chk = document.getElementById(id + '-check');
+    if (chk) chk.classList.add('show');
+  });
+  ['q1','q2','q3','q4','q5','q6'].forEach(q => {
+    document.getElementById('ex1-'+q+'-reveal').classList.add('show');
+    document.getElementById('ex1-'+q+'-sc').classList.add('show');
+  });
+  document.getElementById('ex1-result').classList.add('show');
+  document.getElementById('ex1-submit').disabled = true;
+}
+
+function selfCheckEx1(q, result, pts) {
+  scores.ex1[q] = pts;
+  const item = document.getElementById('ex1-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  const maxPts = (q === 'q6') ? 3 : 1;
+  if (pts === maxPts) item.classList.add('sc-correct');
+  else if (pts === 0) item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById('ex1-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ─────────── EXERCISE 2 — auto-mark A/B/C/D ───────────
+const ex2Questions = [
+  { id:'qa', text:'Reading work by poets from my own age group inspired me.', correct:'D' },
+  { id:'qb', text:'There was too much focus on one specific topic.', correct:'C' },
+  { id:'qc', text:'I\'d never heard of any of the poets in the book.', correct:'D' },
+  { id:'qd', text:'Some of the poems in the book helped me during difficult times.', correct:'A' },
+  { id:'qe', text:'I found many of the poems in the book hard to understand.', correct:'B' },
+  { id:'qf', text:'I think I could have chosen a better selection of poems.', correct:'C' },
+  { id:'qg', text:'There are too many poems by one particular poet.', correct:'B' },
+  { id:'qh', text:'I\'m pleased that there are few very long poems.', correct:'A' },
+  { id:'qi', text:'The design on the front of the book will appeal to teenagers.', correct:'C' }
+];
+
+const ex2Explanations = {
+  qa: 'Radislav (D): he started writing poetry himself thanks to "seeing writers who are no older than me produce such beautiful verse".',
+  qb: 'Daiyu (C): many poems deal with environmental issues, and "a little more variety of themes would have been welcome".',
+  qc: 'Radislav (D): "there wasn\'t even one I was familiar with" — he saw this as an advantage.',
+  qd: 'Millie (A): some poems "have supported me during emotionally upsetting periods of my life".',
+  qe: 'Eduardo (B): the themes seemed too adult, so "I was never really sure what they were trying to say".',
+  qf: 'Daiyu (C): "a poetry-loving sixteen-year-old like me could have come up with a more appropriate set of poems".',
+  qg: 'Eduardo (B): "One poet especially... should have had far fewer poems in the collection."',
+  qh: 'Millie (A): she loses interest in long poems, so "seeing only one or two examples of such poems... was a great relief".',
+  qi: 'Daiyu (C): the street-art cover is "supposed to attract teenagers... which I think it does highly effectively".'
+};
+
+const ex2Selections = {};
+function renderEx2() {
+  const container = document.getElementById('ex2-questions');
+  ex2Questions.forEach((q, i) => {
+    const qId = 'ex2-' + q.id;
+    const letter = String.fromCharCode(97 + i); // a-i
+    container.innerHTML += `
+      <div class="question-item" id="${qId}-item">
+        <div class="q-header">
+          <span class="q-num">7${letter}</span>
+          <span class="q-text">${q.text}</span>
+          <span class="q-marks">1</span>
+        </div>
+        <div class="abcd-row" id="${qId}-btns">
+          <button class="abcd-btn" onclick="selectAbcd('${qId}','A',this)">A</button>
+          <button class="abcd-btn" onclick="selectAbcd('${qId}','B',this)">B</button>
+          <button class="abcd-btn" onclick="selectAbcd('${qId}','C',this)">C</button>
+          <button class="abcd-btn" onclick="selectAbcd('${qId}','D',this)">D</button>
+        </div>
+        <div class="feedback" id="${qId}-fb"></div>
+      </div>`;
+  });
+}
+
+function selectAbcd(qId, letter, btn) {
+  const allBtns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+  allBtns.forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  ex2Selections[qId] = letter;
+}
+
+function submitEx2() {
+  const allAnswered = ex2Questions.every(q => ex2Selections['ex2-' + q.id]);
+  if (!allAnswered) {
+    const nb = document.getElementById('ex2-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ex2Questions.forEach(q => {
+    const qId = 'ex2-' + q.id;
+    const selected = ex2Selections[qId];
+    const correct = q.correct;
+    const btns = document.querySelectorAll('#' + qId + '-btns .abcd-btn');
+    btns.forEach(b => { b.disabled = true; });
+    btns.forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + ex2Explanations[q.id];
+      scores.ex2[q.id] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + ex2Explanations[q.id];
+      scores.ex2[q.id] = 0;
+    }
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('ex2-result').classList.add('show');
+  document.getElementById('ex2-submit').disabled = true;
+}
+
+// ─────────── EXERCISE 3 — reveal + self-check ───────────
+function submitEx3() {
+  const allIds = ['ex3-q8a','ex3-q8b','ex3-q8c','ex3-q8d','ex3-q9a','ex3-q9b','ex3-q9c'];
+  if (!allIds.every(id => document.getElementById(id).value.trim())) {
+    const nb = document.getElementById('ex3-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  allIds.forEach(id => {
+    document.getElementById(id).disabled = true;
+    const chk = document.getElementById(id + '-check');
+    if (chk) chk.classList.add('show');
+  });
+  ['ex3-q8-reveal','ex3-q9-reveal'].forEach(id => document.getElementById(id).classList.add('show'));
+  ['ex3-q8-sc','ex3-q9-sc'].forEach(id => document.getElementById(id).classList.add('show'));
+  document.getElementById('ex3-result').classList.add('show');
+  document.getElementById('ex3-submit').disabled = true;
+}
+
+function selfCheckEx3(q, result, pts) {
+  scores.ex3[q] = pts;
+  const item = document.getElementById('ex3-'+q+'-item');
+  item.classList.remove('sc-correct','sc-wrong','sc-half');
+  const maxPts = (q === 'q8') ? 4 : 3;
+  if (pts === maxPts) item.classList.add('sc-correct');
+  else if (pts === 0) item.classList.add('sc-wrong');
+  else item.classList.add('sc-half');
+  const scRow = document.getElementById('ex3-'+q+'-sc');
+  scRow.querySelectorAll('.sc-btn').forEach(b => { b.disabled = true; b.classList.remove('active'); });
+  event.target.classList.add('active');
+  updateScores();
+}
+
+// ─────────── EXERCISE 4 — auto-mark A/B/C with numbered lines ───────────
+// Each inner array is one paragraph; lines are split to match the real exam so "line 12" is correct.
+const ex4Paragraphs = [
+  [
+    "Imagine you're talking to someone, and you notice that they have an unusual new hairstyle. Would",
+    "you comment on it? How likely you are to do so depends on things such as who the other person",
+    "is, the context in which it happens, and even your own personality. In some instances, it can be",
+    "difficult to know what to say in a situation like this, as you don't want to hurt the person's feelings.",
+    "In fact, in a recent study, fewer than 3% of people said they would comment on an aspect of",
+    "someone's appearance if they felt negatively about it."
+  ],
+  [
+    "Apart from issues relating to appearance, feedback is vital for learning and growth. Students need it",
+    "in order to develop their skills and knowledge. In schools, teachers say that feedback can improve",
+    "performance. In our personal lives, children may tell a parent that the curry they cooked was too",
+    "spicy, or parents tell their kids to be more polite. Yet we are often unwilling to provide feedback in",
+    "these situations too. Researchers who conducted the study mentioned above have proposed that",
+    "a significant reason for this is that we simply fail to realise how valuable feedback is to the person",
+    "receiving it."
+  ],
+  [
+    "The research team decided to investigate this theory through a series of experiments. In one,",
+    "participants were asked to imagine either receiving or giving feedback in different situations: for",
+    "example, if there were errors in a presentation they had given. In another, they were asked to",
+    "provide genuine feedback to someone, for instance, telling a friend that they're always late when",
+    "you arrange to meet. Across the various experiments, fewer than half of the participants wanted",
+    "to provide feedback when given a choice, while a large majority of them were extremely eager to",
+    "receive it. Interestingly, receivers generally described the feedback as 'highly valuable'."
+  ],
+  [
+    "What was striking about the study was that even though the data was obtained in a variety of",
+    "ways, the results were identical. Little account was taken, however, of the effects that differences in",
+    "the relationships between the people involved could have. For example, feedback from a teacher",
+    "to a student is going to be very different to feedback between friends. The study also failed to",
+    "consider how often feedback is given. A friend who is constantly telling you how to improve is likely",
+    "to become annoying very quickly."
+  ],
+  [
+    "School-based research has identified how important the type of feedback provided can be. If",
+    "teachers tell pupils specifically where they have gone wrong and how to improve – higher-level",
+    "feedback – then this often leads to dramatic improvements in performance. General feedback,",
+    "however – such as giving praise for a piece of work without saying exactly why it was good – may",
+    "appear to encourage a student yet has little effect on their education."
+  ],
+  [
+    "What these and many other studies have shown is that not all feedback is welcome by all people",
+    "all of the time. While it is generally valued, this isn't true in every case, so thought must be given",
+    "to not only what you are going to say, but whether you should be saying it at all. It is also worth",
+    "remembering that participants in research studies are not observed in real situations, while genuine",
+    "feedback is given in the real world. We should therefore be cautious about immediately telling",
+    "someone what they've got wrong and how they can improve. So, in many cases, asking someone",
+    "if they would like your feedback would be a better starting point."
+  ]
+];
+
+function renderEx4Article() {
+  const container = document.getElementById('ex4-article');
+  let html = '';
+  let n = 0;
+  ex4Paragraphs.forEach((para, pi) => {
+    para.forEach(line => {
+      n++;
+      html += `<div class="line"><span class="line-num">${n}</span><span class="line-text">${line}</span></div>`;
+    });
+    if (pi < ex4Paragraphs.length - 1) html += '<div class="para-spacer"></div>';
+  });
+  container.innerHTML = html;
+}
+
+const ex4Questions = [
+  { num:10, text:'In paragraph 1, the writer suggests that decisions on whether to give negative feedback',
+    options:{A:'depend on how you\'re feeling.', B:'prove easy for most people.', C:'are influenced by a range of factors.'},
+    correct:'C',
+    explain:'The writer says it depends on "who the other person is, the context... and even your own personality" — a range of factors. (B is wrong: the writer says it "can be difficult to know what to say".)' },
+  { num:11, text:'What does <strong>\'this\'</strong> refer to in line 12?',
+    options:{A:'people are often unwilling to provide feedback', B:'people fail to realise how valuable feedback is', C:'teachers say that feedback can improve performance'},
+    correct:'A',
+    explain:'"A significant reason for this..." points back to the previous sentence: "we are often unwilling to provide feedback". B is the reason itself, not what "this" refers to.' },
+  { num:12, text:'In paragraph 3, the writer says that',
+    options:{A:'the quality of feedback varies according to the situation.', B:'people have a strong desire to get feedback.', C:'those giving feedback believe it\'s not really helping.'},
+    correct:'B',
+    explain:'"A large majority of them were extremely eager to receive it" — people have a strong desire to get feedback.' },
+  { num:13, text:'In paragraph 4, the writer says that a <strong>strength</strong> of the research was that',
+    options:{A:'it analysed situations in which levels of authority vary.', B:'the different experiments reached the same conclusions.', C:'the frequency of feedback was taken into consideration.'},
+    correct:'B',
+    explain:'"Even though the data was obtained in a variety of ways, the results were identical." A and C are things the study actually failed to do.' },
+  { num:14, text:'In paragraph 5, the writer suggests that feedback given in schools should',
+    options:{A:'be a mixture of higher-level and general.', B:'appear to be positive even when it is critical.', C:'focus on learners\' problems and their solutions.'},
+    correct:'C',
+    explain:'Higher-level feedback tells pupils "specifically where they have gone wrong and how to improve" and leads to dramatic improvements; general praise has little effect.' },
+  { num:15, text:'In the final paragraph, what advice does the writer offer about providing feedback?',
+    options:{A:'Give it at every possible opportunity.', B:'Approach every situation with care.', C:'Practise before doing it in reality.'},
+    correct:'B',
+    explain:'The writer says "thought must be given to... whether you should be saying it at all" and to be cautious — approach every situation with care.' }
+];
+
+const ex4Selections = {};
+
+function renderEx4Questions() {
+  const container = document.getElementById('ex4-questions');
+  ex4Questions.forEach(q => {
+    const qId = 'ex4-q' + q.num;
+    let optsHtml = '';
+    ['A','B','C'].forEach(L => {
+      optsHtml += `<div class="abc-opt" onclick="selectAbc('${qId}','${L}',this)"><span class="abc-letter">${L}</span><span>${q.options[L]}</span></div>`;
+    });
+    container.innerHTML += `
+      <div class="question-item" id="${qId}-item">
+        <div class="q-header">
+          <span class="q-num">${q.num}</span>
+          <span class="q-text">${q.text}</span>
+          <span class="q-marks">1</span>
+        </div>
+        <div class="abc-row" id="${qId}-opts">${optsHtml}</div>
+        <div class="feedback" id="${qId}-fb"></div>
+      </div>`;
+  });
+}
+
+function selectAbc(qId, letter, opt) {
+  const allOpts = document.querySelectorAll('#' + qId + '-opts .abc-opt');
+  allOpts.forEach(o => o.classList.remove('selected'));
+  opt.classList.add('selected');
+  ex4Selections[qId] = letter;
+}
+
+function submitEx4() {
+  const allAnswered = ex4Questions.every(q => ex4Selections['ex4-q' + q.num]);
+  if (!allAnswered) {
+    const nb = document.getElementById('ex4-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  ex4Questions.forEach(q => {
+    const qId = 'ex4-q' + q.num;
+    const selected = ex4Selections[qId];
+    const correct = q.correct;
+    const opts = document.querySelectorAll('#' + qId + '-opts .abc-opt');
+    opts.forEach(o => {
+      o.classList.add('disabled');
+      o.onclick = null;
+      const letter = o.querySelector('.abc-letter').textContent;
+      o.classList.remove('selected');
+      if (letter === correct) o.classList.add('correct-answer');
+      else if (letter === selected && selected !== correct) o.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + q.explain;
+      scores.ex4['q' + q.num] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + q.explain;
+      scores.ex4['q' + q.num] = 0;
+    }
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('ex4-result').classList.add('show');
+  document.getElementById('ex4-submit').disabled = true;
+}
+
+// ─────────── RESET ───────────
+function resetEx(ex) {
+  if (ex === 'ex1') {
+    scores.ex1 = {};
+    ['ex1-q1','ex1-q2','ex1-q3','ex1-q4','ex1-q5','ex1-q6a','ex1-q6b','ex1-q6c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+      const chk = document.getElementById(id+'-check');
+      if (chk) chk.classList.remove('show');
+    });
+    ['q1','q2','q3','q4','q5','q6'].forEach(q => {
+      const item = document.getElementById('ex1-'+q+'-item');
+      if (item) item.classList.remove('sc-correct','sc-wrong','sc-half');
+      const rev = document.getElementById('ex1-'+q+'-reveal');
+      if (rev) rev.classList.remove('show');
+      const sc = document.getElementById('ex1-'+q+'-sc');
+      if (sc) { sc.classList.remove('show'); sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); }); }
+    });
+    document.getElementById('ex1-result').classList.remove('show');
+    document.getElementById('ex1-submit').disabled = false;
+  } else if (ex === 'ex2') {
+    scores.ex2 = {};
+    ex2Questions.forEach(q => {
+      const qId = 'ex2-' + q.id;
+      document.querySelectorAll('#'+qId+'-btns .abcd-btn').forEach(b => {
+        b.disabled=false; b.classList.remove('selected','correct-answer','wrong-answer');
+      });
+      delete ex2Selections[qId];
+      const item = document.getElementById(qId+'-item');
+      if (item) item.classList.remove('correct','wrong');
+      const fb = document.getElementById(qId+'-fb');
+      if (fb) { fb.style.display='none'; fb.innerHTML=''; }
+    });
+    document.getElementById('ex2-result').classList.remove('show');
+    document.getElementById('ex2-submit').disabled = false;
+  } else if (ex === 'ex3') {
+    scores.ex3 = {};
+    ['ex3-q8a','ex3-q8b','ex3-q8c','ex3-q8d','ex3-q9a','ex3-q9b','ex3-q9c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value=''; el.disabled=false; }
+      const chk = document.getElementById(id+'-check');
+      if (chk) chk.classList.remove('show');
+    });
+    ['ex3-q8-reveal','ex3-q9-reveal'].forEach(id => document.getElementById(id).classList.remove('show'));
+    ['ex3-q8-sc','ex3-q9-sc'].forEach(id => {
+      const sc = document.getElementById(id);
+      sc.classList.remove('show');
+      sc.querySelectorAll('.sc-btn').forEach(b => { b.disabled=false; b.classList.remove('active'); });
+    });
+    ['ex3-q8-item','ex3-q9-item'].forEach(id => document.getElementById(id).classList.remove('sc-correct','sc-wrong','sc-half'));
+    document.getElementById('ex3-result').classList.remove('show');
+    document.getElementById('ex3-submit').disabled = false;
+  } else {
+    scores.ex4 = {};
+    ex4Questions.forEach(q => {
+      const qId = 'ex4-q' + q.num;
+      delete ex4Selections[qId];
+      const opts = document.querySelectorAll('#' + qId + '-opts .abc-opt');
+      opts.forEach((o, i) => {
+        o.classList.remove('selected','correct-answer','wrong-answer','disabled');
+        const letter = ['A','B','C'][i];
+        o.onclick = () => selectAbc(qId, letter, o);
+      });
+      const item = document.getElementById(qId+'-item');
+      if (item) item.classList.remove('correct','wrong');
+      const fb = document.getElementById(qId+'-fb');
+      if (fb) { fb.style.display='none'; fb.innerHTML=''; }
+    });
+    document.getElementById('ex4-result').classList.remove('show');
+    document.getElementById('ex4-submit').disabled = false;
+  }
+  updateScores();
+}
+
+// ─────────── INIT ───────────
+renderEx2();
+renderEx4Article();
+renderEx4Questions();
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
