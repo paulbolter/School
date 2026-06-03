@@ -411,7 +411,7 @@
     <div class="panel-label">Reading Passage · Exercise 4</div>
     <div class="article-box">
       <div class="article-title">The power of feedback</div>
-      <div class="lined-body" id="ex4-article"></div>
+      <div class="article-body" id="ex4-article"></div>
     </div>
   </div>
 
@@ -614,81 +614,36 @@ function selfCheckEx3(q, result, pts) {
   updateScores();
 }
 
-// ─────────── EXERCISE 4 — auto-mark A/B/C with numbered lines ───────────
-// Each inner array is one paragraph; lines are split to match the real exam so "line 12" is correct.
+// ─────────── EXERCISE 4 — auto-mark A/B/C ───────────
+// The word "this" referred to in Question 11 is wrapped in __HL__ ... __ENDHL__ so it is highlighted.
 const ex4Paragraphs = [
-  [
-    "Imagine you're talking to someone, and you notice that they have an unusual new hairstyle. Would",
-    "you comment on it? How likely you are to do so depends on things such as who the other person",
-    "is, the context in which it happens, and even your own personality. In some instances, it can be",
-    "difficult to know what to say in a situation like this, as you don't want to hurt the person's feelings.",
-    "In fact, in a recent study, fewer than 3% of people said they would comment on an aspect of",
-    "someone's appearance if they felt negatively about it."
-  ],
-  [
-    "Apart from issues relating to appearance, feedback is vital for learning and growth. Students need it",
-    "in order to develop their skills and knowledge. In schools, teachers say that feedback can improve",
-    "performance. In our personal lives, children may tell a parent that the curry they cooked was too",
-    "spicy, or parents tell their kids to be more polite. Yet we are often unwilling to provide feedback in",
-    "these situations too. Researchers who conducted the study mentioned above have proposed that",
-    "a significant reason for this is that we simply fail to realise how valuable feedback is to the person",
-    "receiving it."
-  ],
-  [
-    "The research team decided to investigate this theory through a series of experiments. In one,",
-    "participants were asked to imagine either receiving or giving feedback in different situations: for",
-    "example, if there were errors in a presentation they had given. In another, they were asked to",
-    "provide genuine feedback to someone, for instance, telling a friend that they're always late when",
-    "you arrange to meet. Across the various experiments, fewer than half of the participants wanted",
-    "to provide feedback when given a choice, while a large majority of them were extremely eager to",
-    "receive it. Interestingly, receivers generally described the feedback as 'highly valuable'."
-  ],
-  [
-    "What was striking about the study was that even though the data was obtained in a variety of",
-    "ways, the results were identical. Little account was taken, however, of the effects that differences in",
-    "the relationships between the people involved could have. For example, feedback from a teacher",
-    "to a student is going to be very different to feedback between friends. The study also failed to",
-    "consider how often feedback is given. A friend who is constantly telling you how to improve is likely",
-    "to become annoying very quickly."
-  ],
-  [
-    "School-based research has identified how important the type of feedback provided can be. If",
-    "teachers tell pupils specifically where they have gone wrong and how to improve – higher-level",
-    "feedback – then this often leads to dramatic improvements in performance. General feedback,",
-    "however – such as giving praise for a piece of work without saying exactly why it was good – may",
-    "appear to encourage a student yet has little effect on their education."
-  ],
-  [
-    "What these and many other studies have shown is that not all feedback is welcome by all people",
-    "all of the time. While it is generally valued, this isn't true in every case, so thought must be given",
-    "to not only what you are going to say, but whether you should be saying it at all. It is also worth",
-    "remembering that participants in research studies are not observed in real situations, while genuine",
-    "feedback is given in the real world. We should therefore be cautious about immediately telling",
-    "someone what they've got wrong and how they can improve. So, in many cases, asking someone",
-    "if they would like your feedback would be a better starting point."
-  ]
+  "Imagine you're talking to someone, and you notice that they have an unusual new hairstyle. Would you comment on it? How likely you are to do so depends on things such as who the other person is, the context in which it happens, and even your own personality. In some instances, it can be difficult to know what to say in a situation like this, as you don't want to hurt the person's feelings. In fact, in a recent study, fewer than 3% of people said they would comment on an aspect of someone's appearance if they felt negatively about it.",
+  "Apart from issues relating to appearance, feedback is vital for learning and growth. Students need it in order to develop their skills and knowledge. In schools, teachers say that feedback can improve performance. In our personal lives, children may tell a parent that the curry they cooked was too spicy, or parents tell their kids to be more polite. Yet we are often unwilling to provide feedback in these situations too. Researchers who conducted the study mentioned above have proposed that a significant reason for __HL__this__ENDHL__ is that we simply fail to realise how valuable feedback is to the person receiving it.",
+  "The research team decided to investigate this theory through a series of experiments. In one, participants were asked to imagine either receiving or giving feedback in different situations: for example, if there were errors in a presentation they had given. In another, they were asked to provide genuine feedback to someone, for instance, telling a friend that they're always late when you arrange to meet. Across the various experiments, fewer than half of the participants wanted to provide feedback when given a choice, while a large majority of them were extremely eager to receive it. Interestingly, receivers generally described the feedback as 'highly valuable'.",
+  "What was striking about the study was that even though the data was obtained in a variety of ways, the results were identical. Little account was taken, however, of the effects that differences in the relationships between the people involved could have. For example, feedback from a teacher to a student is going to be very different to feedback between friends. The study also failed to consider how often feedback is given. A friend who is constantly telling you how to improve is likely to become annoying very quickly.",
+  "School-based research has identified how important the type of feedback provided can be. If teachers tell pupils specifically where they have gone wrong and how to improve – higher-level feedback – then this often leads to dramatic improvements in performance. General feedback, however – such as giving praise for a piece of work without saying exactly why it was good – may appear to encourage a student yet has little effect on their education.",
+  "What these and many other studies have shown is that not all feedback is welcome by all people all of the time. While it is generally valued, this isn't true in every case, so thought must be given to not only what you are going to say, but whether you should be saying it at all. It is also worth remembering that participants in research studies are not observed in real situations, while genuine feedback is given in the real world. We should therefore be cautious about immediately telling someone what they've got wrong and how they can improve. So, in many cases, asking someone if they would like your feedback would be a better starting point."
 ];
 
 function renderEx4Article() {
   const container = document.getElementById('ex4-article');
   let html = '';
-  let n = 0;
-  ex4Paragraphs.forEach((para, pi) => {
-    para.forEach(line => {
-      n++;
-      html += `<div class="line"><span class="line-num">${n}</span><span class="line-text">${line}</span></div>`;
-    });
-    if (pi < ex4Paragraphs.length - 1) html += '<div class="para-spacer"></div>';
+  ex4Paragraphs.forEach(para => {
+    const processed = para
+      .replace(/__HL__/g, '<span class="highlight-word">')
+      .replace(/__ENDHL__/g, '</span>');
+    html += `<p>${processed}</p>`;
   });
   container.innerHTML = html;
 }
+
 
 const ex4Questions = [
   { num:10, text:'In paragraph 1, the writer suggests that decisions on whether to give negative feedback',
     options:{A:'depend on how you\'re feeling.', B:'prove easy for most people.', C:'are influenced by a range of factors.'},
     correct:'C',
     explain:'The writer says it depends on "who the other person is, the context... and even your own personality" — a range of factors. (B is wrong: the writer says it "can be difficult to know what to say".)' },
-  { num:11, text:'What does <strong>\'this\'</strong> refer to in line 12?',
+  { num:11, text:'What does the highlighted word <strong>\'this\'</strong> refer to?',
     options:{A:'people are often unwilling to provide feedback', B:'people fail to realise how valuable feedback is', C:'teachers say that feedback can improve performance'},
     correct:'A',
     explain:'"A significant reason for this..." points back to the previous sentence: "we are often unwilling to provide feedback". B is the reason itself, not what "this" refers to.' },
