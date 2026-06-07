@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Academic Reading · Cork | True/False/Not Given + Note Completion</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1e2a5e; --ink-deep: #182347; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: var(--ink-deep); border-bottom: 2px solid var(--gold); }
+  .tab-btn {
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #9aa3c4; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #d6dcf0; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .article-byline { font-family: 'Source Serif 4', serif; font-style: italic; font-size: 13px; text-align: center; color: var(--muted); margin-bottom: 18px; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+  .article-img { display: block; margin: 0 auto 16px; max-width: 230px; width: 100%; border-radius: 4px; border: 1px solid var(--border); background: #fbf6ee; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+
+  /* True / False / Not Given pill buttons */
+  .tfng-row { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+  .tfng-btn {
+    flex: 1; min-width: 92px; padding: 9px 8px; border-radius: 6px; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.5px;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+  }
+  .tfng-btn:hover:not(:disabled) { border-color: var(--ink); color: var(--ink); }
+  .tfng-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .tfng-btn:disabled { cursor: default; }
+  .tfng-btn.correct-answer { background: var(--self-yes); color: white; border-color: var(--self-yes); }
+  .tfng-btn.wrong-answer { background: var(--self-no); color: white; border-color: var(--self-no); }
+
+  /* Note-completion inline inputs */
+  .notes-box { border: 1.5px solid var(--border); border-radius: 6px; padding: 4px 18px 16px; background: white; }
+  .notes-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); text-align: center; margin: 16px 0 14px; line-height: 1.3; }
+  .notes-heading { font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; border-bottom: 1.5px solid var(--border); padding-bottom: 5px; }
+  .note-line { display: flex; align-items: center; gap: 8px; font-size: 13.5px; line-height: 1.7; margin-bottom: 9px; color: #2c2c2c; flex-wrap: wrap; }
+  .note-num { background: var(--ink); color: white; font-size: 10px; font-weight: 600; min-width: 20px; height: 20px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .note-input {
+    width: 130px; border: none; border-bottom: 2px solid var(--ink); background: #fbf6ee;
+    padding: 4px 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
+    text-align: center; outline: none; transition: all 0.2s;
+  }
+  .note-input:focus { background: #fff7df; }
+  .note-input:disabled { cursor: default; }
+  .note-input.correct { border-bottom-color: var(--self-yes); background: #e8f5e9; color: #1a6e2a; font-weight: 700; }
+  .note-input.wrong { border-bottom-color: var(--self-no); background: #fdecea; color: var(--self-no); text-decoration: line-through; }
+  .note-correct { display: none; font-size: 12.5px; font-weight: 700; color: #1a6e2a; }
+  .note-correct.show { display: inline; }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: var(--ink); }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .btn-row { display: flex; gap: 10px; margin: 4px 0 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .btn-reveal:disabled, .btn-reset:disabled { opacity: 0.5; cursor: default; }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  /* TFNG key */
+  .key-box { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .key-row { display: flex; align-items: flex-start; gap: 12px; padding: 9px 14px; font-size: 12.5px; line-height: 1.4; border-bottom: 1px solid var(--border); }
+  .key-row:last-child { border-bottom: none; }
+  .key-tag { font-weight: 700; font-size: 10.5px; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; color: white; flex-shrink: 0; min-width: 86px; text-align: center; }
+  .key-tag.t { background: var(--self-yes); }
+  .key-tag.f { background: var(--self-no); }
+  .key-tag.n { background: var(--muted); }
+
+  /* Answer-location highlighting */
+  .ev { border-radius: 3px; transition: background 0.25s; }
+  .ev.hl-green { background: #d4edda; }
+  .ev.hl-red   { background: #f8d6d6; }
+  .ev.hl-amber { background: #ffe9ad; }
+  .ev.hl::before {
+    content: attr(data-badge);
+    display: inline-block; background: var(--gold); color: var(--ink);
+    font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700;
+    min-width: 14px; height: 14px; line-height: 14px; text-align: center;
+    border-radius: 7px; margin-right: 5px; padding: 0 3px; vertical-align: middle;
+  }
+  .locate-link { display: inline-block; margin-top: 7px; color: var(--ink); font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .locate-link:hover { color: var(--gold); }
+  .note-locate a { cursor: pointer; font-size: 14px; text-decoration: none; margin-left: 4px; vertical-align: middle; }
+  .note-locate a:hover { filter: brightness(1.15); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IELTS Academic Reading · Passage 1</span>
+    <h1>Cork</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 13</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('tfng')">True / False / Not Given</button>
+  <button class="tab-btn" onclick="showTab('notes')">Note Completion</button>
+</div>
+
+<!-- ════════════════════ TAB 1 — TRUE / FALSE / NOT GIVEN ════════════════════ -->
+<div class="exercise active" id="tfng">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Cork</div>
+    <div class="article-box">
+      <div class="article-title">Cork</div>
+      <div class="article-byline">the remarkable bark of the cork oak tree (Quercus suber)</div>
+      <div class="article-body" id="tfng-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 1–5 · 5 marks</div>
+    <div class="ex-intro">Do the following statements agree with the information in the passage? Choose <strong>TRUE</strong>, <strong>FALSE</strong> or <strong>NOT GIVEN</strong> for each statement.</div>
+
+    <div class="key-box">
+      <div class="key-row"><span class="key-tag t">True</span><span>The statement <strong>agrees</strong> with the information in the passage.</span></div>
+      <div class="key-row"><span class="key-tag f">False</span><span>The statement <strong>contradicts</strong> the information in the passage.</span></div>
+      <div class="key-row"><span class="key-tag n">Not Given</span><span>There is <strong>no information</strong> on this in the passage.</span></div>
+    </div>
+
+    <div class="result-bar" id="tfng-result">True/False/Not Given complete — Score: <span id="tfng-score">0</span> / 5</div>
+    <div class="nudge-banner" id="tfng-nudge"><span class="nudge-icon">✏️</span> Please answer all five statements before submitting.</div>
+
+    <div id="tfng-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="tfng-submit" onclick="submitTfng()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetTfng()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ TAB 2 — NOTE COMPLETION ════════════════════ -->
+<div class="exercise" id="notes">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Cork</div>
+    <div class="article-box">
+      <div class="article-title">Cork</div>
+      <div class="article-byline">the remarkable bark of the cork oak tree (Quercus suber)</div>
+      <div class="article-body" id="notes-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 6–13 · 8 marks</div>
+    <div class="ex-intro">Complete the notes below. Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</div>
+
+    <div class="result-bar" id="notes-result">Note completion complete — Score: <span id="notes-score">0</span> / 8</div>
+    <div class="nudge-banner" id="notes-nudge"><span class="nudge-icon">✏️</span> Please fill in all eight gaps before submitting.</div>
+
+    <div class="notes-box">
+      <div class="notes-title">Comparison of aluminium screw caps<br>and cork bottle stoppers</div>
+
+      <div class="notes-heading">Advantages of aluminium screw caps</div>
+      <div class="note-line"><span class="note-num">6</span> do not affect the <input type="text" class="note-input" id="note-6" autocomplete="off"> <span class="note-correct" id="note-6-c"></span> of the bottle contents</div>
+      <div class="note-line"><span class="note-num">7</span> are <input type="text" class="note-input" id="note-7" autocomplete="off"> <span class="note-correct" id="note-7-c"></span> to produce</div>
+      <div class="note-line"><span class="note-num">8</span> are <input type="text" class="note-input" id="note-8" autocomplete="off"> <span class="note-correct" id="note-8-c"></span> to use</div>
+
+      <div class="notes-heading">Advantages of cork bottle stoppers</div>
+      <div class="note-line"><span class="note-num">9</span> suit the <input type="text" class="note-input" id="note-9" autocomplete="off"> <span class="note-correct" id="note-9-c"></span> of quality products</div>
+      <div class="note-line"><span class="note-num">10</span> made from a <input type="text" class="note-input" id="note-10" autocomplete="off"> <span class="note-correct" id="note-10-c"></span> material</div>
+      <div class="note-line"><span class="note-num">11</span> easily <input type="text" class="note-input" id="note-11" autocomplete="off"> <span class="note-correct" id="note-11-c"></span></div>
+      <div class="note-line"><span class="note-num">12</span> cork forests aid <input type="text" class="note-input" id="note-12" autocomplete="off"> <span class="note-correct" id="note-12-c"></span></div>
+      <div class="note-line"><span class="note-num">13</span> cork forests stop <input type="text" class="note-input" id="note-13" autocomplete="off"> <span class="note-correct" id="note-13-c"></span> happening</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="notes-submit" onclick="submitNotes()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetNotes()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────── PASSAGE ───────────
+const passage = [
+  "Cork – the thick bark of the cork oak tree (Quercus suber) – is a remarkable material. It is tough, elastic, buoyant, and fire-resistant, and suitable for a wide range of purposes. It has also been used for millennia: the ancient Egyptians sealed their sarcophagi (stone coffins) with cork, while the ancient Greeks and Romans used it for anything from beehives to sandals.",
+  "And the cork oak itself is an extraordinary tree. <span class='ev' data-ev='tq1' data-badge='1'>Its bark grows up to 20 cm in thickness, insulating the tree like a coat wrapped around the trunk and branches and keeping the inside at a constant 20°C all year round.</span> <span class='ev' data-ev='tq2' data-badge='2'>Developed most probably as a defence against forest fires, the bark of the cork oak has a particular cellular structure – with about 40 million cells per cubic centimetre – that technology has never succeeded in replicating.</span> The cells are filled with air, which is why cork is so buoyant. It also has an elasticity that means you can squash it and watch it spring back to its original size and shape when you release the pressure.",
+  "Cork oaks grow in a number of Mediterranean countries, including Portugal, Spain, Italy, Greece and Morocco. They flourish in warm, sunny climates where there is a minimum of 400 millimetres of rain per year, and not more than 800 millimetres. Like grape vines, the trees thrive in poor soil, putting down deep roots in search of moisture and nutrients. Southern Portugal's Alentejo region meets all of these requirements, which explains why, by the early 20th century, this region had become the world's largest producer of cork, and why today it accounts for roughly half of all cork production around the world.",
+  "Most cork forests are family-owned. Many of these family businesses, and indeed many of the trees themselves, are around 200 years old. Cork production is, above all, an exercise in patience. <span class='ev' data-ev='tq3' data-badge='3'>From the planting of a cork sapling to the first harvest takes 25 years, and a gap of approximately a decade must separate harvests from an individual tree.</span> And for top-quality cork, it's necessary to wait a further 15 or 20 years. You even have to wait for the right kind of summer's day to harvest cork. <span class='ev' data-ev='tq4' data-badge='4'>If the bark is stripped on a day when it's too cold – or when the air is damp – the tree will be damaged.</span>",
+  "Cork harvesting is a very specialised profession. <span class='ev' data-ev='tq5' data-badge='5'>No mechanical means of stripping cork bark has been invented, so the job is done by teams of highly skilled workers.</span> First, they make vertical cuts down the bark using small sharp axes, then lever it away in pieces as large as they can manage. The most skilful cork-strippers prise away a semi-circular husk that runs the length of the trunk from just above ground level to the first branches. It is then dried on the ground for about four months, before being taken to factories, where it is boiled to kill any insects that might remain in the cork. Over 60% of cork then goes on to be made into traditional bottle stoppers, with most of the remainder being used in the construction trade. Corkboard and cork tiles are ideal for thermal and acoustic insulation, while granules of cork are used in the manufacture of concrete.",
+  "Recent years have seen the end of the virtual monopoly of cork as the material for bottle stoppers, due to concerns about the effect it may have on the contents of the bottle. This is caused by a chemical compound called 2,4,6-trichloroanisole (TCA), which forms through the interaction of plant phenols, chlorine and mould. The tiniest concentrations – as little as three or four parts to a trillion – can spoil the <span class='ev' data-ev='nq6' data-badge='6'>taste</span> of the product contained in the bottle. The result has been a gradual yet steady move first towards plastic stoppers and, more recently, to aluminium screw caps. These substitutes are <span class='ev' data-ev='nq7' data-badge='7'>cheaper</span> to manufacture and, in the case of screw caps, more <span class='ev' data-ev='nq8' data-badge='8'>convenient</span> for the user.",
+  "The classic cork stopper does have several advantages, however. Firstly, its traditional <span class='ev' data-ev='nq9' data-badge='9'>image</span> is more in keeping with that of the type of high quality goods with which it has long been associated. Secondly – and very importantly – cork is a <span class='ev' data-ev='nq10' data-badge='10'>sustainable</span> product that can be <span class='ev' data-ev='nq11' data-badge='11'>recycled</span> without difficulty. Moreover, cork forests are a resource which support local <span class='ev' data-ev='nq12' data-badge='12'>biodiversity</span>, and prevent <span class='ev' data-ev='nq13' data-badge='13'>desertification</span> in the regions where they are planted. So, given the current concerns about environmental issues, the future of this ancient material once again looks promising."
+];
+
+function renderPassage() {
+  const html = passage.map(p => '<p>' + p + '</p>').join('');
+  document.getElementById('tfng-passage').innerHTML = html;
+  document.getElementById('notes-passage').innerHTML = html;
+}
+
+// ─────────── HIGHLIGHT / LOCATE IN PASSAGE ───────────
+function locate(panelId, evKey, color) {
+  const panel = document.getElementById(panelId);
+  panel.querySelectorAll('.ev.hl').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  const span = panel.querySelector('[data-ev="' + evKey + '"]');
+  if (span) {
+    span.classList.add('hl', color);
+    span.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// ─────────── TAB SWITCHING ───────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─────────── SCORE TRACKING ───────────
+const scores = { tfng:{}, notes:{} };
+function sum(o){ return Object.values(o).reduce((a,b)=>a+b,0); }
+function updateScores() {
+  const t = sum(scores.tfng), n = sum(scores.notes);
+  document.getElementById('tfng-score').textContent = t;
+  document.getElementById('notes-score').textContent = n;
+  document.getElementById('total-score').textContent = t + n;
+}
+
+// ─────────── TAB 1 — TRUE / FALSE / NOT GIVEN ───────────
+const tfngQuestions = [
+  { num:1, text:'The cork oak has the thickest bark of any living tree.', correct:'NOT GIVEN',
+    explain:`The passage says the bark grows up to 20 cm thick, but it never compares the cork oak with other trees. With no information either way, the answer is NOT GIVEN — be careful not to pick FALSE here.` },
+  { num:2, text:'Scientists have developed a synthetic cork with the same cellular structure as natural cork.', correct:'FALSE',
+    explain:`The passage calls the cellular structure something "technology has never succeeded in replicating", which directly contradicts the statement.` },
+  { num:3, text:'Individual cork oak trees must be left for 25 years between the first and second harvest.', correct:'FALSE',
+    explain:`The 25 years is the wait from planting to the FIRST harvest. The gap between harvests is "approximately a decade" (about 10 years). The statement mixes up the two figures.` },
+  { num:4, text:'Cork bark should be stripped in dry atmospheric conditions.', correct:'TRUE',
+    explain:`The passage warns that if "the air is damp – the tree will be damaged", so the bark should indeed be stripped when conditions are dry.` },
+  { num:5, text:'The only way to remove the bark from cork oak trees is by hand.', correct:'TRUE',
+    explain:`"No mechanical means of stripping cork bark has been invented, so the job is done by teams of highly skilled workers" — confirming hand-stripping is the only method.` }
+];
+
+const tfngSelections = {};
+
+function renderTfng() {
+  const c = document.getElementById('tfng-questions');
+  tfngQuestions.forEach(q => {
+    const qId = 'tfng-q' + q.num;
+    let btns = '';
+    ['TRUE','FALSE','NOT GIVEN'].forEach(v => {
+      btns += `<button class="tfng-btn" onclick="selectTfng('${qId}','${v}',this)">${v}</button>`;
+    });
+    c.innerHTML += `
+      <div class="question-item" id="${qId}-item">
+        <div class="q-header">
+          <span class="q-num">${q.num}</span>
+          <span class="q-text">${q.text}</span>
+          <span class="q-marks">1</span>
+        </div>
+        <div class="tfng-row" id="${qId}-btns">${btns}</div>
+        <div class="feedback" id="${qId}-fb"></div>
+      </div>`;
+  });
+}
+
+function selectTfng(qId, value, btn) {
+  document.querySelectorAll('#' + qId + '-btns .tfng-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  tfngSelections[qId] = value;
+}
+
+function submitTfng() {
+  const allAnswered = tfngQuestions.every(q => tfngSelections['tfng-q' + q.num]);
+  if (!allAnswered) {
+    const nb = document.getElementById('tfng-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  tfngQuestions.forEach(q => {
+    const qId = 'tfng-q' + q.num;
+    const selected = tfngSelections[qId];
+    const correct = q.correct;
+    const btns = document.querySelectorAll('#' + qId + '-btns .tfng-btn');
+    btns.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('selected');
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + q.explain;
+      scores.tfng['q' + q.num] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + q.explain;
+      scores.tfng['q' + q.num] = 0;
+    }
+    const colorMap = { 'TRUE':'hl-green', 'FALSE':'hl-red', 'NOT GIVEN':'hl-amber' };
+    const lbl = (correct === 'NOT GIVEN') ? '🔍 Show the closest mention' : '🔍 Show in text';
+    fb.innerHTML += '<br><a class="locate-link" onclick="locate(&#39;tfng-passage&#39;,&#39;tq' + q.num + '&#39;,&#39;' + colorMap[correct] + '&#39;)">' + lbl + '</a>';
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('tfng-result').classList.add('show');
+  document.getElementById('tfng-submit').disabled = true;
+}
+
+function resetTfng() {
+  scores.tfng = {};
+  tfngQuestions.forEach(q => {
+    const qId = 'tfng-q' + q.num;
+    delete tfngSelections[qId];
+    document.querySelectorAll('#' + qId + '-btns .tfng-btn').forEach(b => {
+      b.disabled = false;
+      b.classList.remove('selected','correct-answer','wrong-answer');
+    });
+    document.getElementById(qId + '-item').classList.remove('correct','wrong');
+    const fb = document.getElementById(qId + '-fb');
+    fb.style.display = 'none'; fb.innerHTML = '';
+  });
+  document.getElementById('tfng-result').classList.remove('show');
+  document.getElementById('tfng-submit').disabled = false;
+  document.querySelectorAll('#tfng-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  updateScores();
+}
+
+// ─────────── TAB 2 — NOTE COMPLETION ───────────
+const notesAnswers = {
+  6:'taste', 7:'cheaper', 8:'convenient', 9:'image',
+  10:'sustainable', 11:'recycled', 12:'biodiversity', 13:'desertification'
+};
+const noteNums = [6,7,8,9,10,11,12,13];
+
+function submitNotes() {
+  const allFilled = noteNums.every(n => document.getElementById('note-' + n).value.trim());
+  if (!allFilled) {
+    const nb = document.getElementById('notes-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  noteNums.forEach(n => {
+    const input = document.getElementById('note-' + n);
+    const given = input.value.trim().toLowerCase();
+    const correct = notesAnswers[n];
+    input.disabled = true;
+    input.classList.remove('correct','wrong');
+    const cTag = document.getElementById('note-' + n + '-c');
+    if (given === correct) {
+      input.classList.add('correct');
+      scores.notes['q' + n] = 1;
+      cTag.classList.remove('show');
+    } else {
+      input.classList.add('wrong');
+      scores.notes['q' + n] = 0;
+      cTag.textContent = '→ ' + correct;
+      cTag.classList.add('show');
+    }
+    let loc = document.getElementById('note-' + n + '-loc');
+    if (!loc) { loc = document.createElement('span'); loc.className = 'note-locate'; loc.id = 'note-' + n + '-loc'; cTag.after(loc); }
+    loc.innerHTML = '<a onclick="locate(&#39;notes-passage&#39;,&#39;nq' + n + '&#39;,&#39;hl-green&#39;)" title="Show this word in the passage">🔍</a>';
+  });
+  updateScores();
+  document.getElementById('notes-result').classList.add('show');
+  document.getElementById('notes-submit').disabled = true;
+}
+
+function resetNotes() {
+  scores.notes = {};
+  noteNums.forEach(n => {
+    const input = document.getElementById('note-' + n);
+    input.value = ''; input.disabled = false;
+    input.classList.remove('correct','wrong');
+    const cTag = document.getElementById('note-' + n + '-c');
+    cTag.classList.remove('show'); cTag.textContent = '';
+    const loc = document.getElementById('note-' + n + '-loc');
+    if (loc) loc.innerHTML = '';
+  });
+  document.querySelectorAll('#notes-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  document.getElementById('notes-result').classList.remove('show');
+  document.getElementById('notes-submit').disabled = false;
+  updateScores();
+}
+
+// ─────────── INIT ───────────
+renderPassage();
+renderTfng();
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
