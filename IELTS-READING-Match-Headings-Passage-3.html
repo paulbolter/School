@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Academic Reading · What's the purpose of gaining knowledge?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1e2a5e; --ink-deep: #182347; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: var(--ink-deep); border-bottom: 2px solid var(--gold); }
+  .tab-btn {
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #9aa3c4; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #d6dcf0; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .article-byline { font-family: 'Source Serif 4', serif; font-style: italic; font-size: 13px; text-align: center; color: var(--muted); margin-bottom: 18px; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 14px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+
+  .sec-label {
+    display: inline-block; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 11px;
+    color: var(--gold); background: var(--ink); width: 21px; height: 21px; line-height: 21px;
+    text-align: center; border-radius: 4px; margin-right: 9px; vertical-align: text-top;
+  }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+
+  /* Heading dropdowns */
+  .heading-select {
+    width: 100%; padding: 9px 10px; border: 2px solid var(--border); border-radius: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: 12.5px; color: var(--ink); background: #fbf6ee;
+    cursor: pointer; outline: none; transition: border-color 0.2s;
+  }
+  .heading-select:focus { border-color: var(--ink); background: #fff7df; }
+  .heading-select:disabled { cursor: default; opacity: 0.95; }
+
+  /* Yes / No / Not Given pill buttons */
+  .tfng-row { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+  .tfng-btn {
+    flex: 1; min-width: 92px; padding: 9px 8px; border-radius: 6px; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.5px;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+  }
+  .tfng-btn:hover:not(:disabled) { border-color: var(--ink); color: var(--ink); }
+  .tfng-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .tfng-btn:disabled { cursor: default; }
+  .tfng-btn.correct-answer { background: var(--self-yes); color: white; border-color: var(--self-yes); }
+  .tfng-btn.wrong-answer { background: var(--self-no); color: white; border-color: var(--self-no); }
+
+  /* Summary-completion inline inputs */
+  .notes-box { border: 1.5px solid var(--border); border-radius: 6px; padding: 4px 18px 18px; background: white; }
+  .notes-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--ink); text-align: center; margin: 16px 0 14px; line-height: 1.3; }
+  .gap-para { font-family: 'Source Serif 4', serif; font-size: 14.5px; line-height: 2.4; color: #2c2c2c; }
+  .note-input {
+    width: 120px; border: none; border-bottom: 2px solid var(--ink); background: #fbf6ee;
+    padding: 3px 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
+    text-align: center; outline: none; transition: all 0.2s;
+  }
+  .note-input.wide { width: 150px; }
+  .note-input:focus { background: #fff7df; }
+  .note-input:disabled { cursor: default; }
+  .note-input.correct { border-bottom-color: var(--self-yes); background: #e8f5e9; color: #1a6e2a; font-weight: 700; }
+  .note-input.wrong { border-bottom-color: var(--self-no); background: #fdecea; color: var(--self-no); text-decoration: line-through; }
+  .note-correct { display: none; font-size: 12.5px; font-weight: 700; color: #1a6e2a; }
+  .note-correct.show { display: inline; }
+  .note-locate a { cursor: pointer; font-size: 14px; text-decoration: none; margin-left: 2px; vertical-align: middle; }
+  .note-locate a:hover { filter: brightness(1.15); }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: var(--ink); }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .btn-row { display: flex; gap: 10px; margin: 16px 0 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .btn-reveal:disabled, .btn-reset:disabled { opacity: 0.5; cursor: default; }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  /* Reference key boxes */
+  .key-box { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .key-row { display: flex; align-items: flex-start; gap: 12px; padding: 9px 14px; font-size: 12.5px; line-height: 1.4; border-bottom: 1px solid var(--border); }
+  .key-row:last-child { border-bottom: none; }
+  .key-tag { font-weight: 700; font-size: 10.5px; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; color: white; flex-shrink: 0; min-width: 86px; text-align: center; }
+  .key-tag.t { background: var(--self-yes); }
+  .key-tag.f { background: var(--self-no); }
+  .key-tag.n { background: var(--muted); }
+
+  /* List of headings reference */
+  .head-list { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .head-list-title { background: var(--ink); color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 14px; }
+  .head-list-row { display: flex; gap: 12px; padding: 7px 14px; font-size: 12.5px; line-height: 1.4; border-bottom: 1px solid var(--border); }
+  .head-list-row:last-child { border-bottom: none; }
+  .head-rn { font-weight: 700; color: var(--gold); min-width: 34px; flex-shrink: 0; }
+
+  /* Answer-location highlighting */
+  .ev { border-radius: 3px; transition: background 0.25s; }
+  .ev.hl-green { background: #d4edda; }
+  .ev.hl-red   { background: #f8d6d6; }
+  .ev.hl-amber { background: #ffe9ad; }
+  .ev.hl::before {
+    content: attr(data-badge);
+    display: inline-block; background: var(--gold); color: var(--ink);
+    font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700;
+    min-width: 14px; height: 14px; line-height: 14px; text-align: center;
+    border-radius: 7px; margin-right: 5px; padding: 0 3px; vertical-align: middle;
+  }
+  .locate-link { display: inline-block; margin-top: 7px; color: var(--ink); font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .locate-link:hover { color: var(--gold); }
+  .no-locate { display: inline-block; margin-top: 7px; color: var(--muted); font-weight: 600; font-size: 12px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IELTS Academic Reading · Passage 3</span>
+    <h1>What's the purpose of gaining knowledge?</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 14</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('headings')">Matching Headings</button>
+  <button class="tab-btn" onclick="showTab('gaps')">Summary Completion</button>
+  <button class="tab-btn" onclick="showTab('yn')">Yes / No / Not Given</button>
+</div>
+
+<!-- ════════════════════ TAB 1 — MATCHING HEADINGS ════════════════════ -->
+<div class="exercise active" id="headings">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Sections A–F</div>
+    <div class="article-box">
+      <div class="article-title">What's the purpose of gaining knowledge?</div>
+      <div class="article-byline">a philosopher on fire science, marketing and the ends of education</div>
+      <div class="article-body" id="headings-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 27–32 · 6 marks</div>
+    <div class="ex-intro">Reading Passage 3 has six sections, <strong>A–F</strong>. Choose the correct heading for each section from the list below.</div>
+
+    <div class="head-list" id="head-list"></div>
+
+    <div class="result-bar" id="headings-result">Matching Headings complete — Score: <span id="headings-score">0</span> / 6</div>
+    <div class="nudge-banner" id="headings-nudge"><span class="nudge-icon">✏️</span> Please choose a heading for all six sections before submitting.</div>
+
+    <div id="headings-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="headings-submit" onclick="submitHeadings()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetHeadings()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ TAB 2 — SUMMARY COMPLETION ════════════════════ -->
+<div class="exercise" id="gaps">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Sections A–F</div>
+    <div class="article-box">
+      <div class="article-title">What's the purpose of gaining knowledge?</div>
+      <div class="article-byline">a philosopher on fire science, marketing and the ends of education</div>
+      <div class="article-body" id="gaps-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 33–36 · 4 marks</div>
+    <div class="ex-intro">Complete the summary below. Choose <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.</div>
+
+    <div class="result-bar" id="gaps-result">Summary Completion complete — Score: <span id="gaps-score">0</span> / 4</div>
+    <div class="nudge-banner" id="gaps-nudge"><span class="nudge-icon">✏️</span> Please fill in all four gaps before submitting.</div>
+
+    <div class="notes-box">
+      <div class="notes-title">The 'Arson for Profit' course</div>
+      <p class="gap-para">
+        This is a university course intended for students who are undergraduates and who are studying
+        <input type="text" class="note-input wide" id="note-33" autocomplete="off"><span class="note-correct" id="note-33-c"></span>.
+        The expectation is that they will become
+        <input type="text" class="note-input" id="note-34" autocomplete="off"><span class="note-correct" id="note-34-c"></span>
+        specialising in arson. The course will help them to detect cases of arson and find
+        <input type="text" class="note-input" id="note-35" autocomplete="off"><span class="note-correct" id="note-35-c"></span>
+        of criminal intent, leading to successful
+        <input type="text" class="note-input" id="note-36" autocomplete="off"><span class="note-correct" id="note-36-c"></span>
+        in the courts.
+      </p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="gaps-submit" onclick="submitGaps()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetGaps()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ TAB 3 — YES / NO / NOT GIVEN ════════════════════ -->
+<div class="exercise" id="yn">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Sections A–F</div>
+    <div class="article-box">
+      <div class="article-title">What's the purpose of gaining knowledge?</div>
+      <div class="article-byline">a philosopher on fire science, marketing and the ends of education</div>
+      <div class="article-body" id="yn-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 37–40 · 4 marks</div>
+    <div class="ex-intro">Do the following statements agree with the views of the writer? Choose <strong>YES</strong>, <strong>NO</strong> or <strong>NOT GIVEN</strong> for each statement.</div>
+
+    <div class="result-bar" id="yn-result">Yes/No/Not Given complete — Score: <span id="yn-score">0</span> / 4</div>
+    <div class="nudge-banner" id="yn-nudge"><span class="nudge-icon">✏️</span> Please answer all four statements before submitting.</div>
+
+    <div id="yn-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="yn-submit" onclick="submitYn()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetYn()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────── PASSAGE (single source of truth) ───────────
+const paragraphs = [
+  { label:'A', text:"'I would found an institution where any person can find instruction in any subject.' That was the founder's motto for Cornell University, and it seems an apt characterization of the different university, also in the USA, where I currently teach philosophy. A student can prepare for a career in resort management, engineering, interior design, accounting, music, law enforcement, you name it. But what would the founders of these two institutions have thought of a course called 'Arson for Profit'? I kid you not: we have it on the books. Any undergraduates who have met the academic requirements can sign up for the course in our program in 'fire science'." },
+  { label:'B', text:"Naturally, the course is intended for prospective arson investigators, who can learn all the tricks of the trade for detecting whether a fire was deliberately set, discovering who did it, and establishing a chain of evidence for effective prosecution in a court of law. But wouldn't this also be the perfect course for prospective arsonists to sign up for? My point is not to criticize academic programs in fire science: they are highly welcome as part of the increasing professionalization of this and many other occupations. However, it's not unknown for a firefighter to torch a building. This example suggests how dishonest and illegal behavior, with the help of higher education, can creep into every aspect of public and business life." },
+  { label:'C', text:"I realized this anew when I was invited to speak before a class in marketing, which is another of our degree programs. The regular instructor is a colleague who appreciates the kind of ethical perspective I can bring as a philosopher. There are endless ways I could have approached this assignment, but I took my cue from the title of the course: 'Principles of Marketing'. It made me think to ask the students, 'Is marketing principled?' After all, a subject matter can have principles in the sense of being codified, having rules, as with football or chess, without being principled in the sense of being ethical. Many of the students immediately assumed that the answer to my question about marketing principles was obvious: no. Just look at the ways in which everything under the sun has been marketed; obviously it need not be done in a principled (=ethical) fashion." },
+  { label:'D', text:"Is that obvious? I made the suggestion, which may sound downright crazy in light of the evidence, that perhaps marketing is by definition principled. My inspiration for this judgement is the philosopher Immanuel Kant, who argued that any body of knowledge consists of an end (or purpose) and a means." },
+  { label:'E', text:"Let us apply both the terms 'means' and 'end' to marketing. The students have signed up for a course in order to learn how to market effectively. But to what end? There seem to be two main attitudes toward that question. One is that the answer is obvious: the purpose of marketing is to sell things and to make money. The other attitude is that the purpose of marketing is irrelevant: each person comes to the program and course with his or her own plans, and these need not even concern the acquisition of marketing expertise as such. My proposal, which I believe would also be Kant's, is that neither of these attitudes captures the significance of the end to the means for marketing. A field of knowledge or a professional endeavor is defined by both the means and the end; hence both deserve scrutiny. Students need to study both how to achieve X, and also what X is." },
+  { label:'F', text:"It is at this point that 'Arson for Profit' becomes supremely relevant. That course is presumably all about means: how to detect and prosecute criminal activity. It is therefore assumed that the end is good in an ethical sense. When I ask fire science students to articulate the end, or purpose, of their field, they eventually generalize to something like, 'The safety and welfare of society,' which seems right. As we have seen, someone could use the very same knowledge of means to achieve a much less noble end, such as personal profit via destructive, dangerous, reckless activity. But we would not call that firefighting. We have a separate word for it: arson. Similarly, if you employed the 'principles of marketing' in an unprincipled way, you would not be doing marketing. We have another term for it: fraud. Kant gives the example of a doctor and a poisoner, who use the identical knowledge to achieve their divergent ends. We would say that one is practicing medicine, the other, murder." }
+];
+
+// Evidence phrases per tab (must each appear exactly once, no overlaps)
+const evHeadings = [
+  { key:'h27', badge:27, phrase:"what would the founders of these two institutions have thought of a course called 'Arson for Profit'?" },
+  { key:'h28', badge:28, phrase:"But wouldn't this also be the perfect course for prospective arsonists to sign up for?" },
+  { key:'h29', badge:29, phrase:"a subject matter can have principles in the sense of being codified, having rules, as with football or chess, without being principled in the sense of being ethical" },
+  { key:'h30', badge:30, phrase:"the philosopher Immanuel Kant, who argued that any body of knowledge consists of an end (or purpose) and a means" },
+  { key:'h31', badge:31, phrase:"A field of knowledge or a professional endeavor is defined by both the means and the end; hence both deserve scrutiny" },
+  { key:'h32', badge:32, phrase:"But we would not call that firefighting. We have a separate word for it: arson" }
+];
+const evGaps = [
+  { key:'g33', badge:33, phrase:"sign up for the course in our program in 'fire science'" },
+  { key:'g34', badge:34, phrase:"the course is intended for prospective arson investigators" },
+  { key:'g35', badge:35, phrase:"establishing a chain of evidence" },
+  { key:'g36', badge:36, phrase:"effective prosecution in a court of law" }
+];
+const evYn = [
+  { key:'y38', badge:38, phrase:"But wouldn't this also be the perfect course for prospective arsonists to sign up for?" },
+  { key:'y39', badge:39, phrase:"My point is not to criticize academic programs in fire science: they are highly welcome" },
+  { key:'y40', badge:40, phrase:"they eventually generalize to something like, 'The safety and welfare of society,'" }
+];
+
+function buildPassage(targetId, evList) {
+  const html = paragraphs.map(p => {
+    let t = p.text;
+    evList.forEach(e => {
+      t = t.replace(e.phrase, '<span class="ev" data-ev="' + e.key + '" data-badge="' + e.badge + '">' + e.phrase + '</span>');
+    });
+    return '<p><span class="sec-label">' + p.label + '</span>' + t + '</p>';
+  }).join('');
+  document.getElementById(targetId).innerHTML = html;
+}
+
+// ─────────── HIGHLIGHT / LOCATE IN PASSAGE ───────────
+function locate(panelId, evKey, color) {
+  const panel = document.getElementById(panelId);
+  panel.querySelectorAll('.ev.hl').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  const span = panel.querySelector('[data-ev="' + evKey + '"]');
+  if (span) {
+    span.classList.add('hl', color);
+    span.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// ─────────── TAB SWITCHING ───────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─────────── SCORE TRACKING ───────────
+const scores = { headings:{}, gaps:{}, yn:{} };
+function sum(o){ return Object.values(o).reduce((a,b)=>a+b,0); }
+function updateScores() {
+  const h = sum(scores.headings), g = sum(scores.gaps), y = sum(scores.yn);
+  document.getElementById('headings-score').textContent = h;
+  document.getElementById('gaps-score').textContent = g;
+  document.getElementById('yn-score').textContent = y;
+  document.getElementById('total-score').textContent = h + g + y;
+}
+
+// ─────────── TAB 1 — MATCHING HEADINGS ───────────
+const headingsList = [
+  { num:'i',    text:'Courses that require a high level of commitment' },
+  { num:'ii',   text:'A course title with two meanings' },
+  { num:'iii',  text:'The equal importance of two key issues' },
+  { num:'iv',   text:'Applying a theory in an unexpected context' },
+  { num:'v',    text:'The financial benefits of studying' },
+  { num:'vi',   text:'A surprising course title' },
+  { num:'vii',  text:'Different names for different outcomes' },
+  { num:'viii', text:'The possibility of attracting the wrong kind of student' }
+];
+function headingText(num){ const h = headingsList.find(x => x.num === num); return h ? h.text : ''; }
+
+const headingQs = [
+  { q:27, section:'A', correct:'vi',   ev:'h27', explain:"Section A builds up to the shock of a real university course literally named 'Arson for Profit' — a surprising title." },
+  { q:28, section:'B', correct:'viii', ev:'h28', explain:"The writer points out the course would be 'perfect' for would-be arsonists — i.e. it could attract the wrong kind of student." },
+  { q:29, section:'C', correct:'ii',   ev:'h29', explain:"'Principles' is shown to mean both 'having rules' and 'being ethical' — the course title carries two meanings." },
+  { q:30, section:'D', correct:'iv',   ev:'h30', explain:"Kant's theory that knowledge has an end and a means is applied to marketing — an unexpected context for the theory." },
+  { q:31, section:'E', correct:'iii',  ev:'h31', explain:"The writer argues both the means and the end 'deserve scrutiny' — two issues of equal importance." },
+  { q:32, section:'F', correct:'vii',  ev:'h32', explain:"Firefighting vs arson, marketing vs fraud, medicine vs murder — the same means earn different names for different outcomes." }
+];
+const headingSelections = {};
+
+function renderHeadList() {
+  document.getElementById('head-list').innerHTML =
+    '<div class="head-list-title">List of Headings</div>' +
+    headingsList.map(h => '<div class="head-list-row"><span class="head-rn">' + h.num + '</span><span>' + h.text + '</span></div>').join('');
+}
+
+function renderHeadings() {
+  const c = document.getElementById('headings-questions');
+  c.innerHTML = '';
+  headingQs.forEach(q => {
+    let opts = '<option value="">— Choose a heading —</option>';
+    headingsList.forEach(h => { opts += '<option value="' + h.num + '">' + h.num + ' — ' + h.text + '</option>'; });
+    c.innerHTML +=
+      '<div class="question-item" id="hq' + q.q + '-item">' +
+        '<div class="q-header">' +
+          '<span class="q-num">' + q.q + '</span>' +
+          '<span class="q-text">Section ' + q.section + '</span>' +
+          '<span class="q-marks">1</span>' +
+        '</div>' +
+        '<select class="heading-select" id="hsel-' + q.q + '" onchange="headingSelections[' + q.q + ']=this.value">' + opts + '</select>' +
+        '<div class="feedback" id="hq' + q.q + '-fb"></div>' +
+      '</div>';
+  });
+}
+
+function submitHeadings() {
+  const allAnswered = headingQs.every(q => headingSelections[q.q]);
+  if (!allAnswered) {
+    const nb = document.getElementById('headings-nudge');
+    nb.classList.add('show'); setTimeout(() => nb.classList.remove('show'), 3000); return;
+  }
+  headingQs.forEach(q => {
+    const sel = document.getElementById('hsel-' + q.q);
+    const chosen = headingSelections[q.q];
+    sel.disabled = true;
+    const item = document.getElementById('hq' + q.q + '-item');
+    const fb = document.getElementById('hq' + q.q + '-fb');
+    item.classList.remove('correct','wrong');
+    if (chosen === q.correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + q.explain;
+      scores.headings['q' + q.q] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + q.correct + ' — ' + headingText(q.correct) + '</strong>. ' + q.explain;
+      scores.headings['q' + q.q] = 0;
+    }
+    fb.innerHTML += '<br><a class="locate-link" onclick="locate(&#39;headings-passage&#39;,&#39;' + q.ev + '&#39;,&#39;hl-green&#39;)">🔍 Show this section in the text</a>';
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('headings-result').classList.add('show');
+  document.getElementById('headings-submit').disabled = true;
+}
+
+function resetHeadings() {
+  scores.headings = {};
+  headingQs.forEach(q => {
+    delete headingSelections[q.q];
+    const sel = document.getElementById('hsel-' + q.q);
+    sel.disabled = false; sel.value = '';
+    document.getElementById('hq' + q.q + '-item').classList.remove('correct','wrong');
+    const fb = document.getElementById('hq' + q.q + '-fb');
+    fb.style.display = 'none'; fb.innerHTML = '';
+  });
+  document.querySelectorAll('#headings-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  document.getElementById('headings-result').classList.remove('show');
+  document.getElementById('headings-submit').disabled = false;
+  updateScores();
+}
+
+// ─────────── TAB 2 — SUMMARY COMPLETION ───────────
+const gapAnswers = { 33:['fire science'], 34:['investigators'], 35:['evidence'], 36:['prosecution'] };
+const gapEv = { 33:'g33', 34:'g34', 35:'g35', 36:'g36' };
+const gapNums = [33,34,35,36];
+
+function norm(s){ return s.trim().replace(/\s+/g,' ').toLowerCase(); }
+
+function submitGaps() {
+  const allFilled = gapNums.every(n => document.getElementById('note-' + n).value.trim());
+  if (!allFilled) {
+    const nb = document.getElementById('gaps-nudge');
+    nb.classList.add('show'); setTimeout(() => nb.classList.remove('show'), 3000); return;
+  }
+  gapNums.forEach(n => {
+    const input = document.getElementById('note-' + n);
+    const given = norm(input.value);
+    const ok = gapAnswers[n].some(a => a === given);
+    input.disabled = true;
+    input.classList.remove('correct','wrong');
+    const cTag = document.getElementById('note-' + n + '-c');
+    if (ok) {
+      input.classList.add('correct'); scores.gaps['q' + n] = 1; cTag.classList.remove('show');
+    } else {
+      input.classList.add('wrong'); scores.gaps['q' + n] = 0;
+      cTag.textContent = ' → ' + gapAnswers[n][0]; cTag.classList.add('show');
+    }
+    let loc = document.getElementById('note-' + n + '-loc');
+    if (!loc) { loc = document.createElement('span'); loc.className = 'note-locate'; loc.id = 'note-' + n + '-loc'; cTag.after(loc); }
+    loc.innerHTML = '<a onclick="locate(&#39;gaps-passage&#39;,&#39;' + gapEv[n] + '&#39;,&#39;hl-green&#39;)" title="Show this answer in the passage">🔍</a>';
+  });
+  updateScores();
+  document.getElementById('gaps-result').classList.add('show');
+  document.getElementById('gaps-submit').disabled = true;
+}
+
+function resetGaps() {
+  scores.gaps = {};
+  gapNums.forEach(n => {
+    const input = document.getElementById('note-' + n);
+    input.value = ''; input.disabled = false; input.classList.remove('correct','wrong');
+    const cTag = document.getElementById('note-' + n + '-c');
+    cTag.classList.remove('show'); cTag.textContent = '';
+    const loc = document.getElementById('note-' + n + '-loc');
+    if (loc) loc.innerHTML = '';
+  });
+  document.querySelectorAll('#gaps-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  document.getElementById('gaps-result').classList.remove('show');
+  document.getElementById('gaps-submit').disabled = false;
+  updateScores();
+}
+
+// ─────────── TAB 3 — YES / NO / NOT GIVEN ───────────
+const ynQuestions = [
+  { num:37, text:'It is difficult to attract students onto courses that do not focus on a career.', correct:'NOT GIVEN', ev:null,
+    explain:"The passage never discusses how easy or hard it is to recruit students to non-career courses, so there is no information either way." },
+  { num:38, text:"The 'Arson for Profit' course would be useful for people intending to set fire to buildings.", correct:'YES', ev:'y38',
+    explain:"The writer asks whether it would be 'the perfect course for prospective arsonists', agreeing it could serve them." },
+  { num:39, text:'Fire science courses are too academic to help people to be good at the job of firefighting.', correct:'NO', ev:'y39',
+    explain:"The writer welcomes these programs as part of professionalization — the opposite of saying they are too academic." },
+  { num:40, text:"The writer's fire science students provided a detailed definition of the purpose of their studies.", correct:'NO', ev:'y40',
+    explain:"They only 'eventually generalize' to a broad phrase about society's welfare — not a detailed definition." }
+];
+const ynSelections = {};
+
+function renderYn() {
+  const c = document.getElementById('yn-questions');
+  c.innerHTML = '';
+  ynQuestions.forEach(q => {
+    const qId = 'yn-q' + q.num;
+    let btns = '';
+    ['YES','NO','NOT GIVEN'].forEach(v => {
+      btns += '<button class="tfng-btn" onclick="selectYn(&#39;' + qId + '&#39;,&#39;' + v + '&#39;,this)">' + v + '</button>';
+    });
+    c.innerHTML +=
+      '<div class="question-item" id="' + qId + '-item">' +
+        '<div class="q-header">' +
+          '<span class="q-num">' + q.num + '</span>' +
+          '<span class="q-text">' + q.text + '</span>' +
+          '<span class="q-marks">1</span>' +
+        '</div>' +
+        '<div class="tfng-row" id="' + qId + '-btns">' + btns + '</div>' +
+        '<div class="feedback" id="' + qId + '-fb"></div>' +
+      '</div>';
+  });
+}
+
+function selectYn(qId, value, btn) {
+  document.querySelectorAll('#' + qId + '-btns .tfng-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  ynSelections[qId] = value;
+}
+
+function submitYn() {
+  const allAnswered = ynQuestions.every(q => ynSelections['yn-q' + q.num]);
+  if (!allAnswered) {
+    const nb = document.getElementById('yn-nudge');
+    nb.classList.add('show'); setTimeout(() => nb.classList.remove('show'), 3000); return;
+  }
+  ynQuestions.forEach(q => {
+    const qId = 'yn-q' + q.num;
+    const selected = ynSelections[qId];
+    const correct = q.correct;
+    document.querySelectorAll('#' + qId + '-btns .tfng-btn').forEach(b => {
+      b.disabled = true; b.classList.remove('selected');
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct'); fb.innerHTML = '✓ Correct! ' + q.explain; scores.yn['q' + q.num] = 1;
+    } else {
+      item.classList.add('wrong'); fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + q.explain; scores.yn['q' + q.num] = 0;
+    }
+    const colorMap = { 'YES':'hl-green', 'NO':'hl-red', 'NOT GIVEN':'hl-amber' };
+    if (q.ev) {
+      fb.innerHTML += '<br><a class="locate-link" onclick="locate(&#39;yn-passage&#39;,&#39;' + q.ev + '&#39;,&#39;' + colorMap[correct] + '&#39;)">🔍 Show in text</a>';
+    } else {
+      fb.innerHTML += '<br><span class="no-locate">Nothing in the passage to point to — that is exactly why it is NOT GIVEN.</span>';
+    }
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('yn-result').classList.add('show');
+  document.getElementById('yn-submit').disabled = true;
+}
+
+function resetYn() {
+  scores.yn = {};
+  ynQuestions.forEach(q => {
+    const qId = 'yn-q' + q.num;
+    delete ynSelections[qId];
+    document.querySelectorAll('#' + qId + '-btns .tfng-btn').forEach(b => {
+      b.disabled = false; b.classList.remove('selected','correct-answer','wrong-answer');
+    });
+    document.getElementById(qId + '-item').classList.remove('correct','wrong');
+    const fb = document.getElementById(qId + '-fb');
+    fb.style.display = 'none'; fb.innerHTML = '';
+  });
+  document.querySelectorAll('#yn-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  document.getElementById('yn-result').classList.remove('show');
+  document.getElementById('yn-submit').disabled = false;
+  updateScores();
+}
+
+// ─────────── INIT ───────────
+buildPassage('headings-passage', evHeadings);
+buildPassage('gaps-passage', evGaps);
+buildPassage('yn-passage', evYn);
+renderHeadList();
+renderHeadings();
+renderYn();
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
