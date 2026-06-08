@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Academic Reading · Urban Farming | Sentence + Table Completion + True/False/Not Given</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1e2a5e; --ink-deep: #182347; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: var(--ink-deep); border-bottom: 2px solid var(--gold); flex-wrap: wrap; }
+  .tab-btn {
+    padding: 11px 24px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #9aa3c4; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #d6dcf0; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .article-byline { font-family: 'Source Serif 4', serif; font-style: italic; font-size: 13px; text-align: center; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+
+  /* True / False / Not Given pill buttons */
+  .tfng-row { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+  .tfng-btn {
+    flex: 1; min-width: 92px; padding: 9px 8px; border-radius: 6px; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.5px;
+    color: var(--muted); cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+  }
+  .tfng-btn:hover:not(:disabled) { border-color: var(--ink); color: var(--ink); }
+  .tfng-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .tfng-btn:disabled { cursor: default; }
+  .tfng-btn.correct-answer { background: var(--self-yes); color: white; border-color: var(--self-yes); }
+  .tfng-btn.wrong-answer { background: var(--self-no); color: white; border-color: var(--self-no); }
+
+  /* Gap-fill inputs (shared by sentence completion + table completion) */
+  .notes-box { border: 1.5px solid var(--border); border-radius: 6px; padding: 4px 18px 16px; background: white; }
+  .notes-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); text-align: center; margin: 16px 0 14px; line-height: 1.3; }
+  .note-line { display: flex; align-items: center; gap: 8px; font-size: 13.5px; line-height: 1.7; margin-bottom: 9px; color: #2c2c2c; flex-wrap: wrap; }
+  .note-num { background: var(--ink); color: white; font-size: 10px; font-weight: 600; min-width: 20px; height: 20px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .note-input {
+    width: 130px; border: none; border-bottom: 2px solid var(--ink); background: #fbf6ee;
+    padding: 4px 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
+    text-align: center; outline: none; transition: all 0.2s;
+  }
+  .note-input:focus { background: #fff7df; }
+  .note-input:disabled { cursor: default; }
+  .note-input.correct { border-bottom-color: var(--self-yes); background: #e8f5e9; color: #1a6e2a; font-weight: 700; }
+  .note-input.wrong { border-bottom-color: var(--self-no); background: #fdecea; color: var(--self-no); text-decoration: line-through; }
+  .note-correct { display: none; font-size: 12.5px; font-weight: 700; color: #1a6e2a; }
+  .note-correct.show { display: inline; }
+
+  /* Table-completion grid (Questions 4–7) */
+  .cmp-table { width: 100%; border-collapse: collapse; background: white; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
+  .cmp-table caption { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--ink); padding: 12px 10px; background: var(--cream); border-bottom: 1.5px solid var(--ink); }
+  .cmp-table th { background: var(--ink); color: white; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 9px 11px; text-align: left; }
+  .cmp-table td { border: 1px solid var(--border); padding: 11px 12px; vertical-align: top; font-size: 13px; line-height: 1.7; color: #2c2c2c; }
+  .cmp-table .row-head { font-weight: 700; color: var(--ink); background: var(--cream); white-space: nowrap; }
+  .cmp-table ul { list-style: none; padding: 0; margin: 0; }
+  .cmp-table li { position: relative; padding-left: 15px; margin-bottom: 9px; }
+  .cmp-table li:last-child { margin-bottom: 0; }
+  .cmp-table li::before { content: '\2022'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+  .cmp-table .note-input { width: 96px; }
+  .cmp-table .note-num { margin-right: 3px; }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: var(--ink); }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .btn-row { display: flex; gap: 10px; margin: 16px 0 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .btn-reveal:disabled, .btn-reset:disabled { opacity: 0.5; cursor: default; }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  /* TFNG key */
+  .key-box { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .key-row { display: flex; align-items: flex-start; gap: 12px; padding: 9px 14px; font-size: 12.5px; line-height: 1.4; border-bottom: 1px solid var(--border); }
+  .key-row:last-child { border-bottom: none; }
+  .key-tag { font-weight: 700; font-size: 10.5px; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; color: white; flex-shrink: 0; min-width: 86px; text-align: center; }
+  .key-tag.t { background: var(--self-yes); }
+  .key-tag.f { background: var(--self-no); }
+  .key-tag.n { background: var(--muted); }
+
+  /* Answer-location highlighting */
+  .ev { border-radius: 3px; transition: background 0.25s; }
+  .ev.hl-green { background: #d4edda; }
+  .ev.hl-red   { background: #f8d6d6; }
+  .ev.hl-amber { background: #ffe9ad; }
+  .ev.hl::before {
+    content: attr(data-badge);
+    display: inline-block; background: var(--gold); color: var(--ink);
+    font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700;
+    min-width: 14px; height: 14px; line-height: 14px; text-align: center;
+    border-radius: 7px; margin-right: 5px; padding: 0 3px; vertical-align: middle;
+  }
+  .locate-link { display: inline-block; margin-top: 7px; color: var(--ink); font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .locate-link:hover { color: var(--gold); }
+  .note-locate a { cursor: pointer; font-size: 14px; text-decoration: none; margin-left: 4px; vertical-align: middle; }
+  .note-locate a:hover { filter: brightness(1.15); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IELTS Academic Reading · Passage 1</span>
+    <h1>Urban Farming</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 13</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('sent')">Sentence Completion</button>
+  <button class="tab-btn" onclick="showTab('table')">Table Completion</button>
+  <button class="tab-btn" onclick="showTab('tfng')">True / False / Not Given</button>
+</div>
+
+<!-- ════════════════════ TAB 1 — SENTENCE COMPLETION (Q1–3) ════════════════════ -->
+<div class="exercise active" id="sent">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Urban Farming</div>
+    <div class="article-box">
+      <div class="article-title">Urban Farming</div>
+      <div class="article-byline">In Paris, urban farmers are trying a soil-free approach to agriculture that uses less space and fewer resources. Could it help cities face the threats to our food supplies?</div>
+      <div class="article-body" id="sent-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 1–3 · 3 marks</div>
+    <div class="ex-intro">Complete the sentences below. Choose <strong>NO MORE THAN TWO WORDS AND/OR A NUMBER</strong> from the passage for each answer.</div>
+
+    <div class="result-bar" id="sent-result">Sentence completion complete — Score: <span id="sent-score">0</span> / 3</div>
+    <div class="nudge-banner" id="sent-nudge"><span class="nudge-icon">✏️</span> Please fill in all three gaps before submitting.</div>
+
+    <div class="notes-box">
+      <div class="notes-title">Urban farming in Paris</div>
+      <div class="note-line"><span class="note-num">1</span> Vertical tubes are used to grow strawberries, <input type="text" class="note-input" id="gap-1" autocomplete="off"> <span class="note-correct" id="gap-1-c"></span> and herbs.</div>
+      <div class="note-line"><span class="note-num">2</span> There will eventually be a daily harvest of as much as <input type="text" class="note-input" id="gap-2" autocomplete="off"> <span class="note-correct" id="gap-2-c"></span> in weight of fruit and vegetables.</div>
+      <div class="note-line"><span class="note-num">3</span> It may be possible that the farm's produce will account for as much as 10% of the city's <input type="text" class="note-input" id="gap-3" autocomplete="off"> <span class="note-correct" id="gap-3-c"></span> overall.</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="sent-submit" onclick="submitSentence()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetSentence()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ TAB 2 — TABLE COMPLETION (Q4–7) ════════════════════ -->
+<div class="exercise" id="table">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Urban Farming</div>
+    <div class="article-box">
+      <div class="article-title">Urban Farming</div>
+      <div class="article-byline">In Paris, urban farmers are trying a soil-free approach to agriculture that uses less space and fewer resources. Could it help cities face the threats to our food supplies?</div>
+      <div class="article-body" id="table-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 4–7 · 4 marks</div>
+    <div class="ex-intro">Complete the table below. Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</div>
+
+    <div class="result-bar" id="table-result">Table completion complete — Score: <span id="table-score">0</span> / 4</div>
+    <div class="nudge-banner" id="table-nudge"><span class="nudge-icon">✏️</span> Please fill in all four gaps before submitting.</div>
+
+    <table class="cmp-table">
+      <caption>Intensive farming versus aeroponic urban farming</caption>
+      <thead>
+        <tr><th></th><th>Growth</th><th>Selection</th><th>Sale</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-head">Intensive<br>farming</td>
+          <td>
+            <ul>
+              <li>wide range of <span class="note-num">4</span> <input type="text" class="note-input" id="gap-4" autocomplete="off"> <span class="note-correct" id="gap-4-c"></span> used</li>
+              <li>techniques pollute air</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>quality not good</li>
+              <li>varieties of fruit and vegetables chosen that can survive long <span class="note-num">5</span> <input type="text" class="note-input" id="gap-5" autocomplete="off"> <span class="note-correct" id="gap-5-c"></span></li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li><span class="note-num">6</span> <input type="text" class="note-input" id="gap-6" autocomplete="off"> <span class="note-correct" id="gap-6-c"></span> receive very little of overall income</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="row-head">Aeroponic<br>urban farming</td>
+          <td>
+            <ul>
+              <li>no soil used</li>
+              <li>nutrients added to water, which is recycled</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>produce chosen because of its <span class="note-num">7</span> <input type="text" class="note-input" id="gap-7" autocomplete="off"> <span class="note-correct" id="gap-7-c"></span></li>
+            </ul>
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="table-submit" onclick="submitTable()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetTable()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ TAB 3 — TRUE / FALSE / NOT GIVEN (Q8–13) ════════════════════ -->
+<div class="exercise" id="tfng">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · Urban Farming</div>
+    <div class="article-box">
+      <div class="article-title">Urban Farming</div>
+      <div class="article-byline">In Paris, urban farmers are trying a soil-free approach to agriculture that uses less space and fewer resources. Could it help cities face the threats to our food supplies?</div>
+      <div class="article-body" id="tfng-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 8–13 · 6 marks</div>
+    <div class="ex-intro">Do the following statements agree with the information in the passage? Choose <strong>TRUE</strong>, <strong>FALSE</strong> or <strong>NOT GIVEN</strong> for each statement.</div>
+
+    <div class="result-bar" id="tfng-result">True/False/Not Given complete — Score: <span id="tfng-score">0</span> / 6</div>
+    <div class="nudge-banner" id="tfng-nudge"><span class="nudge-icon">✏️</span> Please answer all six statements before submitting.</div>
+
+    <div id="tfng-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="tfng-submit" onclick="submitTfng()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetTfng()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────── PASSAGE (evidence spans carry data-ev for the "Show in text" links) ───────────
+const passage = [
+  "On top of a striking new exhibition hall in southern Paris, the world's largest urban rooftop farm has started to bear fruit. Strawberries that are small, intensely flavoured and resplendently red sprout abundantly from large plastic tubes. Peer inside and you see the tubes are completely hollow, the roots of dozens of strawberry plants dangling down inside them. <span class='ev' data-ev='sq1' data-badge='1'>From identical vertical tubes nearby burst row upon row of lettuces; near those are aromatic herbs, such as basil, sage and peppermint.</span> Opposite, in narrow, horizontal trays packed not with soil but with coconut fibre, grow cherry tomatoes, shiny aubergines and brightly coloured chards.",
+
+  "Pascal Hardy, an engineer and sustainable development consultant, began experimenting with vertical farming and aeroponic growing towers – as the soil-free plastic tubes are known – on his Paris apartment block roof five years ago. The urban rooftop space above the exhibition hall is somewhat bigger: 14,000 square metres and almost exactly the size of a couple of football pitches. Already, the team of young urban farmers who tend it have picked, in one day, 3,000 lettuces and 150 punnets of strawberries. When the remaining two thirds of the vast open area are in production, <span class='ev' data-ev='sq2' data-badge='2'>20 staff will harvest up to 1,000 kg of perhaps 35 different varieties of fruit and vegetables, every day.</span> 'We're not ever, obviously, going to feed the whole city this way,' cautions Hardy. 'In the urban environment you're working with very significant practical constraints, clearly, on what you can do and where. <span class='ev' data-ev='sq3' data-badge='3'>But if enough unused space can be developed like this, there's no reason why you shouldn't eventually target maybe between 5% and 10% of consumption.</span>'",
+
+  "Perhaps most significantly, however, this is a real-life showcase for the work of Hardy's flourishing urban agriculture consultancy, Agripolis, which is currently fielding enquiries from around the world to design, build and equip a new breed of soil-free inner-city farm. 'The method's advantages are many,' he says. 'First, I don't much like the fact that most of the fruit and vegetables we eat have been treated with something like <span class='ev' data-ev='cq4' data-badge='4'>17 different pesticides</span>, or that the intensive farming techniques that produced them are such huge generators of greenhouse gases. I don't much like the fact, either, that they've travelled an average of 2,000 refrigerated kilometres to my plate, that their quality is so poor, because <span class='ev' data-ev='cq5' data-badge='5'>the varieties are selected for their capacity to withstand such substantial journeys</span>, or that <span class='ev' data-ev='cq6' data-badge='6'>80% of the price I pay goes to wholesalers and transport companies, not the producers.</span>'",
+
+  "Produce grown using this soil-free method, on the other hand – which relies solely on a small quantity of water, enriched with organic nutrients, pumped around a closed circuit of pipes, towers and trays – is 'produced up here, and sold locally, just down there. It barely travels at all,' Hardy says. 'You can select crop varieties for <span class='ev' data-ev='cq7' data-badge='7'>their flavour</span>, not their resistance to the transport and storage chain, and you can pick them when they're really at their best, and not before.' No soil is exhausted, and the water that gently showers the plants' roots every 12 minutes is recycled, so the method uses 90% less water than a classic intensive farm for the same yield.",
+
+  "Urban farming is not, of course, a new phenomenon. Inner-city agriculture is booming from Shanghai to Detroit and Tokyo to Bangkok. <span class='ev' data-ev='tq8' data-badge='8'>Strawberries are being grown in disused shipping containers, mushrooms in underground carparks.</span> Aeroponic farming, he says, is 'virtuous'. <span class='ev' data-ev='tq9' data-badge='9'>The equipment weighs little, can be installed on almost any flat surface and is cheap to buy: roughly €100 to €150 per square metre.</span> <span class='ev' data-ev='tq10' data-badge='10'>It is cheap to run, too, consuming a tiny fraction of the electricity used by some techniques.</span>",
+
+  "<span class='ev' data-ev='tq11' data-badge='11'>Produce grown this way typically sells at prices that, while generally higher than those of classic intensive agriculture, are lower than soil-based organic growers.</span> There are limits to what farmers can grow this way, of course, and <span class='ev' data-ev='tq12' data-badge='12'>much of the produce is suited to the summer months.</span> 'Root vegetables we cannot do, at least not yet,' he says. 'Radishes are OK, but carrots, potatoes, that kind of thing – the roots are simply too long. Fruit trees are obviously not an option. And <span class='ev' data-ev='tq13' data-badge='13'>beans tend to take up a lot of space for not much return.</span>' Nevertheless, urban farming of the kind being practised in Paris is one part of a bigger and fast-changing picture that is bringing food production closer to our lives."
+];
+
+function renderPassage() {
+  const html = passage.map(p => '<p>' + p + '</p>').join('');
+  document.getElementById('sent-passage').innerHTML = html;
+  document.getElementById('table-passage').innerHTML = html;
+  document.getElementById('tfng-passage').innerHTML = html;
+}
+
+// ─────────── HIGHLIGHT / LOCATE IN PASSAGE ───────────
+function locate(panelId, evKey, color) {
+  const panel = document.getElementById(panelId);
+  panel.querySelectorAll('.ev.hl').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  const span = panel.querySelector('[data-ev="' + evKey + '"]');
+  if (span) {
+    span.classList.add('hl', color);
+    span.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// ─────────── TAB SWITCHING ───────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─────────── SCORE TRACKING ───────────
+const scores = { sentence:{}, table:{}, tfng:{} };
+function sum(o){ return Object.values(o).reduce((a,b)=>a+b,0); }
+function updateScores() {
+  const s = sum(scores.sentence), t = sum(scores.table), f = sum(scores.tfng);
+  document.getElementById('sent-score').textContent = s;
+  document.getElementById('table-score').textContent = t;
+  document.getElementById('tfng-score').textContent = f;
+  document.getElementById('total-score').textContent = s + t + f;
+}
+
+// ─────────── GAP-FILL ANSWERS (sentence Q1–3 + table Q4–7) ───────────
+// accept = every spelling/format counted as correct;  show = what we reveal when wrong
+const gapAnswers = {
+  1: { accept:['lettuces'],                                  show:'lettuces',                  ev:'sq1', panel:'sent-passage'  },
+  2: { accept:['1,000 kg','1000 kg','1,000kg','1000kg'],     show:'1,000 kg',                  ev:'sq2', panel:'sent-passage'  },
+  3: { accept:['consumption','food consumption'],            show:'consumption ("food" optional)', ev:'sq3', panel:'sent-passage'  },
+  4: { accept:['pesticides'],                                show:'pesticides',                ev:'cq4', panel:'table-passage' },
+  5: { accept:['journeys'],                                  show:'journeys',                  ev:'cq5', panel:'table-passage' },
+  6: { accept:['producers'],                                 show:'producers',                 ev:'cq6', panel:'table-passage' },
+  7: { accept:['flavour','flavor'],                          show:'flavour / flavor',          ev:'cq7', panel:'table-passage' }
+};
+
+function normalize(s){ return s.trim().toLowerCase().replace(/\s+/g, ' '); }
+
+function allFilled(nums, nudgeId){
+  const ok = nums.every(n => document.getElementById('gap-' + n).value.trim());
+  if (!ok) {
+    const nb = document.getElementById(nudgeId);
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+  }
+  return ok;
+}
+
+function gradeGaps(nums, scoreKey, resultId, submitId){
+  nums.forEach(n => {
+    const input = document.getElementById('gap-' + n);
+    const a = gapAnswers[n];
+    const correct = a.accept.some(x => normalize(x) === normalize(input.value));
+    input.disabled = true;
+    input.classList.remove('correct','wrong');
+    const cTag = document.getElementById('gap-' + n + '-c');
+    if (correct) {
+      input.classList.add('correct');
+      scores[scoreKey]['q' + n] = 1;
+      cTag.classList.remove('show');
+    } else {
+      input.classList.add('wrong');
+      scores[scoreKey]['q' + n] = 0;
+      cTag.textContent = '→ ' + a.show;
+      cTag.classList.add('show');
+    }
+    let loc = document.getElementById('gap-' + n + '-loc');
+    if (!loc) { loc = document.createElement('span'); loc.className = 'note-locate'; loc.id = 'gap-' + n + '-loc'; cTag.after(loc); }
+    loc.innerHTML = '<a onclick="locate(&#39;' + a.panel + '&#39;,&#39;' + a.ev + '&#39;,&#39;hl-green&#39;)" title="Show this answer in the passage">🔍</a>';
+  });
+  updateScores();
+  document.getElementById(resultId).classList.add('show');
+  document.getElementById(submitId).disabled = true;
+}
+
+function resetGaps(nums, scoreKey, resultId, submitId, panelId){
+  scores[scoreKey] = {};
+  nums.forEach(n => {
+    const input = document.getElementById('gap-' + n);
+    input.value = ''; input.disabled = false;
+    input.classList.remove('correct','wrong');
+    const cTag = document.getElementById('gap-' + n + '-c');
+    cTag.classList.remove('show'); cTag.textContent = '';
+    const loc = document.getElementById('gap-' + n + '-loc');
+    if (loc) loc.innerHTML = '';
+  });
+  document.querySelectorAll('#' + panelId + ' .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  document.getElementById(resultId).classList.remove('show');
+  document.getElementById(submitId).disabled = false;
+  updateScores();
+}
+
+// Sentence completion (Q1–3)
+function submitSentence(){ if (!allFilled([1,2,3], 'sent-nudge')) return; gradeGaps([1,2,3], 'sentence', 'sent-result', 'sent-submit'); }
+function resetSentence(){ resetGaps([1,2,3], 'sentence', 'sent-result', 'sent-submit', 'sent-passage'); }
+
+// Table completion (Q4–7)
+function submitTable(){ if (!allFilled([4,5,6,7], 'table-nudge')) return; gradeGaps([4,5,6,7], 'table', 'table-result', 'table-submit'); }
+function resetTable(){ resetGaps([4,5,6,7], 'table', 'table-result', 'table-submit', 'table-passage'); }
+
+// ─────────── TRUE / FALSE / NOT GIVEN (Q8–13) ───────────
+const tfngQuestions = [
+  { num:8, text:'Urban farming can take place above or below ground.', correct:'TRUE',
+    explain:`The passage describes rooftop farms above ground and "mushrooms in underground carparks" below, so urban farming happens in both.` },
+  { num:9, text:'Some of the equipment used in aeroponic farming can be made by hand.', correct:'NOT GIVEN',
+    explain:`We're told the equipment is light, cheap and fits on flat surfaces, but nothing about whether any of it is home-made. With no information either way, the answer is NOT GIVEN — be careful not to pick FALSE.` },
+  { num:10, text:'Urban farming relies more on electricity than some other types of farming.', correct:'FALSE',
+    explain:`The passage says it consumes "a tiny fraction of the electricity used by some techniques" — so it uses LESS, not more. The statement reverses this.` },
+  { num:11, text:'Fruit and vegetables grown on an aeroponic urban farm are cheaper than traditionally grown organic produce.', correct:'TRUE',
+    explain:`Prices are described as higher than intensive farming but "lower than soil-based organic growers" — i.e. cheaper than traditional organic produce.` },
+  { num:12, text:'Most produce can be grown on an aeroponic urban farm at any time of the year.', correct:'FALSE',
+    explain:`The text states "much of the produce is suited to the summer months", which contradicts the idea of growing at any time of year.` },
+  { num:13, text:'Beans take longer to grow on an urban farm than other vegetables.', correct:'NOT GIVEN',
+    explain:`We learn beans "take up a lot of space for not much return", but nothing about how long they take to grow compared with other vegetables — so NOT GIVEN.` }
+];
+
+const tfngSelections = {};
+
+function renderTfng() {
+  const c = document.getElementById('tfng-questions');
+  tfngQuestions.forEach(q => {
+    const qId = 'tfng-q' + q.num;
+    let btns = '';
+    ['TRUE','FALSE','NOT GIVEN'].forEach(v => {
+      btns += `<button class="tfng-btn" onclick="selectTfng('${qId}','${v}',this)">${v}</button>`;
+    });
+    c.innerHTML += `
+      <div class="question-item" id="${qId}-item">
+        <div class="q-header">
+          <span class="q-num">${q.num}</span>
+          <span class="q-text">${q.text}</span>
+          <span class="q-marks">1</span>
+        </div>
+        <div class="tfng-row" id="${qId}-btns">${btns}</div>
+        <div class="feedback" id="${qId}-fb"></div>
+      </div>`;
+  });
+}
+
+function selectTfng(qId, value, btn) {
+  document.querySelectorAll('#' + qId + '-btns .tfng-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  tfngSelections[qId] = value;
+}
+
+function submitTfng() {
+  const allAnswered = tfngQuestions.every(q => tfngSelections['tfng-q' + q.num]);
+  if (!allAnswered) {
+    const nb = document.getElementById('tfng-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  tfngQuestions.forEach(q => {
+    const qId = 'tfng-q' + q.num;
+    const selected = tfngSelections[qId];
+    const correct = q.correct;
+    const btns = document.querySelectorAll('#' + qId + '-btns .tfng-btn');
+    btns.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('selected');
+      if (b.textContent === correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + q.explain;
+      scores.tfng['q' + q.num] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is <strong>' + correct + '</strong>. ' + q.explain;
+      scores.tfng['q' + q.num] = 0;
+    }
+    const colorMap = { 'TRUE':'hl-green', 'FALSE':'hl-red', 'NOT GIVEN':'hl-amber' };
+    const lbl = (correct === 'NOT GIVEN') ? '🔍 Show the closest mention' : '🔍 Show in text';
+    fb.innerHTML += '<br><a class="locate-link" onclick="locate(&#39;tfng-passage&#39;,&#39;tq' + q.num + '&#39;,&#39;' + colorMap[correct] + '&#39;)">' + lbl + '</a>';
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('tfng-result').classList.add('show');
+  document.getElementById('tfng-submit').disabled = true;
+}
+
+function resetTfng() {
+  scores.tfng = {};
+  tfngQuestions.forEach(q => {
+    const qId = 'tfng-q' + q.num;
+    delete tfngSelections[qId];
+    document.querySelectorAll('#' + qId + '-btns .tfng-btn').forEach(b => {
+      b.disabled = false;
+      b.classList.remove('selected','correct-answer','wrong-answer');
+    });
+    document.getElementById(qId + '-item').classList.remove('correct','wrong');
+    const fb = document.getElementById(qId + '-fb');
+    fb.style.display = 'none'; fb.innerHTML = '';
+  });
+  document.getElementById('tfng-result').classList.remove('show');
+  document.getElementById('tfng-submit').disabled = false;
+  document.querySelectorAll('#tfng-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  updateScores();
+}
+
+// ─────────── INIT ───────────
+renderPassage();
+renderTfng();
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
