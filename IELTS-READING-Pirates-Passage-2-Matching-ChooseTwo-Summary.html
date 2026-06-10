@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Academic Reading · The Pirates of the Ancient Mediterranean | Matching Information + Choose Two + Summary Completion</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1e2a5e; --ink-deep: #182347; --paper: #fdf8f0; --cream: #f5ede0;
+    --gold: #d4a017; --muted: #7a6a5a; --border: #d9cfc4;
+    --self-yes: #4caf50; --self-no: #e53935; --self-partial: #f9a825;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header {
+    background: var(--ink); color: var(--paper);
+    padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100;
+  }
+  .title-group { display: flex; flex-direction: column; }
+  .h-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 19px; }
+  .score-badge { background: var(--gold); color: var(--ink); font-weight: 600; font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .tab-bar { display: flex; background: var(--ink-deep); border-bottom: 2px solid var(--gold); flex-wrap: wrap; }
+  .tab-btn {
+    padding: 11px 24px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: #9aa3c4; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { color: #d6dcf0; }
+
+  .exercise { display: none; }
+  .exercise.active { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 97px); }
+
+  .text-panel { overflow-y: auto; padding: 28px 32px; border-right: 2px solid var(--border); background: var(--cream); }
+  .questions-panel { overflow-y: auto; padding: 28px 32px; background: var(--paper); }
+  .panel-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+
+  .article-box { border: 1.5px solid var(--border); background: white; padding: 24px; border-radius: 4px; }
+  .article-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .article-byline { font-family: 'Source Serif 4', serif; font-style: italic; font-size: 13px; text-align: center; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+  .article-body p { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.85; color: #2c2c2c; margin-bottom: 13px; text-align: justify; }
+  .article-body p:last-child { margin-bottom: 0; }
+  .para-letter {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: white; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 700; min-width: 22px; height: 22px;
+    border-radius: 4px; margin-right: 9px; vertical-align: middle;
+  }
+  .footnote { font-family: 'Source Serif 4', serif; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; padding-top: 9px; line-height: 1.6; }
+
+  .question-item {
+    margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 14px 16px; background: white; transition: border-color 0.3s, background 0.3s;
+  }
+  .question-item.correct { border-color: #4caf50; background: #e8f5e9; }
+  .question-item.wrong { border-color: #e53935; background: #fdecea; }
+  .question-item.partial { border-color: var(--self-partial); background: #fff8e1; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .q-num { background: var(--ink); color: white; font-size: 11px; font-weight: 600; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13.5px; line-height: 1.5; font-weight: 500; flex: 1; }
+  .q-marks { font-size: 11px; color: var(--muted); background: var(--cream); border: 1px solid var(--border); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+
+  /* Paragraph-letter pill buttons (Matching Information) */
+  .letter-row { display: flex; gap: 7px; margin-top: 4px; flex-wrap: wrap; }
+  .letter-btn {
+    min-width: 42px; padding: 9px 0; border-radius: 6px; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
+    color: var(--muted); cursor: pointer; transition: all 0.15s;
+  }
+  .letter-btn:hover:not(:disabled) { border-color: var(--ink); color: var(--ink); }
+  .letter-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .letter-btn:disabled { cursor: default; }
+  .letter-btn.correct-answer { background: var(--self-yes); color: white; border-color: var(--self-yes); }
+  .letter-btn.wrong-answer { background: var(--self-no); color: white; border-color: var(--self-no); }
+
+  /* Choose-TWO option buttons */
+  .opt-list { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .opt-btn {
+    display: flex; align-items: flex-start; gap: 10px; text-align: left;
+    padding: 10px 13px; border-radius: 6px; border: 2px solid var(--border);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; line-height: 1.5;
+    color: #2c2c2c; cursor: pointer; transition: all 0.15s;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--ink); }
+  .opt-btn.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .opt-btn.selected .opt-letter { background: var(--gold); color: var(--ink); }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct-answer { background: var(--self-yes); color: white; border-color: var(--self-yes); }
+  .opt-btn.correct-answer .opt-letter { background: white; color: var(--self-yes); }
+  .opt-btn.wrong-answer { background: var(--self-no); color: white; border-color: var(--self-no); }
+  .opt-btn.wrong-answer .opt-letter { background: white; color: var(--self-no); }
+  .opt-btn.missed-answer { border-color: var(--self-yes); border-style: dashed; }
+  .opt-letter {
+    background: var(--cream); border: none; color: var(--ink); font-weight: 700; font-size: 11px;
+    min-width: 20px; height: 20px; border-radius: 10px; display: inline-flex;
+    align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+    transition: all 0.15s;
+  }
+  .pick-counter { font-size: 11.5px; color: var(--muted); margin-top: 8px; font-weight: 600; }
+
+  /* Gap-fill inputs (summary completion) */
+  .notes-box { border: 1.5px solid var(--border); border-radius: 6px; padding: 4px 18px 16px; background: white; }
+  .notes-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); text-align: center; margin: 16px 0 14px; line-height: 1.3; }
+  .summary-flow { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 2.2; color: #2c2c2c; text-align: justify; }
+  .note-num { background: var(--ink); color: white; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; min-width: 20px; height: 20px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; vertical-align: middle; margin-right: 3px; }
+  .note-input {
+    width: 130px; border: none; border-bottom: 2px solid var(--ink); background: #fbf6ee;
+    padding: 4px 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
+    text-align: center; outline: none; transition: all 0.2s;
+  }
+  .note-input:focus { background: #fff7df; }
+  .note-input:disabled { cursor: default; }
+  .note-input.correct { border-bottom-color: var(--self-yes); background: #e8f5e9; color: #1a6e2a; font-weight: 700; }
+  .note-input.wrong { border-bottom-color: var(--self-no); background: #fdecea; color: var(--self-no); text-decoration: line-through; }
+  .note-correct { display: none; font-size: 12.5px; font-weight: 700; color: #1a6e2a; font-family: 'DM Sans', sans-serif; }
+  .note-correct.show { display: inline; }
+  .note-locate a { cursor: pointer; font-size: 14px; text-decoration: none; margin-left: 4px; vertical-align: middle; }
+  .note-locate a:hover { filter: brightness(1.15); }
+
+  .feedback { margin-top: 9px; font-size: 12.5px; display: none; padding: 7px 11px; border-radius: 4px; line-height: 1.5; background: #f0f4ff; color: var(--ink); }
+
+  .nudge-banner {
+    display: none; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 6px; background: #fff8e1;
+    border: 1.5px solid #ffe082; margin-bottom: 14px; font-size: 13px; color: #5d4037;
+  }
+  .nudge-banner.show { display: flex; }
+  .nudge-icon { font-size: 18px; }
+
+  .btn-row { display: flex; gap: 10px; margin: 16px 0 18px; flex-wrap: wrap; }
+  button { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 4px; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.1s; }
+  button:hover { opacity: 0.88; }
+  button:active { transform: scale(0.97); }
+  .btn-reveal { background: var(--ink); color: white; }
+  .btn-reset { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .btn-reveal:disabled, .btn-reset:disabled { opacity: 0.5; cursor: default; }
+
+  .result-bar { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: white; font-size: 14px; font-weight: 600; font-family: 'Playfair Display', serif; }
+  .result-bar.show { display: block; }
+  .result-bar span { color: var(--gold); }
+
+  .ex-intro { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; padding: 10px 14px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border); }
+
+  /* Answer-location highlighting */
+  .ev { border-radius: 3px; transition: background 0.25s; }
+  .ev.hl-green { background: #d4edda; }
+  .ev.hl-red   { background: #f8d6d6; }
+  .ev.hl-amber { background: #ffe9ad; }
+  .ev.hl::before {
+    content: attr(data-badge);
+    display: inline-block; background: var(--gold); color: var(--ink);
+    font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700;
+    min-width: 14px; height: 14px; line-height: 14px; text-align: center;
+    border-radius: 7px; margin-right: 5px; padding: 0 3px; vertical-align: middle;
+  }
+  .locate-link { display: inline-block; margin-top: 7px; margin-right: 14px; color: var(--ink); font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .locate-link:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <span class="h-label">IELTS Academic Reading · Passage 2</span>
+    <h1>The Pirates of the Ancient Mediterranean</h1>
+  </div>
+  <div class="score-badge">Total: <span id="total-score">0</span> / 13</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('match')">Matching Information (14–19)</button>
+  <button class="tab-btn" onclick="showTab('two')">Choose TWO (20–23)</button>
+  <button class="tab-btn" onclick="showTab('summ')">Summary Completion (24–26)</button>
+</div>
+
+<!-- ════════════════════ TAB 1 — MATCHING INFORMATION (Q14–19) ════════════════════ -->
+<div class="exercise active" id="match">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · The Pirates of the Ancient Mediterranean</div>
+    <div class="article-box">
+      <div class="article-title">The pirates of the ancient Mediterranean</div>
+      <div class="article-byline">In the first and second millennia BCE, pirates sailed around the Mediterranean, attacking ships and avoiding pursuers</div>
+      <div class="article-body" id="match-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 14–19 · 6 marks</div>
+    <div class="ex-intro">Reading Passage 2 has seven paragraphs, <strong>A–G</strong>. Which paragraph contains the following information? Choose the correct letter, <strong>A–G</strong>. <em>NB&nbsp; You may use any letter more than once.</em></div>
+
+    <div class="result-bar" id="match-result">Matching information complete — Score: <span id="match-score">0</span> / 6</div>
+    <div class="nudge-banner" id="match-nudge"><span class="nudge-icon">✏️</span> Please choose a paragraph letter for all six questions before submitting.</div>
+
+    <div id="match-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="match-submit" onclick="submitMatch()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetMatch()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ TAB 2 — CHOOSE TWO (Q20–23) ════════════════════ -->
+<div class="exercise" id="two">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · The Pirates of the Ancient Mediterranean</div>
+    <div class="article-box">
+      <div class="article-title">The pirates of the ancient Mediterranean</div>
+      <div class="article-byline">In the first and second millennia BCE, pirates sailed around the Mediterranean, attacking ships and avoiding pursuers</div>
+      <div class="article-body" id="two-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 20–23 · 4 marks</div>
+    <div class="ex-intro">For each question below, choose <strong>TWO</strong> letters, <strong>A–E</strong>. Each correct letter is worth one mark.</div>
+
+    <div class="result-bar" id="two-result">Choose TWO complete — Score: <span id="two-score">0</span> / 4</div>
+    <div class="nudge-banner" id="two-nudge"><span class="nudge-icon">✏️</span> Please select exactly TWO options for each question before submitting.</div>
+
+    <div id="two-questions"></div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="two-submit" onclick="submitTwo()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetTwo()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ TAB 3 — SUMMARY COMPLETION (Q24–26) ════════════════════ -->
+<div class="exercise" id="summ">
+  <div class="text-panel">
+    <div class="panel-label">Reading Passage · The Pirates of the Ancient Mediterranean</div>
+    <div class="article-box">
+      <div class="article-title">The pirates of the ancient Mediterranean</div>
+      <div class="article-byline">In the first and second millennia BCE, pirates sailed around the Mediterranean, attacking ships and avoiding pursuers</div>
+      <div class="article-body" id="summ-passage"></div>
+    </div>
+  </div>
+
+  <div class="questions-panel">
+    <div class="panel-label">Questions 24–26 · 3 marks</div>
+    <div class="ex-intro">Complete the summary below. Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</div>
+
+    <div class="result-bar" id="summ-result">Summary completion complete — Score: <span id="summ-score">0</span> / 3</div>
+    <div class="nudge-banner" id="summ-nudge"><span class="nudge-icon">✏️</span> Please fill in all three gaps before submitting.</div>
+
+    <div class="notes-box">
+      <div class="notes-title">Ancient Rome and piracy</div>
+      <div class="summary-flow">
+        Piracy was an issue ancient Rome had to deal with, but it also brought some benefits for Rome. For example, pirates supplied slaves that were important for Rome's industries. However, attacks on vessels transporting
+        <span class="note-num">24</span><input type="text" class="note-input" id="gap-24" autocomplete="off"> <span class="note-correct" id="gap-24-c"></span><span class="note-locate" id="gap-24-loc"></span>
+        to Rome resulted in calls for
+        <span class="note-num">25</span><input type="text" class="note-input" id="gap-25" autocomplete="off"> <span class="note-correct" id="gap-25-c"></span><span class="note-locate" id="gap-25-loc"></span>
+        for the pirates responsible. Nevertheless, piracy continued, with some pirates demanding a
+        <span class="note-num">26</span><input type="text" class="note-input" id="gap-26" autocomplete="off"> <span class="note-correct" id="gap-26-c"></span><span class="note-locate" id="gap-26-loc"></span>
+        for the return of the Roman officials they captured.
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reveal" id="summ-submit" onclick="submitSummary()">Submit Answers</button>
+      <button class="btn-reset" onclick="resetSummary()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────── PASSAGE (evidence spans carry data-ev for the "Show in text" links) ───────────
+const passage = [
+  { letter:'A', text:"<span class='ev' data-ev='m17' data-badge='17'>When one mentions pirates, an image springs to most people's minds of a crew of misfits, daredevils and adventurers in command of a tall sailing ship in the Caribbean Sea.</span> Yet from the first to the third millennium BCE, thousands of years before these swashbucklers began spreading fear across the Caribbean, pirates prowled the Mediterranean, raiding merchant ships and threatening vital trade routes. However, despite all efforts and the might of various ancient states, piracy could not be stopped. The situation remained unchanged for thousands of years. Only when the pirates directly threatened the interests of ancient Rome did the Roman Republic organise a massive fleet to eliminate piracy. Under the command of the Roman general Pompey, Rome eradicated piracy, transforming the Mediterranean into <em>'Mare Nostrum'</em> (Our Sea)." },
+
+  { letter:'B', text:"Although piracy in the Mediterranean is first recorded in ancient Egypt during the reign of Pharaoh Amenhotep III (c 1390–1353 BCE), it is reasonable to assume it predated this powerful civilisation. This is partly due to the great importance the Mediterranean held at this time, and partly due to its geography. While the Mediterranean region is predominantly fertile, some parts are rugged and hilly, even mountainous. <span class='ev' data-ev='c20D' data-badge='20/21 D'>In the ancient times, the inhabitants of these areas relied heavily on marine resources, including fish and salt.</span> Most had their own boats, possessed good seafaring skills, and unsurpassed knowledge of the local coastline and sailing routes. Thus, it is not surprising that during hardships, these men turned to piracy. Geography itself further benefited the pirates, with the numerous coves along the coast providing places for them to hide their boats and strike undetected. <span class='ev' data-ev='m19' data-badge='19'>Before the invention of ocean-going caravels* in the 15th century, ships could not easily cross long distances over open water. Thus, in the ancient world most were restricted to a few well-known navigable routes that followed the coastline.</span> Caught in a trap, a slow merchant ship laden with goods had no other option but to surrender. <span class='ev' data-ev='c20B' data-badge='20/21 B'>In addition, knowledge of the local area helped the pirates to avoid retaliation once a state fleet arrived.</span>" },
+
+  { letter:'C', text:"<span class='ev' data-ev='m16' data-badge='16'>One should also add that it was not unknown in the first and second millennia BCE for governments to resort to pirates' services, especially during wartime, employing their skills and numbers against their opponents.</span> A pirate fleet would serve in the first wave of attack, preparing the way for the navy. Some of the regions were known for providing safe harbours to pirates, who, in return, boosted the local economy." },
+
+  { letter:'D', text:"The first known record of a named group of Mediterranean pirates, made during the rule of ancient Egyptian Pharaoh Akhenaten (c 1353–1336 BCE), was in the Amarna Letters. These were extracts of diplomatic correspondence between the pharaoh and his allies, and covered many pressing issues, including piracy. It seems the pharaoh was troubled by two distinct pirate groups, the Lukka and the Sherden. Despite the Egyptian fleet's best efforts, the pirates continued to cause substantial disruption to regional commerce. <span class='ev' data-ev='m14' data-badge='14'>In the letters, the king of Alashiya (modern Cyprus) rejected Akhenaten's claims of a connection with the Lukka (based in modern-day Turkey).</span> The king assured Akhenaten he was prepared to punish any of his subjects involved in piracy." },
+
+  { letter:'E', text:"The ancient Greek world's experience of piracy was different from that of Egyptian rulers. While Egypt's power was land-based, the ancient Greeks relied on the Mediterranean in almost all aspects of life, from trade to warfare. <span class='ev' data-ev='c22E' data-badge='22/23 E'>Interestingly, in his works the <em>Iliad</em> and the <em>Odyssey</em>, the ancient Greek writer Homer not only condones, but praises the lifestyle and actions of pirates. The opinion remained unchanged in the following centuries. The ancient Greek historian Thucydides, for instance, glorified pirates' daring attacks on ships or even cities.</span> For Greeks, piracy was a part of everyday life. <span class='ev' data-ev='c22C' data-badge='22/23 C'>Even high-ranking members of the state were not beyond engaging in such activities. According to the Greek orator Demosthenes, in 355 BCE, Athenian ambassadors made a detour from their official travel to capture a ship sailing from Egypt, taking the wealth found onboard for themselves!</span> The Greeks' liberal approach towards piracy does not mean they always tolerated it, but attempts to curtail piracy were hampered by the large number of pirates operating in the Mediterranean." },
+
+  { letter:'F', text:"The rising power of ancient Rome required the Roman Republic to deal with piracy in the Mediterranean. While piracy was a serious issue for the Republic, Rome profited greatly from its existence. Pirate raids provided a steady source of slaves, essential for Rome's agriculture and mining industries. But this arrangement could work only while the pirates left Roman interests alone. <span class='ev' data-ev='s24' data-badge='24'>Pirate attacks on grain ships, which were essential to Roman citizens,</span> <span class='ev' data-ev='s25' data-badge='25'>led to angry voices in the Senate, demanding punishment of the culprits.</span> Rome, however, did nothing, further encouraging piracy. <span class='ev' data-ev='s26' data-badge='26'>By the 1st century BCE, emboldened pirates kidnapped prominent Roman dignitaries, asking for a large ransom to be paid.</span> Their most famous hostage was none other than Julius Caesar, captured in 75 BCE." },
+
+  { letter:'G', text:"By now, Rome was well aware that pirates had outlived their usefulness. The time had come for concerted action. In 67 BCE, a new law granted Pompey vast funds to combat the Mediterranean menace. <span class='ev' data-ev='m15' data-badge='15'>Taking personal command, Pompey divided the entire Mediterranean into 13 districts, assigning a fleet and commander to each. After cleansing one district of pirates, the fleet would join another in the next district. The process continued until the entire Mediterranean was free of pirates.</span> Although thousands of pirates died at the hands of Pompey's troops, as a long-term solution to the problem, <span class='ev' data-ev='m18' data-badge='18'>many more were offered land in fertile areas located far from the sea.</span> Instead of a maritime menace, Rome got productive farmers that further boosted its economy." }
+];
+
+function renderPassage() {
+  const html = passage.map(p => "<p><span class='para-letter'>" + p.letter + "</span>" + p.text + "</p>").join('')
+    + "<div class='footnote'>* caravel: a small, highly manoeuvrable sailing ship developed by the Portuguese</div>";
+  document.getElementById('match-passage').innerHTML = html;
+  document.getElementById('two-passage').innerHTML = html;
+  document.getElementById('summ-passage').innerHTML = html;
+}
+
+// ─────────── HIGHLIGHT / LOCATE IN PASSAGE ───────────
+function locate(panelId, evKey, color) {
+  const panel = document.getElementById(panelId);
+  panel.querySelectorAll('.ev.hl').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  const span = panel.querySelector('[data-ev="' + evKey + '"]');
+  if (span) {
+    span.classList.add('hl', color);
+    span.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// ─────────── TAB SWITCHING ───────────
+function showTab(id) {
+  document.querySelectorAll('.exercise').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─────────── SCORE TRACKING ───────────
+const scores = { match:{}, two:{}, summ:{} };
+function sum(o){ return Object.values(o).reduce((a,b)=>a+b,0); }
+function updateScores() {
+  const m = sum(scores.match), t = sum(scores.two), s = sum(scores.summ);
+  document.getElementById('match-score').textContent = m;
+  document.getElementById('two-score').textContent = t;
+  document.getElementById('summ-score').textContent = s;
+  document.getElementById('total-score').textContent = m + t + s;
+}
+
+// ─────────── MATCHING INFORMATION (Q14–19) ───────────
+const matchQuestions = [
+  { num:14, text:'a reference to a denial of involvement in piracy', correct:'D', ev:'m14',
+    explain:`In paragraph D, the king of Alashiya rejected Akhenaten's claims that he was connected with the Lukka pirates — a denial of involvement.` },
+  { num:15, text:'details of how a campaign to eradicate piracy was carried out', correct:'G', ev:'m15',
+    explain:`Paragraph G explains Pompey's method step by step: dividing the Mediterranean into 13 districts and clearing them one after another.` },
+  { num:16, text:'a mention of the circumstances in which states in the ancient world would make use of pirates', correct:'C', ev:'m16',
+    explain:`Paragraph C says governments resorted to pirates' services "especially during wartime" — that's the circumstance.` },
+  { num:17, text:'a reference to how people today commonly view pirates', correct:'A', ev:'m17',
+    explain:`Paragraph A opens with the image that "springs to most people's minds" — daredevils on a tall ship in the Caribbean. That's the modern, popular view.` },
+  { num:18, text:'an explanation of how some people were encouraged not to return to piracy', correct:'G', ev:'m18',
+    explain:`At the end of paragraph G, former pirates were offered farmland far from the sea — turning them into farmers instead of pirates. Note that G is used twice (NB!).` },
+  { num:19, text:'a mention of the need for many sailing vessels to stay relatively close to land', correct:'B', ev:'m19',
+    explain:`Paragraph B says that before ocean-going caravels, most ships were restricted to routes "that followed the coastline" — i.e. staying close to land.` }
+];
+
+const matchSelections = {};
+const LETTERS = ['A','B','C','D','E','F','G'];
+
+function renderMatch() {
+  const c = document.getElementById('match-questions');
+  matchQuestions.forEach(q => {
+    const qId = 'match-q' + q.num;
+    let btns = '';
+    LETTERS.forEach(L => {
+      btns += `<button class="letter-btn" onclick="selectMatch('${qId}','${L}',this)">${L}</button>`;
+    });
+    c.innerHTML += `
+      <div class="question-item" id="${qId}-item">
+        <div class="q-header">
+          <span class="q-num">${q.num}</span>
+          <span class="q-text">${q.text}</span>
+          <span class="q-marks">1</span>
+        </div>
+        <div class="letter-row" id="${qId}-btns">${btns}</div>
+        <div class="feedback" id="${qId}-fb"></div>
+      </div>`;
+  });
+}
+
+function selectMatch(qId, letter, btn) {
+  document.querySelectorAll('#' + qId + '-btns .letter-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  matchSelections[qId] = letter;
+}
+
+function submitMatch() {
+  const allAnswered = matchQuestions.every(q => matchSelections['match-q' + q.num]);
+  if (!allAnswered) {
+    const nb = document.getElementById('match-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  matchQuestions.forEach(q => {
+    const qId = 'match-q' + q.num;
+    const selected = matchSelections[qId];
+    const btns = document.querySelectorAll('#' + qId + '-btns .letter-btn');
+    btns.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('selected');
+      if (b.textContent === q.correct) b.classList.add('correct-answer');
+      else if (b.textContent === selected && selected !== q.correct) b.classList.add('wrong-answer');
+    });
+    const item = document.getElementById(qId + '-item');
+    const fb = document.getElementById(qId + '-fb');
+    item.classList.remove('correct','wrong');
+    if (selected === q.correct) {
+      item.classList.add('correct');
+      fb.innerHTML = '✓ Correct! ' + q.explain;
+      scores.match['q' + q.num] = 1;
+    } else {
+      item.classList.add('wrong');
+      fb.innerHTML = '✗ The answer is paragraph <strong>' + q.correct + '</strong>. ' + q.explain;
+      scores.match['q' + q.num] = 0;
+    }
+    fb.innerHTML += '<br><a class="locate-link" onclick="locate(&#39;match-passage&#39;,&#39;' + q.ev + '&#39;,&#39;hl-green&#39;)">🔍 Show in text</a>';
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('match-result').classList.add('show');
+  document.getElementById('match-submit').disabled = true;
+}
+
+function resetMatch() {
+  scores.match = {};
+  matchQuestions.forEach(q => {
+    const qId = 'match-q' + q.num;
+    delete matchSelections[qId];
+    document.querySelectorAll('#' + qId + '-btns .letter-btn').forEach(b => {
+      b.disabled = false;
+      b.classList.remove('selected','correct-answer','wrong-answer');
+    });
+    document.getElementById(qId + '-item').classList.remove('correct','wrong');
+    const fb = document.getElementById(qId + '-fb');
+    fb.style.display = 'none'; fb.innerHTML = '';
+  });
+  document.getElementById('match-result').classList.remove('show');
+  document.getElementById('match-submit').disabled = false;
+  document.querySelectorAll('#match-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  updateScores();
+}
+
+// ─────────── CHOOSE TWO (Q20–23) ───────────
+const twoQuestions = [
+  {
+    id:'q2021', label:'20 & 21',
+    text:'Which TWO of the following statements does the writer make about inhabitants of the Mediterranean region in the ancient world?',
+    options: [
+      { letter:'A', text:'They often used stolen vessels to carry out pirate attacks.' },
+      { letter:'B', text:'They managed to escape capture by the authorities because they knew the area so well.' },
+      { letter:'C', text:'They paid for information about the routes merchant ships would take.' },
+      { letter:'D', text:'They depended more on the sea for their livelihood than on farming.' },
+      { letter:'E', text:'They stored many of the goods taken in pirate attacks in coves along the coastline.' }
+    ],
+    correct:['B','D'],
+    evs:{ B:'c20B', D:'c20D' },
+    explain:`<strong>B</strong> matches "knowledge of the local area helped the pirates to avoid retaliation once a state fleet arrived." <strong>D</strong> matches the inhabitants of rugged areas relying "heavily on marine resources, including fish and salt." A, C and E mention things (stolen vessels, paying for information, storing goods in coves) that the writer never says — the coves were for hiding boats, not goods.`
+  },
+  {
+    id:'q2223', label:'22 & 23',
+    text:'Which TWO of the following statements does the writer make about piracy and ancient Greece?',
+    options: [
+      { letter:'A', text:'The state estimated that very few people were involved in piracy.' },
+      { letter:'B', text:'Attitudes towards piracy changed shortly after the Iliad and the Odyssey were written.' },
+      { letter:'C', text:'Important officials were known to occasionally take part in piracy.' },
+      { letter:'D', text:'Every citizen regarded pirate attacks on cities as unacceptable.' },
+      { letter:'E', text:'A favourable view of piracy is evident in certain ancient Greek texts.' }
+    ],
+    correct:['C','E'],
+    evs:{ C:'c22C', E:'c22E' },
+    explain:`<strong>C</strong> matches "high-ranking members of the state were not beyond engaging in such activities" — the Athenian ambassadors even captured a ship themselves. <strong>E</strong> matches Homer praising pirates in the Iliad and Odyssey, and Thucydides glorifying their attacks. B is wrong because the opinion "remained unchanged in the following centuries", and D is contradicted by Thucydides glorifying attacks on cities.`
+  }
+];
+
+const twoSelections = { q2021: [], q2223: [] };
+
+function renderTwo() {
+  const c = document.getElementById('two-questions');
+  twoQuestions.forEach(q => {
+    let opts = '';
+    q.options.forEach(o => {
+      opts += `<button class="opt-btn" id="${q.id}-${o.letter}" onclick="toggleTwo('${q.id}','${o.letter}',this)"><span class="opt-letter">${o.letter}</span><span>${o.text}</span></button>`;
+    });
+    c.innerHTML += `
+      <div class="question-item" id="${q.id}-item">
+        <div class="q-header">
+          <span class="q-num">${q.label}</span>
+          <span class="q-text">${q.text}</span>
+          <span class="q-marks">2</span>
+        </div>
+        <div class="opt-list">${opts}</div>
+        <div class="pick-counter" id="${q.id}-count">Selected: 0 / 2</div>
+        <div class="feedback" id="${q.id}-fb"></div>
+      </div>`;
+  });
+}
+
+function toggleTwo(qId, letter, btn) {
+  const sel = twoSelections[qId];
+  const idx = sel.indexOf(letter);
+  if (idx > -1) {
+    sel.splice(idx, 1);
+    btn.classList.remove('selected');
+  } else {
+    if (sel.length >= 2) {
+      // deselect the oldest pick so the newest takes its place
+      const removed = sel.shift();
+      document.getElementById(qId + '-' + removed).classList.remove('selected');
+    }
+    sel.push(letter);
+    btn.classList.add('selected');
+  }
+  document.getElementById(qId + '-count').textContent = 'Selected: ' + sel.length + ' / 2';
+}
+
+function submitTwo() {
+  const allPicked = twoQuestions.every(q => twoSelections[q.id].length === 2);
+  if (!allPicked) {
+    const nb = document.getElementById('two-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  twoQuestions.forEach(q => {
+    const sel = twoSelections[q.id];
+    let marks = 0;
+    q.options.forEach(o => {
+      const btn = document.getElementById(q.id + '-' + o.letter);
+      btn.disabled = true;
+      btn.classList.remove('selected');
+      const isCorrect = q.correct.includes(o.letter);
+      const isPicked = sel.includes(o.letter);
+      if (isCorrect && isPicked) { btn.classList.add('correct-answer'); marks++; }
+      else if (!isCorrect && isPicked) { btn.classList.add('wrong-answer'); }
+      else if (isCorrect && !isPicked) { btn.classList.add('missed-answer'); }
+    });
+    scores.two[q.id] = marks;
+    const item = document.getElementById(q.id + '-item');
+    item.classList.remove('correct','wrong','partial');
+    if (marks === 2) item.classList.add('correct');
+    else if (marks === 1) item.classList.add('partial');
+    else item.classList.add('wrong');
+
+    const fb = document.getElementById(q.id + '-fb');
+    let head;
+    if (marks === 2) head = '✓ Both correct! ';
+    else if (marks === 1) head = 'One out of two — the answers are <strong>' + q.correct.join(' and ') + '</strong>. ';
+    else head = '✗ The answers are <strong>' + q.correct.join(' and ') + '</strong>. ';
+    fb.innerHTML = head + q.explain + '<br>';
+    q.correct.forEach(L => {
+      fb.innerHTML += '<a class="locate-link" onclick="locate(&#39;two-passage&#39;,&#39;' + q.evs[L] + '&#39;,&#39;hl-green&#39;)">🔍 Show ' + L + ' in text</a>';
+    });
+    fb.style.display = 'block';
+  });
+  updateScores();
+  document.getElementById('two-result').classList.add('show');
+  document.getElementById('two-submit').disabled = true;
+}
+
+function resetTwo() {
+  scores.two = {};
+  twoQuestions.forEach(q => {
+    twoSelections[q.id] = [];
+    q.options.forEach(o => {
+      const btn = document.getElementById(q.id + '-' + o.letter);
+      btn.disabled = false;
+      btn.classList.remove('selected','correct-answer','wrong-answer','missed-answer');
+    });
+    document.getElementById(q.id + '-item').classList.remove('correct','wrong','partial');
+    document.getElementById(q.id + '-count').textContent = 'Selected: 0 / 2';
+    const fb = document.getElementById(q.id + '-fb');
+    fb.style.display = 'none'; fb.innerHTML = '';
+  });
+  document.getElementById('two-result').classList.remove('show');
+  document.getElementById('two-submit').disabled = false;
+  document.querySelectorAll('#two-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  updateScores();
+}
+
+// ─────────── SUMMARY COMPLETION (Q24–26) ───────────
+const gapAnswers = {
+  24: { accept:['grain'],      show:'grain',      ev:'s24' },
+  25: { accept:['punishment'], show:'punishment', ev:'s25' },
+  26: { accept:['ransom'],     show:'ransom',     ev:'s26' }
+};
+
+function normalize(s){ return s.trim().toLowerCase().replace(/\s+/g, ' '); }
+
+function submitSummary() {
+  const nums = [24,25,26];
+  const ok = nums.every(n => document.getElementById('gap-' + n).value.trim());
+  if (!ok) {
+    const nb = document.getElementById('summ-nudge');
+    nb.classList.add('show');
+    setTimeout(() => nb.classList.remove('show'), 3000);
+    return;
+  }
+  nums.forEach(n => {
+    const input = document.getElementById('gap-' + n);
+    const a = gapAnswers[n];
+    const correct = a.accept.some(x => normalize(x) === normalize(input.value));
+    input.disabled = true;
+    input.classList.remove('correct','wrong');
+    const cTag = document.getElementById('gap-' + n + '-c');
+    if (correct) {
+      input.classList.add('correct');
+      scores.summ['q' + n] = 1;
+      cTag.classList.remove('show');
+    } else {
+      input.classList.add('wrong');
+      scores.summ['q' + n] = 0;
+      cTag.textContent = '→ ' + a.show;
+      cTag.classList.add('show');
+    }
+    document.getElementById('gap-' + n + '-loc').innerHTML =
+      '<a onclick="locate(&#39;summ-passage&#39;,&#39;' + a.ev + '&#39;,&#39;hl-green&#39;)" title="Show this answer in the passage">🔍</a>';
+  });
+  updateScores();
+  document.getElementById('summ-result').classList.add('show');
+  document.getElementById('summ-submit').disabled = true;
+}
+
+function resetSummary() {
+  scores.summ = {};
+  [24,25,26].forEach(n => {
+    const input = document.getElementById('gap-' + n);
+    input.value = ''; input.disabled = false;
+    input.classList.remove('correct','wrong');
+    const cTag = document.getElementById('gap-' + n + '-c');
+    cTag.classList.remove('show'); cTag.textContent = '';
+    document.getElementById('gap-' + n + '-loc').innerHTML = '';
+  });
+  document.querySelectorAll('#summ-passage .ev').forEach(s => s.classList.remove('hl','hl-green','hl-red','hl-amber'));
+  document.getElementById('summ-result').classList.remove('show');
+  document.getElementById('summ-submit').disabled = false;
+  updateScores();
+}
+
+// ─────────── INIT ───────────
+renderPassage();
+renderMatch();
+renderTwo();
+
+document.addEventListener('dragstart', e => e.preventDefault(), true);
+</script>
+</body>
+</html>
