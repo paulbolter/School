@@ -155,6 +155,22 @@
     color:#9a8f78;font-style:italic;font-size:.95rem;
   }
 
+  /* Persistent guidance note (stays while writing) */
+  .guide{
+    font-family:'DM Sans',sans-serif;font-size:.85rem;
+    color:var(--navy-light);background:var(--paper-deep);
+    border-left:3px solid var(--gold-bright);
+    padding:9px 13px;margin-bottom:8px;line-height:1.5;
+  }
+  .panel.guides-off .guide{display:none;}
+  .guide-toggle{
+    font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;
+    background:transparent;border:1px solid var(--navy-light);
+    color:var(--navy-light);padding:6px 14px;border-radius:3px;
+    cursor:pointer;margin-bottom:20px;transition:.15s;
+  }
+  .guide-toggle:hover{border-color:var(--navy);color:var(--navy);}
+
   /* ---------- Footer bar: counter + copy ---------- */
   .toolbar{
     display:flex;align-items:center;justify-content:space-between;
@@ -232,28 +248,34 @@
       <strong>Balanced approach:</strong> Stay neutral in the two body paragraphs — present each view fairly without taking sides. Hold your own opinion back until the conclusion. The box sizes are a hint: the two body paragraphs (taller) carry most of your essay.
     </div>
 
+    <button class="guide-toggle" data-tab="s1">Hide guidance</button>
+
     <div class="box-group">
       <div class="box-note"><span class="dot"></span>Introduction · Frame both views · no opinion yet</div>
+      <div class="guide">Rephrase the question in your own words. Introduce both views — that some prefer online materials and others prefer printed ones — and say you will discuss both. Don't give your opinion here.</div>
       <textarea class="writebox intro" data-tab="s1"
-        placeholder="Rephrase the question in your own words. Introduce both views — that some prefer online materials and others prefer printed ones — and say you will discuss both. Do NOT give your opinion here."></textarea>
+        placeholder="Start your introduction here…"></textarea>
     </div>
 
     <div class="box-group">
       <div class="box-note"><span class="dot"></span>Body 1 · The case for online materials</div>
+      <div class="guide">Explain why supporters prefer online materials — for example: instant access anywhere, easy searching, lower cost, video and interactive content, always up to date. You can cover more than one reason, but explain each one and add an example rather than just listing them. Stay neutral: this is their view, not yet yours.</div>
       <textarea class="writebox body" data-tab="s1"
-        placeholder="Explain why supporters prefer online materials. Possible reasons: instant access anywhere, easy searching, lower cost, videos and interactive content, always up to date. Develop ONE or two reasons fully and give an example. Stay neutral — this is their view, not yet yours."></textarea>
+        placeholder="Write this paragraph here…"></textarea>
     </div>
 
     <div class="box-group">
       <div class="box-note"><span class="dot"></span>Body 2 · The case for printed materials</div>
+      <div class="guide">Explain why supporters prefer printed materials — for example: easier on the eyes, better focus and memory, no device or internet needed, simple to highlight and annotate. Again, more than one reason is fine as long as each is developed with an explanation and an example. Stay neutral here too.</div>
       <textarea class="writebox body" data-tab="s1"
-        placeholder="Explain why supporters prefer printed materials. Possible reasons: easier on the eyes, better focus and memory, no device or internet needed, simple to highlight and annotate. Develop ONE or two reasons fully and give an example. Stay neutral here too."></textarea>
+        placeholder="Write this paragraph here…"></textarea>
     </div>
 
     <div class="box-group">
       <div class="box-note"><span class="dot"></span>Conclusion · Your opinion goes HERE</div>
+      <div class="guide">Now give your own opinion. Which view do you find more convincing, and why? Summarise the two sides briefly and make your position clear. Don't add new ideas.</div>
       <textarea class="writebox conclusion" data-tab="s1"
-        placeholder="Now give your own opinion. Which view do you find more convincing, and why? Summarise the two sides briefly and make your position clear. Do not add new ideas."></textarea>
+        placeholder="Write your conclusion here…"></textarea>
     </div>
 
     <div class="toolbar">
@@ -268,28 +290,34 @@
       <strong>Opinion-led approach:</strong> Make your position clear from the very first paragraph. Argue mainly for the side you favour, then fairly acknowledge the other side and explain why it does not change your mind. The body boxes (taller) are where your argument lives.
     </div>
 
+    <button class="guide-toggle" data-tab="s2">Hide guidance</button>
+
     <div class="box-group">
       <div class="box-note"><span class="dot"></span>Introduction · State your opinion NOW</div>
+      <div class="guide">Rephrase the question, then state your opinion clearly. Which type of material do you think is better — online or printed? Make your position obvious from the start.</div>
       <textarea class="writebox intro" data-tab="s2"
-        placeholder="Rephrase the question, then state your opinion clearly. Which type of material do you think is better — online or printed? Make your position obvious from the start."></textarea>
+        placeholder="Start your introduction here…"></textarea>
     </div>
 
     <div class="box-group">
       <div class="box-note"><span class="dot"></span>Body 1 · Argue the side you favour</div>
+      <div class="guide">Develop the side you support. Give your reasons and a clear example. You can include more than one reason — just make sure each is explained and supported, not simply listed. This is your main argument, so make it your most detailed paragraph.</div>
       <textarea class="writebox body" data-tab="s2"
-        placeholder="Develop the side you support. Give your strongest reasons and a clear example. This is your main argument, so make it the most detailed and convincing paragraph in the essay."></textarea>
+        placeholder="Write this paragraph here…"></textarea>
     </div>
 
     <div class="box-group">
       <div class="box-note"><span class="dot"></span>Body 2 · The other side — then push back</div>
+      <div class="guide">Fairly acknowledge the other view — what do its supporters argue? Then explain why it doesn't change your opinion (concede the point, then push back). This shows you've considered both sides.</div>
       <textarea class="writebox body" data-tab="s2"
-        placeholder="Fairly acknowledge the other view — what do its supporters argue? Then explain why it does not change your opinion (concede the point, then rebut it). This shows you have considered both sides."></textarea>
+        placeholder="Write this paragraph here…"></textarea>
     </div>
 
     <div class="box-group">
       <div class="box-note"><span class="dot"></span>Conclusion · Restate your opinion</div>
+      <div class="guide">Restate your opinion and briefly summarise your main reasons. Keep it consistent with your introduction. Don't introduce new points.</div>
       <textarea class="writebox conclusion" data-tab="s2"
-        placeholder="Restate your opinion and briefly summarise your main reasons. Keep it consistent with your introduction. Do not introduce new points."></textarea>
+        placeholder="Write your conclusion here…"></textarea>
     </div>
 
     <div class="toolbar">
@@ -335,6 +363,16 @@
     t.addEventListener('input',function(){
       grow(t);
       updateCounter(t.getAttribute('data-tab'));
+    });
+  });
+
+  /* ---- Hide / show guidance per tab ---- */
+  document.querySelectorAll('.guide-toggle').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var panel=document.getElementById(btn.getAttribute('data-tab'));
+      var off=panel.classList.toggle('guides-off');
+      btn.textContent=off?'Show guidance':'Hide guidance';
+      /* box heights change when guides vanish, so nothing else needed */
     });
   });
 
