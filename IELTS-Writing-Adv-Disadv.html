@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Writing Practice · Advantages and Disadvantages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#20364b;
+    --navy-light:#4e6172;
+    --gold:#4d91b8;
+    --gold-bright:#79b7dc;
+    --paper:#eaf4fb;
+    --paper-deep:#f3f9fd;
+    --ink:#26343d;
+    --rule:#c5d8e6;
+    --green:#25705f;
+    --green-bg:#e4f2ed;
+    --teal:#2c6f8a;
+    --teal-dark:#245c73;
+    --white:#ffffff;
+    --shadow:0 12px 32px rgba(37,74,100,.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Serif 4',Georgia,serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 22px 72px;}
+  /* Keep the reading-heavy Question tab at a comfortable measure */
+  #q{max-width:880px;}
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    background:var(--white);border:1px solid var(--rule);
+    border-radius:18px;padding:22px 28px;margin-bottom:18px;text-align:left;
+    box-shadow:var(--shadow);
+  }
+  .masthead .kicker{
+    font-family:'DM Sans',sans-serif;
+    text-transform:uppercase;letter-spacing:.32em;
+    font-size:.72rem;color:var(--teal);font-weight:700;
+    margin-bottom:5px;
+  }
+  .masthead h1{
+    font-family:'Playfair Display',serif;font-weight:700;
+    color:var(--navy);margin:0;
+    font-size:2rem;line-height:1.15;
+  }
+  .masthead .sub{
+    font-family:'DM Sans',sans-serif;font-size:.82rem;
+    color:var(--navy-light);margin-top:7px;letter-spacing:.02em;
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;flex-wrap:wrap;gap:7px;
+    border:1px solid var(--rule);border-radius:13px;
+    background:var(--white);padding:6px;margin:0;
+  }
+  .tab{
+    font-family:'DM Sans',sans-serif;font-weight:400;
+    font-size:.9rem;letter-spacing:.02em;
+    padding:10px 17px;cursor:pointer;border-radius:8px;
+    appearance:none;-webkit-appearance:none;
+    background:var(--white);background-image:none;border:none;
+    color:var(--navy-light);
+    transition:.15s;
+  }
+  .tab:hover{color:var(--navy);background:var(--paper-deep);}
+  .tab.active{
+    color:var(--navy);background:var(--paper);background-image:none;
+    font-weight:600;box-shadow:inset 0 0 0 1px var(--rule);
+  }
+  .panel{display:none;padding-top:24px;}
+  .panel.active{display:block;}
+
+  /* ---------- Question tab ---------- */
+  .qcard{
+    background:var(--white);
+    border:1px solid var(--rule);
+    border-top:5px solid var(--teal);
+    border-radius:14px;padding:24px 26px;margin-bottom:26px;
+    box-shadow:var(--shadow);
+  }
+  .qcard .label{
+    font-family:'DM Sans',sans-serif;text-transform:uppercase;
+    letter-spacing:.18em;font-size:.7rem;color:var(--teal);
+    font-weight:700;margin-bottom:10px;
+  }
+  .qcard .question{
+    font-size:1.35rem;line-height:1.42;color:var(--navy);
+    font-weight:600;
+  }
+  .qcard .instruction{
+    font-style:italic;color:var(--navy-light);margin-top:8px;
+    font-size:1.08rem;
+  }
+
+  h2.section{
+    font-family:'Playfair Display',serif;color:var(--navy-light);
+    font-weight:600;opacity:.82;
+    font-size:1.4rem;border-bottom:1px solid rgba(22,38,63,.22);
+    padding-bottom:6px;margin:30px 0 14px;
+  }
+  .note-block{margin-bottom:14px;}
+  .note-block p{margin:8px 0;}
+  .tag{
+    display:inline-block;font-family:'DM Sans',sans-serif;
+    font-size:.72rem;font-weight:500;text-transform:uppercase;
+    letter-spacing:.08em;background:transparent;color:var(--navy-light);
+    border:1px solid rgba(22,38,63,.35);
+    padding:3px 10px;border-radius:2px;margin-right:6px;
+  }
+  .tag.gold{background:transparent;color:var(--gold);border-color:rgba(77,145,184,.5);}
+  .callout{
+    background:var(--white);border:1px solid var(--rule);
+    border-left:4px solid var(--gold-bright);border-radius:9px;
+    padding:14px 18px;margin:18px 0;
+    font-family:'DM Sans',sans-serif;font-size:.95rem;
+  }
+  .callout strong{color:var(--navy);}
+  /* Quieter callout variant — recedes into the page */
+  .callout.subtle{
+    background:transparent;
+    border-color:rgba(77,145,184,.3);
+    border-left-color:rgba(77,145,184,.45);
+    color:var(--navy-light);
+  }
+  .callout.subtle strong{color:var(--navy-light);font-weight:600;}
+  ul.clean{font-family:'DM Sans',sans-serif;font-size:.95rem;}
+  ul.clean li{margin:6px 0;}
+
+  /* ---------- Writing tab ---------- */
+  .strategy-intro{
+    font-family:'DM Sans',sans-serif;font-size:.95rem;
+    background:var(--white);border:1px solid var(--rule);
+    border-radius:10px;padding:12px 16px;margin-bottom:18px;
+  }
+  .strategy-intro strong{color:var(--navy);}
+  .writing-brief{
+    display:flex;align-items:flex-start;gap:12px;background:var(--white);
+    border:1px solid var(--rule);border-radius:12px;padding:15px 18px;
+    margin-bottom:14px;color:var(--navy);box-shadow:0 6px 18px rgba(29,53,66,.04);
+  }
+  .writing-brief .brief-mark{
+    font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--teal);
+    background:var(--paper-deep);border-radius:6px;padding:4px 7px;white-space:nowrap;
+  }
+  .writing-brief p{margin:0;font-size:1rem;line-height:1.45;}
+
+  /* Side-by-side: note spans top, guidance left, writing box right */
+  .box-group{
+    display:grid;background:var(--white);border:1px solid var(--rule);
+    border-radius:14px;padding:20px;
+    box-shadow:0 8px 24px rgba(29,53,66,.055);
+    grid-template-columns:290px minmax(0,1fr);
+    gap:12px 22px;
+    align-items:start;
+    margin-bottom:26px;
+  }
+  .box-note{
+    grid-column:1 / -1;
+    font-family:'DM Sans',sans-serif;font-weight:600;
+    font-size:.85rem;color:var(--navy);margin:0 0 2px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .body-instruction{grid-column:1 / -1;margin:0;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:400;color:var(--navy-light);}
+  /* When guidance is hidden, writing box takes the full width */
+  .panel.guides-off .box-group{grid-template-columns:1fr;}
+  .box-note .dot{
+    width:8px;height:8px;background:var(--teal);
+    border-radius:50%;flex:none;
+  }
+  textarea.writebox{
+    width:100%;font-family:'Source Serif 4',Georgia,serif;
+    font-size:1.08rem;line-height:1.7;color:var(--ink);
+    background:var(--white);border:1px solid #b9cacc;border-radius:9px;
+    padding:17px 18px;resize:vertical;overflow:hidden;
+    transition:border-color .15s;
+  }
+  textarea.writebox:focus{
+    outline:none;border-color:var(--teal);
+    box-shadow:0 0 0 3px rgba(44,112,116,.13);
+  }
+  textarea.intro,textarea.conclusion{min-height:130px;}
+  textarea.body{min-height:230px;}
+  textarea.body-strong{min-height:300px;}
+  /* Intro & conclusion have no idea prompts — box takes the full width */
+  .box-group.solo{grid-template-columns:1fr;}
+  textarea.writebox::placeholder{
+    color:#829196;font-style:italic;font-size:.98rem;
+  }
+
+  /* Persistent guidance note (stays while writing) */
+  .guide{
+    font-family:'DM Sans',sans-serif;font-size:.85rem;
+    color:#536b7b;background:var(--paper-deep);
+    border-left:3px solid var(--gold-bright);border-radius:0 8px 8px 0;
+    padding:12px 14px;line-height:1.5;
+  }
+  .guide p{margin:0;}
+  .guide.conclusion-guide p + p{margin-top:9px;}
+  .guide .guide-lead{margin-bottom:9px;}
+  .guide .guide-lead strong{color:var(--navy);}
+  /* The "how to use these" rule — visually distinct from the bullets */
+  .guide .guide-instruct{
+    background:var(--white);border-left:3px solid var(--gold);
+    color:var(--navy);font-weight:600;font-size:.82rem;
+    padding:8px 11px;margin-bottom:10px;line-height:1.45;
+  }
+  /* Vertical list of idea options */
+  .guide ul.guide-ideas{
+    list-style:none;margin:0;padding:0;
+  }
+  .guide .guide-sublabel{
+    font-weight:600;color:var(--navy);
+    font-size:.8rem;margin:8px 0 2px;
+  }
+  .guide ul.guide-ideas li{
+    position:relative;padding:3px 0 3px 18px;
+  }
+  .guide ul.guide-ideas li::before{
+    content:"";position:absolute;left:2px;top:11px;
+    width:5px;height:5px;background:var(--gold);
+    border-radius:50%;
+  }
+  .panel.guides-off .guide{display:none;}
+  .guide-toggle{
+    font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;
+    background:var(--white);border:1px solid #afc1c4;
+    color:var(--teal-dark);padding:8px 14px;border-radius:8px;
+    cursor:pointer;margin-bottom:20px;transition:.15s;
+  }
+  .guide-toggle:hover{border-color:var(--teal);background:var(--white);}
+
+  /* ---------- Footer bar: counter + copy ---------- */
+  .toolbar{
+    display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:12px;
+    background:var(--white);border:1px solid var(--rule);border-radius:13px;
+    margin-top:10px;padding:14px 16px;box-shadow:var(--shadow);
+  }
+  .counter{
+    font-family:'DM Sans',sans-serif;font-weight:600;
+    font-size:.95rem;color:var(--navy-light);
+    background:var(--paper-deep);padding:7px 14px;border-radius:7px;
+  }
+  .counter.met{
+    color:var(--green);background:var(--green-bg);
+  }
+  .counter .target{font-weight:400;opacity:.7;}
+  button.copy{
+    font-family:'DM Sans',sans-serif;font-weight:600;font-size:.9rem;
+    background:var(--teal);color:#fff;border:none;
+    padding:10px 20px;border-radius:8px;cursor:pointer;
+    letter-spacing:.02em;transition:.15s;
+  }
+  button.copy:hover{background:var(--teal-dark);}
+  button.copy.done{background:var(--green);}
+
+  .progress-track{height:5px;background:#dceaf2;border-radius:999px;overflow:hidden;flex:1;min-width:130px;}
+  .progress-fill{height:100%;width:0;background:var(--gold-bright);border-radius:999px;transition:width .2s ease;}
+
+  @media (max-width:760px){
+    .wrap{padding:14px 12px 48px;}
+    .masthead{padding:18px;border-radius:14px;}
+    .masthead h1{font-size:1.65rem;}
+    .tabs{display:grid;grid-template-columns:1fr;}
+    .tab{text-align:left;}
+    .box-group{grid-template-columns:1fr;padding:16px;gap:10px;}
+    .box-note{grid-column:1;}
+    .guide{grid-row:auto;}
+    .writing-brief{display:block;}
+    .writing-brief .brief-mark{display:inline-block;margin-bottom:8px;}
+    textarea.intro,textarea.conclusion{min-height:150px;}
+    textarea.body{min-height:260px;}
+    textarea.body-strong{min-height:330px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="kicker">IELTS Academic · Writing Task 2</div>
+    <h1>Write your outweigh essay</h1>
+    <div class="sub">Choose your position, develop it clearly, and aim for at least 250 words.</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" data-tab="q">Plan the essay</button>
+    <button class="tab" data-tab="w1">Write · Disadvantages outweigh</button>
+    <button class="tab" data-tab="w2">Write · Advantages outweigh</button>
+  </div>
+
+  <!-- ===================== TAB 1: QUESTION ===================== -->
+  <section class="panel active" id="q">
+    <div class="qcard">
+      <div class="label">Your Task</div>
+      <div class="question">In many countries, fast food is becoming cheaper and more widely available.</div>
+      <div class="instruction">Do the disadvantages of this development outweigh the advantages?<br>Give reasons for your answer and include any relevant examples from your own knowledge or experience.</div>
+    </div>
+
+    <h2 class="section">What kind of question is this?</h2>
+    <div class="note-block">
+      <p><span class="tag">Type</span><span class="tag gold">Outweigh</span> The question asks you to compare the advantages against the disadvantages and decide which side outweighs the other.</p>
+    </div>
+
+    <div class="callout">
+      Decide if the advantages outweigh the disadvantages, or the other way around. Choose one.
+    </div>
+
+    <h2 class="section">How to structure it</h2>
+    <ul class="clean">
+      <li><strong>Introduction:</strong> rephrase the topic and choose your side.</li>
+      <li><strong>Body 1:</strong> fairly acknowledge the <em>weaker</em> side (the one you did NOT choose).</li>
+      <li><strong>Body 2:</strong> develop <em>your</em> side in more depth — this is the side that "outweighs", so it gets more words.</li>
+      <li><strong>Conclusion:</strong> refer very briefly to your body paragraph ideas to restate your side.</li>
+    </ul>
+  </section>
+
+  <!-- ============ TAB 2: WRITE — DISADVANTAGES OUTWEIGH ============ -->
+  <section class="panel" id="w1">
+    <div class="strategy-intro"><strong>Your position:</strong> The disadvantages outweigh the advantages. Give the stronger side more explanation and support.</div>
+    <button class="guide-toggle" data-tab="w1">Hide prompts for focus</button>
+
+    <div class="box-group">
+      <div class="box-note"><span class="dot"></span>Introduction</div>
+      <div class="guide">
+        <p class="guide-sublabel">Rephrase the topic</p>
+        <p>e.g. "Fast food is becoming cheaper and easier to find in many countries."</p>
+        <p class="guide-sublabel">Then state your verdict</p>
+        <p>Make it clear the <strong>disadvantages</strong> are the stronger side.</p>
+      </div>
+      <textarea class="writebox intro" data-tab="w1"
+        placeholder="Write your introduction here…"></textarea>
+    </div>
+
+    <div class="box-group">
+      <div class="box-note"><span class="dot"></span>Body 1 · Advantages (the weaker side)</div>
+      <p class="body-instruction">Expand briefly on these ideas with further information or maybe an example.</p>
+      <div class="guide">
+        <p class="guide-sublabel">Ideas you could use</p>
+        <ul class="guide-ideas">
+          <li>Cheap meals help people on low incomes</li>
+          <li>Fast and convenient for busy workers and students</li>
+          <li>Creates jobs in restaurants and delivery</li>
+          <li>Reliable and available almost everywhere</li>
+        </ul>
+      </div>
+      <textarea class="writebox body" data-tab="w1"
+        placeholder="Acknowledge the advantages fairly…"></textarea>
+    </div>
+
+    <div class="box-group">
+      <div class="box-note"><span class="dot"></span>Body 2 · Disadvantages (your side — the bigger paragraph)</div>
+      <p class="body-instruction">Use only one or two of these ideas (not all of them), and expand on them with further information or an example.</p>
+      <div class="guide">
+        <p class="guide-sublabel">Ideas you could use</p>
+        <ul class="guide-ideas">
+          <li>High in fat, salt and sugar — linked to obesity and heart disease</li>
+          <li>Cheapness encourages people to eat it too often</li>
+          <li>Children develop unhealthy eating habits early</li>
+          <li>Traditional food culture and home cooking decline</li>
+          <li>Health problems cost societies money in the long run</li>
+        </ul>
+      </div>
+      <textarea class="writebox body-strong" data-tab="w1"
+        placeholder="Develop the disadvantages in more depth — this side outweighs…"></textarea>
+    </div>
+
+    <div class="box-group">
+      <div class="box-note"><span class="dot"></span>Conclusion · Your final sentences to sum up your argument</div>
+      <div class="guide conclusion-guide">
+        <p>Try to combine ideas from both body paragraphs into a complex sentence.</p>
+        <p>You may use “Although” or “Even though” to combine two opposing ideas.</p>
+        <p><strong>Use the word outweigh.</strong> For example: the disadvantages clearly outweigh the advantages.</p>
+      </div>
+      <textarea class="writebox conclusion" data-tab="w1"
+        placeholder="Write your conclusion here…"></textarea>
+    </div>
+
+    <div class="toolbar">
+      <div class="counter" data-tab="w1">0 <span class="target">/ 250 words</span></div>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill" data-tab="w1"></div></div>
+      <button class="copy" data-tab="w1">Copy my essay</button>
+    </div>
+  </section>
+
+  <!-- ============ TAB 3: WRITE — ADVANTAGES OUTWEIGH ============ -->
+  <section class="panel" id="w2">
+    <div class="strategy-intro"><strong>Your position:</strong> The advantages outweigh the disadvantages. Give the stronger side more explanation and support.</div>
+    <button class="guide-toggle" data-tab="w2">Hide prompts for focus</button>
+
+    <div class="box-group">
+      <div class="box-note"><span class="dot"></span>Introduction</div>
+      <div class="guide">
+        <p class="guide-sublabel">Rephrase the topic</p>
+        <p>e.g. "Fast food is becoming cheaper and easier to find in many countries."</p>
+        <p class="guide-sublabel">Then state your verdict</p>
+        <p>Make it clear the <strong>advantages</strong> are the stronger side.</p>
+      </div>
+      <textarea class="writebox intro" data-tab="w2"
+        placeholder="Write your introduction here…"></textarea>
+    </div>
+
+    <div class="box-group">
+      <div class="box-note"><span class="dot"></span>Body 1 · Disadvantages (the weaker side)</div>
+      <p class="body-instruction">Expand briefly on these ideas with further information or maybe an example.</p>
+      <div class="guide">
+        <p class="guide-sublabel">Ideas you could use</p>
+        <ul class="guide-ideas">
+          <li>High in fat, salt and sugar — linked to obesity and heart disease</li>
+          <li>Cheapness encourages people to eat it too often</li>
+          <li>Children develop unhealthy eating habits early</li>
+          <li>Traditional food culture and home cooking decline</li>
+          <li>Health problems cost societies money in the long run</li>
+        </ul>
+      </div>
+      <textarea class="writebox body" data-tab="w2"
+        placeholder="Acknowledge the disadvantages fairly…"></textarea>
+    </div>
+
+    <div class="box-group">
+      <div class="box-note"><span class="dot"></span>Body 2 · Advantages (your side — the bigger paragraph)</div>
+      <p class="body-instruction">Use only one or two of these ideas (not all of them), and expand on them with further information or an example.</p>
+      <div class="guide">
+        <p class="guide-sublabel">Ideas you could use</p>
+        <ul class="guide-ideas">
+          <li>Cheap meals help people on low incomes</li>
+          <li>Fast and convenient for busy workers and students</li>
+          <li>Creates jobs in restaurants and delivery</li>
+          <li>Healthier fast-food options are increasingly available</li>
+        </ul>
+      </div>
+      <textarea class="writebox body-strong" data-tab="w2"
+        placeholder="Develop the advantages in more depth — this side outweighs…"></textarea>
+    </div>
+
+     <div class="box-group">
+      <div class="box-note"><span class="dot"></span>Conclusion · Your final sentences to sum up your argument</div>
+      <div class="guide conclusion-guide">
+        <p>Try to combine ideas from both body paragraphs into a complex sentence.</p>
+        <p>You may use “Although” or “Even though” to combine two opposing ideas.</p>
+        <p><strong>Use the word outweigh.</strong> For example: the advantages clearly outweigh the disadvantages.</p>
+      </div>
+      <textarea class="writebox conclusion" data-tab="w2"
+        placeholder="Write your conclusion here…"></textarea>
+    </div>
+    <div class="toolbar">
+      <div class="counter" data-tab="w2">0 <span class="target">/ 250 words</span></div>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill" data-tab="w2"></div></div>
+      <button class="copy" data-tab="w2">Copy my essay</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  /* ---- Tab switching ---- */
+  document.querySelectorAll('.tab').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var id=btn.getAttribute('data-tab');
+      document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+      document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+      btn.classList.add('active');
+      document.getElementById(id).classList.add('active');
+    });
+  });
+
+  /* ---- Auto-grow textareas ---- */
+  function grow(el){ el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px'; }
+
+  /* ---- Word counting per tab ---- */
+  function countWords(str){
+    var m=str.trim().match(/\S+/g);
+    return m?m.length:0;
+  }
+  function updateCounter(tab){
+    var total=0;
+    document.querySelectorAll('textarea[data-tab="'+tab+'"]').forEach(function(t){
+      total+=countWords(t.value);
+    });
+    var c=document.querySelector('.counter[data-tab="'+tab+'"]');
+    c.innerHTML=total+' <span class="target">/ 250 words</span>';
+    if(total>=250){ c.classList.add('met'); } else { c.classList.remove('met'); }
+    var fill=document.querySelector('.progress-fill[data-tab="'+tab+'"]');
+    if(fill){ fill.style.width=Math.min((total/250)*100,100)+'%'; }
+  }
+
+  document.querySelectorAll('textarea.writebox').forEach(function(t){
+    grow(t);
+    t.addEventListener('input',function(){
+      grow(t);
+      updateCounter(t.getAttribute('data-tab'));
+    });
+  });
+
+  /* ---- Hide / show guidance per tab ---- */
+  document.querySelectorAll('.guide-toggle').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var panel=document.getElementById(btn.getAttribute('data-tab'));
+      var off=panel.classList.toggle('guides-off');
+      btn.textContent=off?'Show idea prompts':'Hide prompts for focus';
+      /* box heights change when guides vanish, so nothing else needed */
+    });
+  });
+
+  /* ---- Copy my essay ---- */
+  document.querySelectorAll('button.copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var tab=btn.getAttribute('data-tab');
+      var parts=[];
+      document.querySelectorAll('textarea[data-tab="'+tab+'"]').forEach(function(t){
+        if(t.value.trim()!==''){ parts.push(t.value.trim()); }
+      });
+      var essay=parts.join('\n\n');
+      navigator.clipboard.writeText(essay).then(function(){
+        var orig=btn.textContent;
+        btn.textContent='Copied \u2713';
+        btn.classList.add('done');
+        setTimeout(function(){ btn.textContent=orig; btn.classList.remove('done'); },1600);
+      });
+    });
+  });
+
+  /* ---- Hook for future API feedback ----
+     Each tab's four boxes can be stitched with the copy logic above.
+     A "Get feedback" button could POST that text to your Vercel proxy later. */
+</script>
+</body>
+</html>
